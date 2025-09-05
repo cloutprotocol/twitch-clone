@@ -54,21 +54,31 @@ export async function POST(req: Request) {
   // Get the type
   const eventType = evt.type;
 
+  console.log("Webhook received:", eventType, payload.data);
+
   if (eventType === "user.created") {
+    console.log("Creating user with data:", {
+      id: payload.data.id,
+      username: payload.data.username,
+      email_addresses: payload.data.email_addresses,
+      image_url: payload.data.image_url
+    });
+    
     // Add the user to the database
     await db.user.create({
       data: {
         externalUserId: payload.data.id,
-        email: payload.data.email_addresses[0].email_address,
-        username: payload.data.username,
-        imageUrl: payload.data.image_url,
+        email: payload.data.email_addresses?.[0]?.email_address || payload.data.primary_email_address?.email_address || "",
+        username: payload.data.username || "user_" + payload.data.id.slice(-6),
+        imageUrl: payload.data.image_url || "",
         stream: {
           create: {
-            title: `${payload.data.username}'s stream`,
+            title: `${payload.data.username || "user_" + payload.data.id.slice(-6)}'s stream`,
           },
         },
       },
     });
+    console.log("User created successfully!");
   }
 
   if (eventType === "user.updated") {
