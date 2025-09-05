@@ -8,6 +8,8 @@ export default authMiddleware({
     "/",
     "/api/webhooks(.*)",
     "/api/uploadthing",
+    "/api/search",
+    "/api/chat(.*)",
     "/:username",
     "/search",
   ],

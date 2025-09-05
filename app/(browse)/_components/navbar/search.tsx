@@ -1,16 +1,34 @@
 "use client";
 
 import qs from "query-string";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SearchIcon, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useLiveSearch } from "@/hooks/use-live-search";
+import { SearchPreview } from "./search-preview";
 
 export const Search = () => {
   const router = useRouter();
   const [value, setValue] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  const { results, isLoading, error, clearResults } = useLiveSearch(value);
+
+  // Close preview when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowPreview(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,38 +43,72 @@ export const Search = () => {
       { skipEmptyString: true }
     );
 
+    setShowPreview(false);
     router.push(url);
   };
 
   const onClear = () => {
     setValue("");
+    clearResults();
+    setShowPreview(false);
+  };
+
+  const onFocus = () => {
+    if (value.length >= 2) {
+      setShowPreview(true);
+    }
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    
+    if (newValue.length >= 2) {
+      setShowPreview(true);
+    } else {
+      setShowPreview(false);
+    }
+  };
+
+  const closePreview = () => {
+    setShowPreview(false);
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="relative w-full lg:w-[400px] flex items-center"
-    >
-      <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Search"
-        className="rounded-r-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
-      />
-      {value && (
-        <X
-          className="absolute top-2.5 right-14 h-5 w-5 text-muted-foreground cursor-pointer hover:opacity-75 transition"
-          onClick={onClear}
+    <div ref={searchRef} className="relative w-full lg:w-[400px]">
+      <form onSubmit={onSubmit} className="flex items-center">
+        <Input
+          value={value}
+          onChange={onInputChange}
+          onFocus={onFocus}
+          placeholder="Search streams and users..."
+          className="rounded-r-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0"
+        />
+        {value && (
+          <X
+            className="absolute top-2.5 right-14 h-5 w-5 text-muted-foreground cursor-pointer hover:opacity-75 transition z-10"
+            onClick={onClear}
+          />
+        )}
+        <Button
+          type="submit"
+          size="sm"
+          variant="secondary"
+          className="rounded-l-none"
+        >
+          <SearchIcon className="h-5 w-5 text-muted-foreground" />
+        </Button>
+      </form>
+
+      {showPreview && (
+        <SearchPreview
+          results={results}
+          isLoading={isLoading}
+          error={error}
+          query={value}
+          onClose={closePreview}
         />
       )}
-      <Button
-        type="submit"
-        size="sm"
-        variant="secondary"
-        className="rounded-l-none"
-      >
-        <SearchIcon className="h-5 w-5 text-muted-foreground" />
-      </Button>
-    </form>
+    </div>
   );
 };
