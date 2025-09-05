@@ -1,14 +1,41 @@
-import { getStreams, getLiveStreams } from "@/lib/feed-service";
+import { db } from "@/lib/db";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { ResultCard, ResultCardSkeleton } from "./result-card";
 import { LiveMarquee } from "./live-marquee";
 
 export const Results = async () => {
-  const [streams, liveStreams] = await Promise.all([
-    getStreams(),
-    getLiveStreams(),
-  ]);
+  // Simplified direct database call to avoid feed-service issues
+  const streams = await db.stream.findMany({
+    select: {
+      id: true,
+      user: {
+        select: {
+          id: true,
+          username: true,
+          imageUrl: true,
+        },
+      },
+      isLive: true,
+      title: true,
+      thumbnail: true,
+      viewerCount: true,
+      updatedAt: true,
+      _count: {
+        select: {
+          chatMessages: true,
+        },
+      },
+    },
+    orderBy: [
+      { isLive: "desc" },
+      { viewerCount: "desc" },
+      { updatedAt: "desc" },
+    ],
+    take: 50,
+  });
+
+  const liveStreams = streams.filter(stream => stream.isLive);
 
   const liveStreamData = streams.filter(stream => stream.isLive);
   const offlineStreamData = streams.filter(stream => !stream.isLive);

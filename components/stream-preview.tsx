@@ -12,7 +12,7 @@ import { useViewerToken } from "@/hooks/use-viewer-token";
 interface StreamPreviewProps {
   hostIdentity: string;
   className?: string;
-  isHovered: boolean;
+  isHovered?: boolean;
 }
 
 const PreviewVideo = ({ hostIdentity }: { hostIdentity: string }) => {
@@ -39,7 +39,7 @@ const PreviewVideo = ({ hostIdentity }: { hostIdentity: string }) => {
 
   if (!participant || tracks.length === 0) {
     return (
-      <div className="w-full h-full bg-muted animate-pulse flex items-center justify-center">
+      <div className="absolute inset-0 w-full h-full bg-muted animate-pulse flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
       </div>
     );
@@ -48,7 +48,7 @@ const PreviewVideo = ({ hostIdentity }: { hostIdentity: string }) => {
   return (
     <video
       ref={videoRef}
-      className="w-full h-full object-cover"
+      className="absolute inset-0 w-full h-full object-cover"
       muted
       autoPlay
       playsInline

@@ -64,41 +64,27 @@ export const ResultCard = ({ data }: ResultCardProps) => {
         <div className="relative aspect-video bg-muted overflow-hidden">
           {data.isLive ? (
             <>
-              {/* LiveKit Live Preview */}
-              <div className={cn(
-                "absolute inset-0 w-full h-full transition-opacity duration-300",
-                isHovered ? "opacity-100" : "opacity-0"
-              )}>
+              {/* Always show live video for live streams */}
+              <div className="absolute inset-0 w-full h-full">
                 <StreamPreview 
                   hostIdentity={data.user.id}
                   className="w-full h-full"
+                  isHovered={isHovered}
                 />
               </div>
               
-              {/* Thumbnail Fallback */}
-              {data.thumbnail && !imageError ? (
-                <img
-                  src={data.thumbnail}
-                  alt={data.title}
-                  className={cn(
-                    "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-                    isHovered ? "opacity-0" : "opacity-100"
-                  )}
-                  onError={() => setImageError(true)}
+              {/* User avatar overlay - shows on top of live video */}
+              <div className={cn(
+                "absolute inset-0 flex items-center justify-center w-full h-full bg-black/40 transition-opacity duration-300",
+                isHovered ? "opacity-0" : "opacity-70"
+              )}>
+                <UserAvatar
+                  username={data.user.username}
+                  imageUrl={data.user.imageUrl}
+                  isLive={data.isLive}
+                  size="lg"
                 />
-              ) : (
-                <div className={cn(
-                  "absolute inset-0 flex items-center justify-center w-full h-full bg-gradient-to-br from-muted to-muted/50 transition-opacity duration-300",
-                  isHovered ? "opacity-0" : "opacity-100"
-                )}>
-                  <UserAvatar
-                    username={data.user.username}
-                    imageUrl={data.user.imageUrl}
-                    isLive={data.isLive}
-                    size="lg"
-                  />
-                </div>
-              )}
+              </div>
             </>
           ) : (
             /* Static Thumbnail or Avatar for offline streams */
