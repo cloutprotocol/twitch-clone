@@ -54,7 +54,7 @@ export const SearchPreview = ({
 
       {!isLoading && !error && results.length === 0 && query.length >= 2 && (
         <div className="p-4 text-sm text-muted-foreground">
-          No results found for "{query}"
+          No results found for &quot;{query}&quot;
         </div>
       )}
 
@@ -111,7 +111,7 @@ export const SearchPreview = ({
               onClick={onClose}
               className="block p-3 text-center text-sm text-blue-500 hover:bg-muted/50 border-t border-border"
             >
-              View all results for "{query}"
+              View all results for &quot;{query}&quot;
             </Link>
           )}
         </>

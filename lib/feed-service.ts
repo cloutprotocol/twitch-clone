@@ -38,11 +38,20 @@ export const getStreams = async (limit: number = 50) => {
         isLive: true,
         title: true,
         thumbnail: true,
+        viewerCount: true,
         updatedAt: true,
+        _count: {
+          select: {
+            chatMessages: true,
+          },
+        },
       },
       orderBy: [
         {
           isLive: "desc",
+        },
+        {
+          viewerCount: "desc",
         },
         {
           updatedAt: "desc",
@@ -64,11 +73,20 @@ export const getStreams = async (limit: number = 50) => {
         isLive: true,
         title: true,
         thumbnail: true,
+        viewerCount: true,
         updatedAt: true,
+        _count: {
+          select: {
+            chatMessages: true,
+          },
+        },
       },
       orderBy: [
         {
           isLive: "desc",
+        },
+        {
+          viewerCount: "desc",
         },
         {
           updatedAt: "desc",
@@ -79,4 +97,26 @@ export const getStreams = async (limit: number = 50) => {
   }
 
   return streams;
+};
+
+export const getLiveStreams = async () => {
+  return await db.stream.findMany({
+    where: {
+      isLive: true,
+    },
+    select: {
+      id: true,
+      title: true,
+      user: {
+        select: {
+          username: true,
+          imageUrl: true,
+        },
+      },
+      viewerCount: true,
+    },
+    orderBy: {
+      viewerCount: "desc",
+    },
+  });
 };

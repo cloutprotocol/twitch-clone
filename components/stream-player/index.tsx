@@ -11,6 +11,7 @@ import { ChatToggle } from "./chat-toggle";
 import { Chat, ChatSkeleton } from "./chat";
 import { Video, VideoSkeleton } from "./video";
 import { Header, HeaderSkeleton } from "./header";
+import { ViewerTracker } from "./viewer-tracker";
 
 type CustomStream = {
   id: string;
@@ -78,6 +79,11 @@ export const StreamPlayer = ({
           collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
         )}
       >
+        <ViewerTracker
+          streamId={stream.id}
+          hostIdentity={user.id}
+          viewerIdentity={identity}
+        />
         <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
           <Video hostName={user.username} hostIdentity={user.id} />
           <Header

@@ -66,6 +66,7 @@ model Stream {
   isChatEnabled       Boolean       @default(true)
   isChatDelayed       Boolean       @default(false)
   isChatFollowersOnly Boolean       @default(false)
+  viewerCount         Int           @default(0)
   userId              String        @unique @db.ObjectId
   user                User          @relation(fields: [userId], references: [id])
   chatMessages        ChatMessage[]
@@ -73,6 +74,7 @@ model Stream {
   updatedAt           DateTime      @updatedAt
 
   @@index([isLive, updatedAt])
+  @@index([viewerCount])
 }
 
 model ChatMessage {
