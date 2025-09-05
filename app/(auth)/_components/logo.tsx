@@ -10,9 +10,7 @@ const font = Poppins({
 export const Logo = () => {
   return (
     <div className="flex flex-col items-center gap-y-4">
-      <div className="rounded-full p-1">
-        <div className="text-5xl">🧊</div>
-      </div>
+      <div className="text-5xl">▣</div>
       <div className={cn(font.className, "flex flex-col items-center")}>
         <p className="text-xl font-semibold">rarecube.tv</p>
       </div>

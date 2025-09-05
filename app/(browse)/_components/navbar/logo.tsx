@@ -11,10 +11,8 @@ const font = Poppins({
 export const Logo = () => {
   return (
     <Link href="/">
-      <div className="flex items-center gap-x-4 hover:opacity-75 transition">
-        <div className="bg-white rounded-full p-3 mr-12 shrink-0 lg:mr-0 lg:shrink">
-          <div className="text-2xl">🧊</div>
-        </div>
+      <div className="flex items-center gap-x-2 hover:opacity-75 transition">
+        <div className="text-2xl shrink-0">▣</div>
         <div className={cn("hidden lg:block", font.className)}>
           <p className="text-lg font-semibold">rarecube.tv</p>
         </div>
