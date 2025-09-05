@@ -1,4 +1,4 @@
-# Setup Documentation
+# rarecube.tv Setup Documentation
 
 ## Issues Encountered During Initial Setup
 

@@ -9,8 +9,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Twitch",
-  description: "Twitch is the world's leading video platform and community for gamers.",
+  title: "rarecube.tv",
+  description: "rarecube.tv is a cutting-edge streaming platform for creators and communities.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
           <ThemeProvider
             attribute="class"
             forcedTheme="dark"
-            storageKey="twitch-theme"
+            storageKey="rarecube-theme"
           >
             <Toaster theme="light" position="top-right" />
             {children}

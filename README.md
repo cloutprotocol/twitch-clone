@@ -1,8 +1,8 @@
-# Fullstack Twitch Clone
+# rarecube.tv - Streaming Platform
 
 <img src="Logo.jpeg" alt="Logo" width="400" height="400"/>
 
-Welcome to the Fullstack Twitch Clone repository! This project utilizes Next.js 14, Livestreaming capabilities, React, Prisma, Stripe, Tailwind, and MongoDB to create a comprehensive Twitch-like streaming platform.
+Welcome to rarecube.tv! This project utilizes Next.js 14, Livestreaming capabilities, React, Prisma, Stripe, Tailwind, and MongoDB to create a comprehensive streaming platform.
 
 ## Key Features
 
@@ -129,7 +129,7 @@ Welcome to the Fullstack Twitch Clone repository! This project utilizes Next.js 
 ## Cloning the repository
 
 ```bash
-git clone https://github.com/yuvi76/twitch-clone.git
+git clone https://github.com/cloutprotocol/twitch-clone.git
 ```
 
 ## Installation
