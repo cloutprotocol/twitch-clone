@@ -73,18 +73,6 @@ export const ResultCard = ({ data }: ResultCardProps) => {
                 />
               </div>
               
-              {/* User avatar overlay - shows on top of live video */}
-              <div className={cn(
-                "absolute inset-0 flex items-center justify-center w-full h-full bg-black/40 transition-opacity duration-300",
-                isHovered ? "opacity-0" : "opacity-70"
-              )}>
-                <UserAvatar
-                  username={data.user.username}
-                  imageUrl={data.user.imageUrl}
-                  isLive={data.isLive}
-                  size="lg"
-                />
-              </div>
             </>
           ) : (
             /* Static Thumbnail or Avatar for offline streams */

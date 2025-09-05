@@ -11,6 +11,13 @@ export const getUserByUsername = async (username: string) => {
       username: true,
       bio: true,
       imageUrl: true,
+      twitterUrl: true,
+      instagramUrl: true,
+      tiktokUrl: true,
+      discordUrl: true,
+      telegramUrl: true,
+      twitchUrl: true,
+      websiteUrl: true,
       stream: {
         select: {
           id: true,

@@ -10,17 +10,32 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { onFollow, onUnfollow } from "@/actions/follow";
+import { ProfileEditModal } from "./profile-edit-modal";
 
 interface ActionsProps {
   hostIdentity: string;
   isFollowing: boolean;
   isHost: boolean;
+  bio?: string | null;
+  streamTitle: string;
+  socialLinks?: {
+    twitter?: string;
+    instagram?: string;
+    tiktok?: string;
+    discord?: string;
+    telegram?: string;
+    twitch?: string;
+    website?: string;
+  };
 }
 
 export const Actions = ({
   hostIdentity,
   isFollowing,
   isHost,
+  bio,
+  streamTitle,
+  socialLinks,
 }: ActionsProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -60,9 +75,27 @@ export const Actions = ({
     }
   };
 
+  if (isHost) {
+    return (
+      <ProfileEditModal
+        initialValues={{
+          bio: bio || "",
+          streamTitle: streamTitle,
+          twitterUrl: socialLinks?.twitter || "",
+          instagramUrl: socialLinks?.instagram || "",
+          tiktokUrl: socialLinks?.tiktok || "",
+          discordUrl: socialLinks?.discord || "",
+          telegramUrl: socialLinks?.telegram || "",
+          twitchUrl: socialLinks?.twitch || "",
+          websiteUrl: socialLinks?.website || "",
+        }}
+      />
+    );
+  }
+
   return (
     <Button
-      disabled={isPending || isHost}
+      disabled={isPending}
       onClick={toggleFollow}
       variant="primary"
       size="sm"

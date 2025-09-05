@@ -58,38 +58,20 @@ const PreviewVideo = ({ hostIdentity }: { hostIdentity: string }) => {
 
 export const StreamPreview = ({ hostIdentity, className, isHovered }: StreamPreviewProps) => {
   const { token } = useViewerToken(hostIdentity);
-  const [shouldConnect, setShouldConnect] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const [shouldConnect, setShouldConnect] = useState(true); // Always try to connect for live streams
 
-  // Debounce connection to prevent rapid connect/disconnect
-  useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    if (isHovered) {
-      // Delay connection by 500ms to avoid accidental hovers
-      timeoutRef.current = setTimeout(() => {
-        setShouldConnect(true);
-      }, 500);
-    } else {
-      // Disconnect immediately when not hovered
-      setShouldConnect(false);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [isHovered]);
-
-  if (!token || !shouldConnect) {
-    return null;
+  if (!token) {
+    return (
+      <div className={`relative ${className}`}>
+        <div className="absolute inset-0 w-full h-full bg-muted animate-pulse flex items-center justify-center">
+          <div className="w-8 h-8 border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className={className}>
+    <div className={`relative ${className}`}>
       <LiveKitRoom
         token={token}
         serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL!}
