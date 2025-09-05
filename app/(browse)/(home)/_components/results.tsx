@@ -15,11 +15,8 @@ export const Results = async () => {
 
   return (
     <div className="w-full">
-      {/* Live Streams Marquee - Full Width */}
-      <LiveMarquee streams={liveStreams} />
-
       {/* Content Container */}
-      <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+      <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 space-y-12">
         {/* Live Streams Section */}
         {liveStreamData.length > 0 && (
           <section>
@@ -79,6 +76,9 @@ export const Results = async () => {
           </div>
         )}
       </div>
+
+      {/* Live Streams Marquee - Footer Position */}
+      <LiveMarquee streams={liveStreams} />
     </div>
   );
 };

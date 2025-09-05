@@ -23,7 +23,7 @@ export const LiveMarquee = ({ streams }: LiveMarqueeProps) => {
   if (streams.length === 0) return null;
 
   return (
-    <div className="w-full bg-black text-white py-3 overflow-hidden shadow-lg">
+    <div className="fixed bottom-0 left-0 w-full bg-black text-white py-3 overflow-hidden shadow-lg z-[10]">
       <div className="flex animate-marquee whitespace-nowrap">
         {[...streams, ...streams].map((stream, index) => (
           <Link

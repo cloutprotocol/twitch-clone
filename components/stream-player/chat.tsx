@@ -122,11 +122,11 @@ export const Chat = ({
       send(value);
     }
 
-    // Persist to database and add to local state for immediate feedback
+    // Persist to database (will appear on refresh)
     try {
-      const newMessage = await onSendMessage(streamId, value, viewerName);
-      // Add to persisted messages so it shows up after refresh
-      setPersistedMessages(prev => [...prev, newMessage]);
+      await onSendMessage(streamId, value, viewerName);
+      // Don't add to persistedMessages - let LiveKit handle real-time display
+      // The message will appear in initialMessages on next page load
     } catch (error) {
       console.error("Failed to persist message:", error);
     }

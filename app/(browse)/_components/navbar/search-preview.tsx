@@ -38,7 +38,7 @@ export const SearchPreview = ({
   }
 
   return (
-    <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-50 max-h-96 overflow-y-auto">
+    <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg z-[9999] max-h-96 overflow-y-auto">
       {isLoading && (
         <div className="flex items-center justify-center p-4">
           <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -80,7 +80,7 @@ export const SearchPreview = ({
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   {result.isLive && (
-                    <div className="absolute -bottom-1 -right-1 bg-red-500 text-white text-xs px-1 rounded">
+                    <div className="absolute -bottom-2 right-0.5 bg-red-500 text-white text-xs px-1 rounded">
                       LIVE
                     </div>
                   )}
