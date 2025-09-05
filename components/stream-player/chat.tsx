@@ -7,14 +7,29 @@ import {
   useChat,
   useConnectionState,
   useRemoteParticipant,
+  ReceivedChatMessage,
 } from "@livekit/components-react";
 
 import { ChatVariant, useChatSidebar } from "@/store/use-chat-sidebar";
+import { onSendMessage } from "@/actions/chat";
 
 import { ChatForm, ChatFormSkeleton } from "./chat-form";
 import { ChatList, ChatListSkeleton } from "./chat-list";
 import { ChatHeader, ChatHeaderSkeleton } from "./chat-header";
 import { ChatCommunity } from "./chat-community";
+
+interface ChatMessage {
+  id: string;
+  content: string;
+  username: string;
+  userId?: string;
+  createdAt: Date;
+  user?: {
+    id: string;
+    username: string;
+    imageUrl: string;
+  };
+}
 
 interface ChatProps {
   hostName: string;
@@ -24,6 +39,8 @@ interface ChatProps {
   isChatEnabled: boolean;
   isChatDelayed: boolean;
   isChatFollowersOnly: boolean;
+  streamId: string;
+  initialMessages?: ChatMessage[];
 }
 
 export const Chat = ({
@@ -34,6 +51,8 @@ export const Chat = ({
   isChatEnabled,
   isChatDelayed,
   isChatFollowersOnly,
+  streamId,
+  initialMessages = [],
 }: ChatProps) => {
   const matches = useMediaQuery("(max-width: 1024px)");
   const { variant, onExpand } = useChatSidebar((state) => state);
@@ -41,11 +60,12 @@ export const Chat = ({
   const participant = useRemoteParticipant(hostIdentity);
 
   const isOnline = participant && connectionState === ConnectionState.Connected;
-
   const isHidden = !isChatEnabled || !isOnline;
 
   const [value, setValue] = useState("");
-  const { chatMessages: messages, send } = useChat();
+  const [persistedMessages, setPersistedMessages] = useState<ChatMessage[]>(initialMessages);
+  const { chatMessages: liveMessages, send } = useChat();
+  const [hasConnected, setHasConnected] = useState(false);
 
   useEffect(() => {
     if (matches) {
@@ -53,14 +73,64 @@ export const Chat = ({
     }
   }, [matches, onExpand]);
 
-  const reversedMessages = useMemo(() => {
-    return messages.sort((a, b) => b.timestamp - a.timestamp);
-  }, [messages]);
+  // Track when we first connect to LiveKit
+  useEffect(() => {
+    if (isOnline && !hasConnected) {
+      setHasConnected(true);
+    }
+  }, [isOnline, hasConnected]);
 
-  const onSubmit = () => {
-    if (!send) return;
+  // Convert persisted messages to LiveKit format for display
+  const convertedPersistedMessages: ReceivedChatMessage[] = useMemo(() => {
+    return persistedMessages.map((msg) => ({
+      message: msg.content,
+      from: {
+        identity: msg.userId || `guest-${msg.username}`,
+        name: msg.username,
+      },
+      timestamp: msg.createdAt.getTime(),
+      id: msg.id,
+    }));
+  }, [persistedMessages]);
 
-    send(value);
+  // Always show persisted messages + live messages, with smart deduplication
+  const displayMessages = useMemo(() => {
+    // Always start with persisted messages as the foundation
+    const baseMessages = [...convertedPersistedMessages];
+    
+    // Add live messages that aren't already in persisted messages
+    const liveMessagesToAdd = liveMessages.filter(liveMsg => {
+      // Check if this live message is already in persisted messages
+      // We'll consider it a duplicate if same user + same content within 10 seconds
+      return !baseMessages.some(persistedMsg => 
+        persistedMsg.from.name === liveMsg.from.name &&
+        persistedMsg.message === liveMsg.message &&
+        Math.abs(persistedMsg.timestamp - liveMsg.timestamp) < 10000
+      );
+    });
+    
+    // Combine and sort by timestamp
+    const allMessages = [...baseMessages, ...liveMessagesToAdd];
+    return allMessages.sort((a, b) => b.timestamp - a.timestamp);
+  }, [convertedPersistedMessages, liveMessages]);
+
+  const onSubmit = async () => {
+    if (!value.trim()) return;
+
+    // Send via LiveKit for real-time display
+    if (send) {
+      send(value);
+    }
+
+    // Persist to database and add to local state for immediate feedback
+    try {
+      const newMessage = await onSendMessage(streamId, value, viewerName);
+      // Add to persisted messages so it shows up after refresh
+      setPersistedMessages(prev => [...prev, newMessage]);
+    } catch (error) {
+      console.error("Failed to persist message:", error);
+    }
+
     setValue("");
   };
 
@@ -73,7 +143,7 @@ export const Chat = ({
       <ChatHeader />
       {variant === ChatVariant.CHAT && (
         <>
-          <ChatList messages={reversedMessages} isHidden={isHidden} />
+          <ChatList messages={displayMessages} isHidden={isHidden} />
           <ChatForm
             onSubmit={onSubmit}
             value={value}

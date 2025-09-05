@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getUserByUsername } from "@/lib/user-service";
 import { isFollowingUser } from "@/lib/follow-service";
 import { isBlockedByUser } from "@/lib/block-service";
+import { getChatMessages } from "@/lib/chat-service";
 import { StreamPlayer } from "@/components/stream-player";
 
 interface UserPageProps {
@@ -19,9 +20,10 @@ const UserPage = async ({ params }: UserPageProps) => {
   }
 
   // Parallelize these queries for better performance
-  const [isFollowing, isBlocked] = await Promise.all([
+  const [isFollowing, isBlocked, chatMessages] = await Promise.all([
     isFollowingUser(user.id),
-    isBlockedByUser(user.id)
+    isBlockedByUser(user.id),
+    getChatMessages(user.stream.id).catch(() => []) // Fallback to empty array on error
   ]);
 
   if (isBlocked) {
@@ -29,7 +31,12 @@ const UserPage = async ({ params }: UserPageProps) => {
   }
 
   return (
-    <StreamPlayer user={user} stream={user.stream} isFollowing={isFollowing} />
+    <StreamPlayer 
+      user={user} 
+      stream={user.stream} 
+      isFollowing={isFollowing}
+      chatMessages={chatMessages}
+    />
   );
 };
 

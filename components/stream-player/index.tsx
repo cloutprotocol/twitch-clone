@@ -31,16 +31,31 @@ type CustomUser = {
   _count: { followedBy: number };
 };
 
+interface ChatMessage {
+  id: string;
+  content: string;
+  username: string;
+  userId?: string;
+  createdAt: Date;
+  user?: {
+    id: string;
+    username: string;
+    imageUrl: string;
+  };
+}
+
 interface StreamPlayerProps {
   user: CustomUser;
   stream: CustomStream;
   isFollowing: boolean;
+  chatMessages?: ChatMessage[];
 }
 
 export const StreamPlayer = ({
   user,
   stream,
   isFollowing,
+  chatMessages = [],
 }: StreamPlayerProps) => {
   const { token, name, identity } = useViewerToken(user.id);
   const { collapsed } = useChatSidebar((state) => state);
@@ -96,6 +111,8 @@ export const StreamPlayer = ({
             isChatEnabled={stream.isChatEnabled}
             isChatDelayed={stream.isChatDelayed}
             isChatFollowersOnly={stream.isChatFollowersOnly}
+            streamId={stream.id}
+            initialMessages={chatMessages}
           />
         </div>
       </LiveKitRoom>
