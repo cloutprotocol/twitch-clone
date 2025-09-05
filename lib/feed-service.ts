@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
 
-export const getStreams = async () => {
+export const getStreams = async (limit: number = 50) => {
   let userId;
 
   try {
@@ -28,10 +28,17 @@ export const getStreams = async () => {
       },
       select: {
         id: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            imageUrl: true,
+          },
+        },
         isLive: true,
         title: true,
         thumbnail: true,
+        updatedAt: true,
       },
       orderBy: [
         {
@@ -41,15 +48,23 @@ export const getStreams = async () => {
           updatedAt: "desc",
         },
       ],
+      take: limit,
     });
   } else {
     streams = await db.stream.findMany({
       select: {
         id: true,
-        user: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            imageUrl: true,
+          },
+        },
         isLive: true,
         title: true,
         thumbnail: true,
+        updatedAt: true,
       },
       orderBy: [
         {
@@ -59,6 +74,7 @@ export const getStreams = async () => {
           updatedAt: "desc",
         },
       ],
+      take: limit,
     });
   }
 

@@ -1,30 +1,24 @@
+import { cache } from "react";
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
 
-export const isBlockedByUser = async (id: string) => {
+export const isBlockedByUser = cache(async (id: string) => {
   try {
     const self = await getSelf();
 
-    const otherUser = await db.user.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!otherUser) {
-      throw new Error("User not found");
-    }
-
-    if (self.id === otherUser.id) {
+    if (self.id === id) {
       return false;
     }
 
     const existingBlock = await db.block.findUnique({
       where: {
         blockerId_blockedId: {
-          blockerId: otherUser.id,
+          blockerId: id,
           blockedId: self.id,
         },
+      },
+      select: {
+        id: true,
       },
     });
 
@@ -32,7 +26,7 @@ export const isBlockedByUser = async (id: string) => {
   } catch {
     return false;
   }
-};
+});
 
 export const blockUser = async (id: string) => {
   const self = await getSelf();

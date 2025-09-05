@@ -7,8 +7,11 @@ import { Toggle, ToggleSkeleton } from "./toggle";
 import { Recommended, RecommendedSkeleton } from "./recommended";
 
 export const Sidebar = async () => {
-  const recommended = await getRecommended();
-  const following = await getFollowedUsers();
+  // Parallelize sidebar data fetching
+  const [recommended, following] = await Promise.all([
+    getRecommended(),
+    getFollowedUsers()
+  ]);
 
   return (
     <Wrapper>

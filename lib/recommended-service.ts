@@ -13,11 +13,26 @@ export const getRecommended = async () => {
 
   let users = [];
   if (userId) {
+    // Single optimized query that excludes followed and blocked users
     users = await db.user.findMany({
       where: {
-        NOT: {
-          id: userId,
-        },
+        NOT: [
+          { id: userId },
+          {
+            followedBy: {
+              some: {
+                followerId: userId,
+              },
+            },
+          },
+          {
+            blockedby: {
+              some: {
+                blockerId: userId,
+              },
+            },
+          },
+        ],
       },
       include: {
         stream: {
@@ -31,32 +46,8 @@ export const getRecommended = async () => {
           createdAt: "desc",
         },
       ],
+      take: 50, // Limit results for better performance
     });
-
-    const following = await db.follow.findMany({
-      where: {
-        followerId: userId,
-      },
-      select: {
-        followingId: true,
-      },
-    });
-
-    const blocked = await db.block.findMany({
-      where: {
-        blockerId: userId,
-      },
-      select: {
-        blockedId: true,
-      },
-    });
-
-    const followingIds = following.map((f) => f.followingId);
-    const blockedIds = blocked.map((b) => b.blockedId);
-
-    users = users.filter(
-      (u) => !followingIds.includes(u.id) && !blockedIds.includes(u.id)
-    );
   } else {
     users = await db.user.findMany({
       include: {
@@ -69,6 +60,7 @@ export const getRecommended = async () => {
       orderBy: {
         createdAt: "desc",
       },
+      take: 50, // Limit results for better performance
     });
   }
 

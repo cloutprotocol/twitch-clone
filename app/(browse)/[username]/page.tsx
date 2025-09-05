@@ -18,8 +18,11 @@ const UserPage = async ({ params }: UserPageProps) => {
     notFound();
   }
 
-  const isFollowing = await isFollowingUser(user.id);
-  const isBlocked = await isBlockedByUser(user.id);
+  // Parallelize these queries for better performance
+  const [isFollowing, isBlocked] = await Promise.all([
+    isFollowingUser(user.id),
+    isBlockedByUser(user.id)
+  ]);
 
   if (isBlocked) {
     notFound();
