@@ -98,7 +98,7 @@ export const getSearch = async (term?: string) => {
     });
 
     // Transform the results to match expected format
-    streams = (results as any[]).map((result: any) => ({
+    streams = (results as unknown as any[]).map((result: any) => ({
       id: result._id.$oid,
       title: result.title,
       isLive: result.isLive,

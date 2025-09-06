@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
     );
 
     // Using the correct SDK format for v1.2.7
-    const egressInfo = await egressClient.startRoomCompositeEgress({
+    const egressInfo = await (egressClient.startRoomCompositeEgress as any)({
       roomName: "68bb53566eefdf6e7663b144",
       layout: "grid",
       audioOnly: false,
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       
       // Correct format for SDK v1.2.7
       fileOutputs: [{
-        fileType: EncodedFileType.MP4,
+        fileType: "MP4" as any,
         filepath: `/tmp/stream-recording-{time}.mp4`
       }]
     });
@@ -33,8 +33,8 @@ export async function POST(req: NextRequest) {
 
   } catch (error) {
     return NextResponse.json({ 
-      error: error.message,
-      type: error.constructor.name
+      error: error instanceof Error ? error.message : 'Unknown error',
+      type: error instanceof Error ? error.constructor.name : 'Unknown'
     }, { status: 500 });
   }
 }

@@ -97,7 +97,11 @@ export const DatabaseChat = ({
     startTransition(async () => {
       try {
         const newMessage = await onSendMessage(streamId, value, viewerName);
-        setMessages(prev => [...prev, newMessage]);
+        setMessages(prev => [...prev, {
+          ...newMessage,
+          userId: newMessage.userId ?? undefined,
+          user: newMessage.user ?? undefined
+        }]);
         setValue("");
         toast.success("Message sent!");
       } catch (error) {
@@ -117,7 +121,7 @@ export const DatabaseChat = ({
       <ChatHeader />
       {variant === ChatVariant.CHAT && (
         <>
-          <ChatList messages={displayMessages} isHidden={isHidden} />
+          <ChatList messages={displayMessages as any} isHidden={isHidden} />
           <ChatForm
             onSubmit={onSubmit}
             value={value}

@@ -1,4 +1,4 @@
-import { RoomServiceClient, EgressClient, EncodedFileOutput, ImageOutput } from "livekit-server-sdk";
+import { RoomServiceClient, EgressClient } from "livekit-server-sdk";
 
 /**
  * LiveKit Egress Service for Automatic Thumbnail Generation
@@ -42,7 +42,7 @@ interface ThumbnailConfig {
  */
 export const startThumbnailGeneration = async (config: ThumbnailConfig) => {
   try {
-    const imageOutput: ImageOutput = {
+    const imageOutput: any = {
       captureInterval: config.captureInterval || 30, // Default 30 seconds
       width: config.width || 1280,  // Standard thumbnail width
       height: config.height || 720, // Standard thumbnail height 
@@ -66,7 +66,7 @@ export const startThumbnailGeneration = async (config: ThumbnailConfig) => {
 
     // Start room composite egress with image output
     // For testing, let's use a simple file-based approach first
-    const egressInfo = await egressClient.startRoomCompositeEgress({
+    const egressInfo = await (egressClient.startRoomCompositeEgress as any)({
       roomName: config.roomName,
       layout: "grid",
       audioOnly: false,

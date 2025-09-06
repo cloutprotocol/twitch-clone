@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
+import { useMediaQuery } from "usehooks-ts";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,22 +22,30 @@ export const NavItem = ({
   href,
   isActive,
 }: NavItemProps) => {
-  const { collapsed } = useCreatorSidebar((state) => state);
+  const { collapsed, onCollapse } = useCreatorSidebar((state) => state);
+  const isMobile = useMediaQuery("(max-width: 1024px)");
+
+  const handleClick = () => {
+    // Auto-close sidebar on mobile after navigation
+    if (isMobile) {
+      onCollapse();
+    }
+  };
 
   return (
     <Button
       asChild
       variant="ghost"
       className={cn(
-        "w-full h-12",
+        "w-full h-12 transition-colors duration-200",
         collapsed ? "justify-center" : "justify-start",
-        isActive && "bg-accent"
+        isActive && "bg-accent text-accent-foreground"
       )}
     >
-      <Link href={href}>
+      <Link href={href} onClick={handleClick}>
         <div className="flex items-center gap-x-4">
           <Icon className={cn("h-4 w-4", collapsed ? "mr-0" : "mr-2")} />
-          {!collapsed && <span>{label}</span>}
+          {!collapsed && <span className="truncate">{label}</span>}
         </div>
       </Link>
     </Button>

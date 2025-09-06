@@ -124,13 +124,9 @@ export const getFollowedUsers = async () => {
           },
         },
       },
-      select: {
-        id: true,
+      include: {
         following: {
-          select: {
-            id: true,
-            username: true,
-            imageUrl: true,
+          include: {
             stream: {
               select: {
                 isLive: true,

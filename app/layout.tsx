@@ -19,13 +19,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
-      <html lang="en">
+    <ClerkProvider 
+      appearance={{ baseTheme: dark }}
+    >
+      <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
           <ThemeProvider
             attribute="class"
             forcedTheme="dark"
             storageKey="rarecube-theme"
+            enableSystem={false}
+            disableTransitionOnChange
           >
             <Toaster theme="light" position="top-right" />
             {children}

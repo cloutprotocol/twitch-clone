@@ -88,7 +88,7 @@ export const DebugResults = async () => {
         <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
           <div className="text-center py-16">
             <h2 className="text-2xl font-bold mb-4 text-red-500">Debug Error</h2>
-            <p className="text-muted-foreground">{error.message}</p>
+            <p className="text-muted-foreground">{error instanceof Error ? error.message : 'An unknown error occurred'}</p>
           </div>
         </div>
       </div>

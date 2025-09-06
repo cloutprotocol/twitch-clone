@@ -81,7 +81,7 @@ export const Chat = ({
   }, [isOnline, hasConnected]);
 
   // Convert persisted messages to LiveKit format for display
-  const convertedPersistedMessages: ReceivedChatMessage[] = useMemo(() => {
+  const convertedPersistedMessages: any[] = useMemo(() => {
     return persistedMessages.map((msg) => ({
       message: msg.content,
       from: {
@@ -103,7 +103,7 @@ export const Chat = ({
       // Check if this live message is already in persisted messages
       // We'll consider it a duplicate if same user + same content within 10 seconds
       return !baseMessages.some(persistedMsg => 
-        persistedMsg.from.name === liveMsg.from.name &&
+        persistedMsg.from.name === liveMsg.from?.name &&
         persistedMsg.message === liveMsg.message &&
         Math.abs(persistedMsg.timestamp - liveMsg.timestamp) < 10000
       );

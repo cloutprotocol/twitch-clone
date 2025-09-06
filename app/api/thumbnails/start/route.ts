@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Failed to start thumbnails:", error);
     return NextResponse.json(
-      { error: "Failed to start thumbnail generation", details: error.message },
+      { error: "Failed to start thumbnail generation", details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

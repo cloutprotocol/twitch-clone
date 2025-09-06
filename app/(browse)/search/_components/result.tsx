@@ -22,7 +22,7 @@ export const Results = async ({ term }: ResultsProps) => {
       )}
       <div className="flex flex-col gap-y-4">
         {data.map((result) => (
-          <ResultCard data={result} key={result.id} />
+          <ResultCard data={result as any} key={result.id} />
         ))}
       </div>
     </div>

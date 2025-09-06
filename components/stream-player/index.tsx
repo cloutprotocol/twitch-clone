@@ -101,13 +101,13 @@ export const StreamPlayer = ({
             bio={user.bio}
             followedByCount={user._count.followedBy}
             socialLinks={{
-              twitter: user.twitterUrl,
-              instagram: user.instagramUrl,
-              tiktok: user.tiktokUrl,
-              discord: user.discordUrl,
-              telegram: user.telegramUrl,
-              twitch: user.twitchUrl,
-              website: user.websiteUrl,
+              twitter: user.twitterUrl ?? undefined,
+              instagram: user.instagramUrl ?? undefined,
+              tiktok: user.tiktokUrl ?? undefined,
+              discord: user.discordUrl ?? undefined,
+              telegram: user.telegramUrl ?? undefined,
+              twitch: user.twitchUrl ?? undefined,
+              website: user.websiteUrl ?? undefined,
             }}
           />
         </div>

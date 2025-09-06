@@ -9,31 +9,31 @@ export async function POST(req: NextRequest) {
       process.env.LIVEKIT_API_SECRET!
     );
 
-    // Test with minimal configuration
+    // Test with minimal configuration using new API signature
     const egressInfo = await egressClient.startRoomCompositeEgress({
-      roomName: "68bb53566eefdf6e7663b144", // Your live room ID from test
+      roomName: "68bb53566eefdf6e7663b144",
       layout: "grid",
-      audioOnly: false,
-      videoOnly: false,
-      outputs: {
+      output: {
         file: {
           filepath: `/tmp/test-recording-{time}.mp4`
         }
-      }
+      },
+      audioOnly: false,
+      videoOnly: false
     });
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       egressId: egressInfo.egressId,
       status: egressInfo.status,
-      message: "Recording started - thumbnails can be extracted from video file" 
+      message: "Recording started - thumbnails can be extracted from video file"
     });
 
   } catch (error) {
     console.error("Egress test failed:", error);
-    return NextResponse.json({ 
-      error: error.message,
-      stack: error.stack?.split('\n').slice(0, 3) 
+    return NextResponse.json({
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack?.split('\n').slice(0, 3) : undefined
     }, { status: 500 });
   }
 }

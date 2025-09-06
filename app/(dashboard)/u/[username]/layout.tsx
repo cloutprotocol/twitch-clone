@@ -5,6 +5,7 @@ import { getSelfByUsername } from "@/lib/auth-service";
 import { Navbar } from "./_components/navbar";
 import { Sidebar } from "./_components/sidebar";
 import { Container } from "./_components/container";
+import { MobileOverlay } from "./_components/mobile-overlay";
 
 interface CreatorLayoutProps {
   params: { username: string };
@@ -24,6 +25,7 @@ const CreatorLayout = async ({ params, children }: CreatorLayoutProps) => {
       <div className="flex h-full pt-20">
         <Sidebar />
         <Container>{children}</Container>
+        <MobileOverlay />
       </div>
     </>
   );

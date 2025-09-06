@@ -35,7 +35,11 @@ const UserPage = async ({ params }: UserPageProps) => {
       user={user} 
       stream={user.stream} 
       isFollowing={isFollowing}
-      chatMessages={chatMessages}
+      chatMessages={chatMessages.map(msg => ({
+        ...msg,
+        userId: msg.userId ?? undefined,
+        user: msg.user ?? undefined
+      }))}
     />
   );
 };

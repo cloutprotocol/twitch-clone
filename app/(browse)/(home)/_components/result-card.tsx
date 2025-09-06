@@ -140,12 +140,13 @@ export const ResultCard = ({ data }: ResultCardProps) => {
         {/* Content */}
         <div className="p-4">
           <div className="flex items-start space-x-3">
-            <UserAvatar
-              username={data.user.username}
-              imageUrl={data.user.imageUrl}
-              isLive={data.isLive}
-              className="flex-shrink-0"
-            />
+            <div className="flex-shrink-0">
+              <UserAvatar
+                username={data.user.username}
+                imageUrl={data.user.imageUrl}
+                isLive={data.isLive}
+              />
+            </div>
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
                 {data.title}

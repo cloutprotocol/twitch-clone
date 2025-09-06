@@ -9,6 +9,29 @@ body,
   @apply bg-neutral-900/80;
 }
 
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+/* Improve mobile touch targets */
+@media (max-width: 1024px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Smooth sidebar animations */
+  aside {
+    will-change: transform;
+  }
+}
+
 .hidden-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
