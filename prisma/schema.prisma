@@ -12,10 +12,10 @@ generator client {
 
 model User {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  email            String   @unique
+  email            String?  @unique       // Make optional for wallet-only users
   username         String   @unique
   imageUrl         String   @db.String
-  externalUserId   String   @unique
+  externalUserId   String?  @unique       // Keep temporarily for migration
   bio              String?  @db.String
   twitterUrl       String?  @db.String
   instagramUrl     String?  @db.String
@@ -32,6 +32,11 @@ model User {
   blockedby        Block[]       @relation(name: "BlockedBy")
   stream           Stream?
   chatMessages     ChatMessage[]
+  
+  // New relations for wallet authentication
+  accounts         Account[]
+  wallets          Wallet[]
+  sessions         Session[]
 }
 
 model Follow {
@@ -95,4 +100,68 @@ model ChatMessage {
   createdAt DateTime @default(now())
 
   @@index([streamId, createdAt])
+}
+
+// New models for wallet authentication
+model Account {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type               String   // 'oauth', 'credentials', 'siws'
+  provider           String   // 'clerk', 'siws', 'email'
+  providerAccountId  String   // wallet address, clerk ID, etc.
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.String
+  session_state      String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Wallet {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chain         String   // 'solana'
+  address       String   @unique
+  label         String?  // 'primary', 'phantom', etc.
+  isPrimary     Boolean  @default(false)
+  lastVerified  DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([chain])
+}
+
+model SignNonce {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  nonce     String   @unique
+  purpose   String   // 'siws'
+  address   String?
+  userId    String?  @db.ObjectId
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([expiresAt])
+  @@index([nonce])
 }

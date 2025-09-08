@@ -12,6 +12,7 @@ export default authMiddleware({
     "/api/viewer-count(.*)",
     "/api/stream(.*)",
     "/:username",
+    "/u/(.*)",
     "/search",
     "/sign-in(.*)",
     "/sign-up(.*)",
