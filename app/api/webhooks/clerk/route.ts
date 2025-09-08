@@ -6,13 +6,11 @@ import { db } from "@/lib/db";
 import { resetIngresses } from "@/actions/ingress";
 
 export async function POST(req: Request) {
-  console.log("=== CLERK WEBHOOK RECEIVED ===");
   
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    console.error("WEBHOOK_SECRET not found in environment");
     throw new Error(
       "Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local"
     );
@@ -24,15 +22,9 @@ export async function POST(req: Request) {
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  console.log("Headers received:", {
-    svix_id,
-    svix_timestamp,
-    svix_signature: svix_signature ? "present" : "missing"
-  });
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.error("Missing svix headers");
     return new Response("Error occured -- no svix headers", {
       status: 400,
     });
@@ -49,33 +41,21 @@ export async function POST(req: Request) {
 
   // Verify the payload with the headers
   try {
-    console.log("Attempting to verify webhook with secret:", WEBHOOK_SECRET.substring(0, 10) + "...");
     evt = wh.verify(body, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent;
-    console.log("Webhook verification successful");
   } catch (err) {
-    console.error("Error verifying webhook:", err);
-    console.log("BYPASSING SIGNATURE VERIFICATION FOR DEBUGGING - payload:", JSON.stringify(payload, null, 2));
-    // Temporarily bypass verification for debugging
-    evt = payload as WebhookEvent;
+    return new Response("Error verifying webhook", {
+      status: 400,
+    });
   }
 
   // Get the type
   const eventType = evt.type;
 
-  console.log("Webhook received:", eventType);
-  console.log("Payload data:", JSON.stringify(payload.data, null, 2));
-
   if (eventType === "user.created") {
-    console.log("Creating user with data:", {
-      id: payload.data.id,
-      username: payload.data.username,
-      email_addresses: payload.data.email_addresses,
-      image_url: payload.data.image_url
-    });
     
     // Add the user to the database - fixed to handle unique email constraint
     const email = payload.data.email_addresses?.[0]?.email_address || 

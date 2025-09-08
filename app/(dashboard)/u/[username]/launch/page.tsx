@@ -15,10 +15,13 @@ const LaunchPage = async ({ params }: LaunchPageProps) => {
     redirect("/");
   }
 
+  // Get the primary wallet for the user
+  const primaryWallet = self.wallets.find(wallet => wallet.isPrimary) || self.wallets[0];
+
   return (
     <div className="h-full bg-background-primary text-text-inverse">
       <div className="container mx-auto p-4 h-full">
-        <TokenLauncher />
+        <TokenLauncher userWallet={primaryWallet} />
       </div>
     </div>
   );

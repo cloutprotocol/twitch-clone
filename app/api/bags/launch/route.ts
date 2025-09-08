@@ -73,17 +73,26 @@ export async function POST(req: NextRequest) {
     console.log("✨ Successfully created token info and metadata!");
     console.log("🪙 Token mint:", tokenInfo.tokenMint);
 
-    let configKey: PublicKey | undefined;
+    // Default config key (you might need to get this from the SDK or use a specific default)
+    let configKey: PublicKey = PublicKey.default;
 
     // Step 2: Handle fee sharing if enabled
     if (launchType === "twitter-fee-sharing" && twitterUsername) {
       console.log("⚙️ Setting up fee sharing configuration...");
       
       // Get fee share wallet
-      const feeShareWallet = await sdk.state.getLaunchWalletForTwitterUsername(twitterUsername);
-      if (!feeShareWallet) {
+      let feeShareWallet: PublicKey;
+      try {
+        feeShareWallet = await sdk.state.getLaunchWalletForTwitterUsername(twitterUsername);
+        if (!feeShareWallet) {
+          return NextResponse.json({ 
+            error: `Could not find fee share wallet for Twitter user @${twitterUsername}. They need to connect their wallet at bags.fm first.` 
+          }, { status: 400 });
+        }
+      } catch (error) {
+        console.error("Fee share wallet lookup error:", error);
         return NextResponse.json({ 
-          error: `Could not find fee share wallet for Twitter user @${twitterUsername}` 
+          error: `Failed to lookup fee share wallet for @${twitterUsername}. Please verify the username is correct.` 
         }, { status: 400 });
       }
 

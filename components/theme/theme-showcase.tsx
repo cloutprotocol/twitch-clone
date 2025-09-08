@@ -3,12 +3,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
-export function ThemeTest() {
+export function ThemeShowcase() {
   return (
     <div className="p-6 space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-text-primary">Theme Test Component</CardTitle>
+          <CardTitle className="text-text-primary">Theme Showcase Component</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Text Hierarchy */}

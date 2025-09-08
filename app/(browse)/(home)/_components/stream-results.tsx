@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import Image from "next/image";
 
-export const DebugResults = async () => {
+export const StreamResults = async () => {
   try {
     const streams = await db.stream.findMany({
       select: {
@@ -30,7 +30,7 @@ export const DebugResults = async () => {
       <div className="w-full">
         <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
           <h2 className="text-2xl font-bold mb-8">Debug: Found {streams.length} streams</h2>
-
+          
           {streams.length === 0 ? (
             <div className="text-center py-16">
               <p>No streams found in database</p>
@@ -50,10 +50,11 @@ export const DebugResults = async () => {
                     ) : (
                       <div className="absolute inset-0 bg-muted rounded-lg" />
                     )}
-
+                    
                     {/* User avatar in center - fades on hover for live streams */}
-                    <div className={`relative z-10 transition-opacity duration-300 ${stream.isLive ? 'group-hover:opacity-30' : ''
-                      }`}>
+                    <div className={`relative z-10 transition-opacity duration-300 ${
+                      stream.isLive ? 'group-hover:opacity-30' : ''
+                    }`}>
                       <Image
                         src={stream.user.imageUrl}
                         alt={stream.user.username}
@@ -68,7 +69,7 @@ export const DebugResults = async () => {
                       )}
                     </div>
                   </div>
-
+                  
                   <div className="space-y-2">
                     <h3 className="font-semibold text-sm line-clamp-2">{stream.title}</h3>
                     <p className="text-xs text-text-secondary">{stream.user.username}</p>

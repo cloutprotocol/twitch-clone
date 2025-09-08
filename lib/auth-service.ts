@@ -13,6 +13,9 @@ export const getSelf = cache(async () => {
 
   const user = await db.user.findUnique({
     where: { id: session.user.id },
+    include: {
+      wallets: true,
+    },
   });
 
   if (!user) {
@@ -31,6 +34,9 @@ export const getSelfByUsername = async (username: string) => {
 
   const user = await db.user.findUnique({
     where: { username },
+    include: {
+      wallets: true,
+    },
   });
 
   if (!user) {

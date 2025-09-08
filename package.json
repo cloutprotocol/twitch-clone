@@ -1,6 +1,18 @@
 {
-  "name": "my-app",
+  "name": "twitch-clone",
   "version": "0.1.0",
+  "description": "A decentralized streaming platform with token launching capabilities built on Solana",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": ["streaming", "solana", "nextjs", "livekit", "web3", "cryptocurrency"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/twitch-clone.git"
+  },
+  "homepage": "https://github.com/username/twitch-clone#readme",
+  "bugs": {
+    "url": "https://github.com/username/twitch-clone/issues"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",

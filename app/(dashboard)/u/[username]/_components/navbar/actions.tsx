@@ -2,16 +2,38 @@
 
 import Link from "next/link";
 import { LogOut, Menu } from "lucide-react";
-import { useSession, signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 import { UserDropdown } from "@/components/auth/user-dropdown";
 import { TwitchStyleThemeToggle } from "@/components/theme/twitch-style-toggle";
+import { WalletBalance } from "@/components/wallet/wallet-balance";
 
 export const Actions = () => {
   const { data: session } = useSession();
   const { collapsed, onExpand, onCollapse } = useCreatorSidebar((state) => state);
+  const [userWallet, setUserWallet] = useState<string | null>(null);
+
+  // Fetch user wallet information
+  useEffect(() => {
+    const fetchUserWallet = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch('/api/user/wallet');
+          const data = await response.json();
+          if (data.wallet) {
+            setUserWallet(data.wallet.address);
+          }
+        } catch (error) {
+          console.error('Failed to fetch user wallet:', error);
+        }
+      }
+    };
+
+    fetchUserWallet();
+  }, [session?.user?.id]);
 
   const handleMenuClick = () => {
     if (collapsed) {
@@ -24,6 +46,16 @@ export const Actions = () => {
   return (
     <div className="flex items-center justify-end gap-x-2">
       <TwitchStyleThemeToggle />
+      
+      {userWallet && (
+        <div className="hidden md:block">
+          <WalletBalance 
+            compact={true}
+            showRefresh={true}
+            className="text-xs lg:text-sm"
+          />
+        </div>
+      )}
       
       {/* Mobile menu button - only show on mobile */}
       <Button

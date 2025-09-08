@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
-import { Loader2, Upload, X, Twitter } from "lucide-react";
+import { Loader2, Upload, X, Wallet, CheckCircle } from "lucide-react";
+import { CostBreakdown } from "@/components/wallet/cost-breakdown";
+import { WalletBalance } from "@/components/wallet/wallet-balance";
 
 interface TokenFormData {
   name: string;
@@ -25,10 +28,23 @@ interface TokenFormData {
   websiteLink: string;
   twitterLink: string;
   telegramLink: string;
-  privateKey: string;
 }
 
-export const TokenLauncher = () => {
+interface UserWallet {
+  id: string;
+  address: string;
+  chain: string;
+  label?: string | null;
+  isPrimary: boolean;
+}
+
+interface TokenLauncherProps {
+  userWallet: UserWallet | null;
+}
+
+export const TokenLauncher = ({ userWallet }: TokenLauncherProps) => {
+  const { data: session } = useSession();
+  
   const [formData, setFormData] = useState<TokenFormData>({
     name: "",
     symbol: "",
@@ -42,7 +58,6 @@ export const TokenLauncher = () => {
     websiteLink: "",
     twitterLink: "",
     telegramLink: "",
-    privateKey: "",
   });
 
   const [isLaunching, setIsLaunching] = useState(false);
@@ -120,14 +135,23 @@ export const TokenLauncher = () => {
         throw new Error(data.error || "Failed to lookup wallet");
       }
     } catch (error) {
-      console.error("Fee share wallet lookup error:", error);
       toast.error("Failed to lookup fee share wallet");
       setFeeShareWallet(null);
     }
   };
 
   const handleLaunch = async () => {
-    if (!formData.name || !formData.symbol || !formData.description || !formData.privateKey) {
+    if (!session?.user) {
+      toast.error("Please sign in to launch tokens");
+      return;
+    }
+
+    if (!userWallet) {
+      toast.error("No wallet found for your account");
+      return;
+    }
+
+    if (!formData.name || !formData.symbol || !formData.description) {
       toast.error("Please fill in all required fields");
       return;
     }
@@ -140,6 +164,7 @@ export const TokenLauncher = () => {
     setIsLaunching(true);
 
     try {
+      // Step 1: Create launch data
       const launchData = new FormData();
       
       // Add all form fields
@@ -151,6 +176,10 @@ export const TokenLauncher = () => {
         }
       });
 
+      // Add wallet address from authenticated user
+      launchData.append("walletAddress", userWallet.address);
+
+      // Step 2: Get transaction from API
       const response = await fetch("/api/bags/launch", {
         method: "POST",
         body: launchData,
@@ -158,14 +187,17 @@ export const TokenLauncher = () => {
 
       const result = await response.json();
 
-      if (result.success) {
-        toast.success("Token launched successfully!");
-        // Reset form or redirect
-      } else {
-        toast.error(result.error || "Failed to launch token");
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to create launch transaction");
       }
+
+      // For now, we'll show the transaction that needs to be signed
+      // In a full implementation, you'd integrate with a wallet to sign this
+      toast.success("Token launch transaction created!");
+      toast.info("Transaction signing integration coming soon...");
+
     } catch (error) {
-      toast.error("Failed to launch token");
+      toast.error(error instanceof Error ? error.message : "Failed to launch token");
     } finally {
       setIsLaunching(false);
     }
@@ -329,6 +361,12 @@ export const TokenLauncher = () => {
             <p className="text-xs text-text-tertiary mt-1">
               Recommended minimum 0.2 SOL to avoid snipers. Leave ~0.05 SOL for transaction fees.
             </p>
+            
+            {/* Cost Breakdown */}
+            <CostBreakdown 
+              initialBuySOL={formData.initialBuySOL} 
+              className="mt-3"
+            />
           </div>
         </CardContent>
       </Card>
@@ -371,31 +409,29 @@ export const TokenLauncher = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-background-secondary border-border-primary">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-status-warning text-xl">Wallet Configuration</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="p-4 bg-status-warning/10 border border-status-warning/20 rounded-xl">
-            <Label htmlFor="privateKey" className="text-status-warning">Private Key (Temporary) *</Label>
-            <Input
-              id="privateKey"
-              type="password"
-              value={formData.privateKey}
-              onChange={(e) => handleInputChange("privateKey", e.target.value)}
-              placeholder="Your base58 encoded private key"
-              className="bg-background-tertiary border-border-secondary text-text-primary mt-1"
-            />
-            <p className="text-xs text-status-warning mt-1">
-              ⚠️ This will be replaced with global Solana wallet connection. Never share your private key.
-            </p>
+      {/* Wallet Status & Balance */}
+      {session?.user && userWallet ? (
+        <WalletBalance 
+          showStatus={true}
+          showRefresh={true}
+        />
+      ) : (
+        <div className="p-4 bg-status-warning/10 border border-status-warning/20 rounded-xl">
+          <div className="flex items-center gap-3">
+            <Wallet className="h-5 w-5 text-status-warning" />
+            <div>
+              <p className="text-status-warning font-medium">No Wallet Found</p>
+              <p className="text-xs text-text-tertiary">
+                Please contact support if you see this message
+              </p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      )}
 
       <Button
         onClick={handleLaunch}
-        disabled={isLaunching}
+        disabled={isLaunching || !session?.user || !userWallet}
         className="w-full py-6 bg-interactive-primary hover:bg-interactive-hover disabled:bg-interactive-disabled text-text-inverse font-semibold text-lg"
         size="lg"
       >
@@ -404,10 +440,38 @@ export const TokenLauncher = () => {
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
             Launching Token...
           </>
+        ) : !session?.user ? (
+          <>
+            <Wallet className="mr-2 h-5 w-5" />
+            Sign In Required
+          </>
+        ) : !userWallet ? (
+          <>
+            <Wallet className="mr-2 h-5 w-5" />
+            No Wallet Found
+          </>
         ) : (
           "Launch Token"
         )}
       </Button>
+
+      {/* Powered by Bags Footer */}
+      <div className="flex items-center justify-center pt-8 pb-4">
+        <a 
+          href="https://bags.fm" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="flex items-center space-x-2 text-text-tertiary hover:text-text-secondary transition-colors text-sm"
+        >
+          <span>Powered by</span>
+          <img 
+            src="https://bags.fm/assets/images/bags-icon.png" 
+            alt="Bags" 
+            className="w-4 h-4"
+          />
+          <span className="font-medium">Bags</span>
+        </a>
+      </div>
     </div>
   );
 };
