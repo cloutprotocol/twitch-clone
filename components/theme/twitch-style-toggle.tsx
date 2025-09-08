@@ -63,7 +63,8 @@ export function TwitchStyleThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        align="end" 
+        align="center"
+        side="top"
         className={cn(
           "min-w-[140px] p-1",
           "bg-background-secondary border-border-primary",

@@ -25,8 +25,10 @@ export const Container = ({ children }: ContainerProps) => {
   return (
     <div
       className={cn(
-        "flex-1 transition-all duration-300 ease-in-out",
-        collapsed ? "ml-[70px]" : "ml-[70px] lg:ml-60"
+        "flex-1 transition-all duration-300 ease-in-out min-h-screen",
+        collapsed ? "ml-[70px]" : "ml-[70px] lg:ml-60",
+        // Add top margin for floating wallet
+        "pt-16 px-4"
       )}
     >
       {children}

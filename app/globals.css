@@ -283,6 +283,24 @@ body,
   border-color: hsl(var(--border-focus)) !important;
 }
 
+/* Disable Radix UI dropdown animations */
+[data-radix-popper-content-wrapper] {
+  animation: none !important;
+  transition: none !important;
+}
+
+[data-radix-popper-content-wrapper] > * {
+  animation: none !important;
+  transition: none !important;
+  transform-origin: center !important;
+}
+
+/* Disable all Radix dropdown menu animations */
+[data-radix-dropdown-menu-content] {
+  animation: none !important;
+  transition: none !important;
+}
+
 @layer utilities {
   .line-clamp-2 {
     display: -webkit-box;

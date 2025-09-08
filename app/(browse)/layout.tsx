@@ -1,18 +1,18 @@
 import { Suspense } from "react";
 
-import { Navbar } from "./_components/navbar";
 import { Sidebar, SidebarSkeleton } from "./_components/sidebar";
 import { Container } from "./_components/container";
+import { FloatingWallet } from "@/components/layout/floating-wallet";
 
 const BrowseLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <Navbar />
-      <div className="flex h-full pt-20">
+      <div className="flex h-full">
         <Suspense fallback={<SidebarSkeleton />}>
           <Sidebar />
         </Suspense>
         <Container>{children}</Container>
+        <FloatingWallet />
       </div>
     </>
   );

@@ -20,7 +20,7 @@ const LaunchPage = async ({ params }: LaunchPageProps) => {
 
   return (
     <div className="h-full bg-background-primary text-text-inverse">
-      <div className="container mx-auto p-4 h-full">
+      <div className="max-w-4xl mx-auto h-full">
         <TokenLauncher userWallet={primaryWallet} />
       </div>
     </div>

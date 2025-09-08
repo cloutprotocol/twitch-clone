@@ -31,7 +31,9 @@ export const Container = ({ children }: ContainerProps) => {
         // Desktop: proper margins based on sidebar state
         collapsed ? "lg:ml-[70px]" : "lg:ml-60",
         // Mobile: always full width (sidebar is overlay)
-        "ml-0"
+        "ml-0",
+        // Add top margin for floating wallet
+        "pt-16 px-4"
       )}
     >
       {children}

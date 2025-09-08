@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 
 import { getSelfByUsername } from "@/lib/auth-service";
 
-import { Navbar } from "./_components/navbar";
 import { Sidebar } from "./_components/sidebar";
 import { Container } from "./_components/container";
 import { MobileOverlay } from "./_components/mobile-overlay";
+import { FloatingWallet } from "@/components/layout/floating-wallet";
 
 interface CreatorLayoutProps {
   params: { username: string };
@@ -24,9 +24,7 @@ const CreatorLayout = async ({ params, children }: CreatorLayoutProps) => {
       <div className="flex h-full">
         <Sidebar />
         <Container>{children}</Container>
-        <div className="fixed top-0 right-0 z-50">
-          <Navbar />
-        </div>
+        <FloatingWallet />
         <MobileOverlay />
       </div>
     </>

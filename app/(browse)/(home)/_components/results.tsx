@@ -3,6 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import { ResultCard, ResultCardSkeleton } from "./result-card";
 import { LiveMarquee } from "./live-marquee";
+import { StreamSearch } from "./stream-search";
 
 export const Results = async () => {
   // Only fetch live streams for the main page
@@ -41,6 +42,8 @@ export const Results = async () => {
     <div className="w-full min-h-screen">
       {/* Content Container */}
       <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20 space-y-12">
+        {/* Search Section */}
+        <StreamSearch />
         {/* Live Streams Section */}
         {liveStreams.length > 0 && (
           <section>
@@ -120,6 +123,10 @@ export const ResultsSkeleton = () => {
       
       {/* Content Container */}
       <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        {/* Search Skeleton */}
+        <div className="flex justify-center mb-8">
+          <Skeleton className="h-10 w-full max-w-md" />
+        </div>
         {/* Live Section Skeleton */}
         <section>
           <div className="flex items-center justify-between mb-8">
