@@ -1,11 +1,19 @@
 import { db } from "@/lib/db";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 
 import { ResultCard, ResultCardSkeleton } from "./result-card";
 import { LiveMarquee } from "./live-marquee";
 import { StreamSearch } from "./stream-search";
+import { StartStreamWrapper } from "./start-stream-wrapper";
 
 export const Results = async () => {
+  // Check if user is authenticated
+  const session = await getServerSession(authOptions);
+  const isLoggedIn = !!session?.user;
+  const username = session?.user?.username;
+
   // Only fetch live streams for the main page
   const liveStreams = await db.stream.findMany({
     where: {
@@ -47,24 +55,25 @@ export const Results = async () => {
         {/* Live Streams Section */}
         {liveStreams.length > 0 && (
           <section>
-            <div className="flex items-center space-x-4 mb-8">
+            {/* Minimal header with just live indicator */}
+            <div className="flex items-center space-x-2 mb-6">
               <div className="relative">
-                <div className="w-8 h-8 bg-streaming-live rounded-full flex items-center justify-center shadow-lg">
-                  <div className="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                <div className="w-6 h-6 bg-streaming-live rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
                 </div>
                 <div className="absolute -inset-1 bg-streaming-live rounded-full opacity-20 animate-ping"></div>
               </div>
-              <div>
-                <h2 className="text-3xl font-bold text-text-primary flex items-center gap-2">
-                  Streaming now
-                  <span className="text-sm font-normal text-text-secondary bg-background-secondary px-2 py-1 rounded-full">
-                    {liveStreams.length}
-                  </span>
-                </h2>
-                <p className="text-text-secondary text-sm mt-1">Live content happening right now</p>
-              </div>
+              <span className="text-sm text-text-secondary">
+                {liveStreams.length} live
+              </span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 justify-items-center">
+            
+            {/* 3-column grid with larger cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Start Stream Card */}
+              <StartStreamWrapper isLoggedIn={isLoggedIn} username={username} />
+              
+              {/* Live Stream Cards */}
               {liveStreams.map((stream) => (
                 <ResultCard key={stream.id} data={stream} />
               ))}
@@ -72,40 +81,40 @@ export const Results = async () => {
           </section>
         )}
 
-        {/* Empty State */}
+        {/* Empty State - Show Start Stream Card */}
         {liveStreams.length === 0 && (
-          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-            {/* Offline Icon */}
-            <div className="relative mb-8">
-              <div className="w-32 h-32 bg-background-secondary border-2 border-border-primary rounded-3xl flex items-center justify-center shadow-lg">
-                {/* Simple Offline Symbol - Circle with diagonal line */}
-                <div className="relative">
-                  <div className="w-16 h-16 border-4 border-text-tertiary rounded-full"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-0.5 bg-text-tertiary rotate-45 rounded-full"></div>
+          <section>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Start Stream Card */}
+              <StartStreamWrapper isLoggedIn={isLoggedIn} username={username} />
+              
+              {/* Empty state message card */}
+              <div className="md:col-span-2 lg:col-span-2 flex flex-col items-center justify-center text-center p-8 border-2 border-dashed border-border-primary/30 rounded-lg bg-background-secondary/20">
+                <div className="space-y-4 max-w-lg">
+                  <div className="relative inline-block">
+                    <div className="w-16 h-16 border-2 border-dashed border-text-tertiary/40 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 border-2 border-text-tertiary/60 rounded-full"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-10 h-0.5 bg-text-tertiary/60 rotate-45 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-text-primary">
+                    No live streams
+                  </h3>
+                  <p className="text-text-secondary leading-relaxed">
+                    No one is streaming right now. Check back soon for live content, or be the first to go live!
+                  </p>
+                  
+                  <div className="flex items-center gap-2 justify-center pt-2">
+                    <div className="w-2 h-2 bg-text-tertiary rounded-full animate-pulse"></div>
+                    <span className="text-sm text-text-secondary">Waiting for streamers...</span>
                   </div>
                 </div>
               </div>
             </div>
-
-            {/* Content */}
-            <div className="space-y-4 max-w-lg">
-              <h3 className="text-4xl font-bold text-text-primary">
-                No live streams
-              </h3>
-              <p className="text-text-secondary text-lg leading-relaxed">
-                No one is streaming right now. Check back soon for live content, or be the first to go live!
-              </p>
-              
-              {/* Call to action */}
-              <div className="pt-6">
-                <div className="inline-flex items-center gap-2 px-6 py-3 bg-background-secondary border border-border-primary rounded-full text-text-secondary hover:text-text-primary hover:border-interactive-primary transition-all duration-200">
-                  <div className="w-2 h-2 bg-text-tertiary rounded-full"></div>
-                  <span className="text-sm font-medium">Waiting for streamers...</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          </section>
         )}
       </div>
 
