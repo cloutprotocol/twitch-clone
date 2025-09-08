@@ -6,7 +6,7 @@ import { useState, useRef } from "react";
 import { Eye, MessageCircle, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatViewerCount } from "@/lib/format";
-import { StreamPreview } from "@/components/stream-preview";
+// Removed getBestThumbnail import - using API endpoint instead
 
 import { LiveBadge } from "@/components/live-badge";
 import { LiveParticipantCount } from "@/components/live-participant-count";
@@ -34,25 +34,21 @@ interface ResultCardProps {
 export const ResultCard = ({ data }: ResultCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(data.thumbnail);
 
+  // Load fresh thumbnail on hover for live streams
   const handleMouseEnter = () => {
     setIsHovered(true);
-    if (videoRef.current && data.isLive) {
-      videoRef.current.play().catch(() => {
-        // Fallback to thumbnail if video fails
-      });
+    if (data.isLive && !thumbnailUrl) {
+      // Use the thumbnail API endpoint for fresh thumbnails
+      const freshThumbnailUrl = `/api/thumbnail/${data.id}?t=${Date.now()}`;
+      setThumbnailUrl(freshThumbnailUrl);
     }
   };
 
   const handleMouseLeave = () => {
     setIsHovered(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
   };
-
-  const streamUrl = data.isLive ? `/api/stream/${data.id}/preview` : null;
 
   return (
     <Link href={`/${data.user.username}`}>
@@ -61,43 +57,36 @@ export const ResultCard = ({ data }: ResultCardProps) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Video/Thumbnail Container */}
+        {/* Thumbnail Container - Always use thumbnails, never live video */}
         <div className="relative aspect-video bg-muted overflow-hidden">
-          {data.isLive ? (
-            <>
-              {/* Always show live video for live streams */}
-              <div className="absolute inset-0 w-full h-full">
-                <StreamPreview 
-                  hostIdentity={data.user.id}
-                  className="w-full h-full"
-                  isHovered={isHovered}
+          <div className="relative w-full h-full">
+            {(thumbnailUrl || data.thumbnail) && !imageError ? (
+              <Image
+                src={thumbnailUrl || data.thumbnail || ''}
+                alt={data.title}
+                fill
+                className="object-cover"
+                onError={() => setImageError(true)}
+                priority={data.isLive} // Prioritize live stream thumbnails
+              />
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-muted to-muted/50">
+                <UserAvatar
+                  username={data.user.username}
+                  imageUrl={data.user.imageUrl}
+                  isLive={data.isLive}
+                  size="lg"
                 />
               </div>
-              
-            </>
-          ) : (
-            /* Static Thumbnail or Avatar for offline streams */
-            <div className="relative w-full h-full">
-              {data.thumbnail && !imageError ? (
-                <Image
-                  src={data.thumbnail}
-                  alt={data.title}
-                  fill
-                  className="object-cover"
-                  onError={() => setImageError(true)}
-                />
-              ) : (
-                <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-muted to-muted/50">
-                  <UserAvatar
-                    username={data.user.username}
-                    imageUrl={data.user.imageUrl}
-                    isLive={data.isLive}
-                    size="lg"
-                  />
-                </div>
-              )}
-            </div>
-          )}
+            )}
+            
+            {/* Live indicator overlay for fresh content */}
+            {data.isLive && isHovered && (
+              <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+                LIVE
+              </div>
+            )}
+          </div>
 
           {/* Overlay */}
           <div className="absolute inset-0 bg-transparent group-hover:bg-background-overlay transition-colors duration-300" />

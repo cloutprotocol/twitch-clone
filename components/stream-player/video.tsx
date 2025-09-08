@@ -16,9 +16,10 @@ import { LiveVideo } from "./live-video";
 interface VideoProps {
   hostName: string;
   hostIdentity: string;
+  streamId?: string; // Add streamId prop
 }
 
-export const Video = ({ hostName, hostIdentity }: VideoProps) => {
+export const Video = ({ hostName, hostIdentity, streamId }: VideoProps) => {
   const connectionState = useConnectionState();
   const participant = useRemoteParticipant(hostIdentity);
   const tracks = useTracks([
@@ -33,7 +34,7 @@ export const Video = ({ hostName, hostIdentity }: VideoProps) => {
   } else if (!participant || tracks.length === 0) {
     content = <LoadingVideo label={connectionState} />;
   } else {
-    content = <LiveVideo participant={participant} />;
+    content = <LiveVideo participant={participant} streamId={streamId} />;
   }
 
   return <div className="aspect-video border-b group relative">{content}</div>;

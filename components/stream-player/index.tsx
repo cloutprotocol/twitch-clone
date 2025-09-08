@@ -91,7 +91,7 @@ export const StreamPlayer = ({
           viewerIdentity={identity}
         />
         <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
-          <Video hostName={user.username} hostIdentity={user.id} />
+          <Video hostName={user.username} hostIdentity={user.id} streamId={stream.id} />
           <Header
             hostName={user.username}
             hostIdentity={user.id}

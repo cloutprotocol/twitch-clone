@@ -1,0 +1,6 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#1a1a1a"/>
+  <circle cx="640" cy="360" r="80" fill="#333"/>
+  <path d="M620 330L680 360L620 390V330Z" fill="#666"/>
+  <text x="640" y="450" text-anchor="middle" fill="#666" font-family="Arial, sans-serif" font-size="24">Stream Offline</text>
+</svg>

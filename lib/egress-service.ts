@@ -1,4 +1,4 @@
-import { RoomServiceClient, EgressClient } from "livekit-server-sdk";
+import { EgressClient } from "livekit-server-sdk";
 
 /**
  * LiveKit Egress Service for Automatic Thumbnail Generation
@@ -14,17 +14,23 @@ import { RoomServiceClient, EgressClient } from "livekit-server-sdk";
  * - Implements proper error handling and cleanup
  */
 
-const egressClient = new EgressClient(
-  process.env.LIVEKIT_API_URL!,
-  process.env.LIVEKIT_API_KEY!,
-  process.env.LIVEKIT_API_SECRET!
-);
+// Lazy initialization to avoid client-side errors
+let egressClient: EgressClient | null = null;
 
-const roomService = new RoomServiceClient(
-  process.env.LIVEKIT_API_URL!,
-  process.env.LIVEKIT_API_KEY!,
-  process.env.LIVEKIT_API_SECRET!
-);
+const getEgressClient = () => {
+  if (!egressClient) {
+    if (!process.env.LIVEKIT_API_URL || !process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
+      throw new Error("LiveKit environment variables not configured");
+    }
+    
+    egressClient = new EgressClient(
+      process.env.LIVEKIT_API_URL,
+      process.env.LIVEKIT_API_KEY,
+      process.env.LIVEKIT_API_SECRET
+    );
+  }
+  return egressClient;
+};
 
 interface ThumbnailConfig {
   roomName: string;
@@ -35,57 +41,59 @@ interface ThumbnailConfig {
 }
 
 /**
- * Start automatic thumbnail generation for a live stream
- * 
- * @param config - Configuration for thumbnail generation
- * @returns EgressInfo object with egress ID for tracking
+ * Generate a single thumbnail screenshot from a live stream
+ * NO CONTINUOUS RECORDING - just one screenshot when needed
  */
-export const startThumbnailGeneration = async (config: ThumbnailConfig) => {
+export const generateThumbnailScreenshot = async (roomName: string, streamId: string) => {
   try {
-    const imageOutput: any = {
-      captureInterval: config.captureInterval || 30, // Default 30 seconds
-      width: config.width || 1280,  // Standard thumbnail width
-      height: config.height || 720, // Standard thumbnail height 
-      filenamePrefix: `thumbnails/${config.streamId}/thumb_`,
-      filenameSuffix: "INDEX", // Appends sequential numbers
-      disableManifest: false, // Generate manifest with timestamps
-      
-      // Configure cloud storage - adapt based on your provider
-      // Example for S3:
-      output: {
-        case: "s3",
-        value: {
-          accessKey: process.env.AWS_ACCESS_KEY_ID!,
-          secret: process.env.AWS_SECRET_ACCESS_KEY!,
-          region: process.env.AWS_REGION!,
-          bucket: process.env.AWS_S3_BUCKET!,
-          forcePathStyle: false,
-        }
-      }
-    };
-
-    // Start room composite egress with image output
-    // For testing, let's use a simple file-based approach first
-    const egressInfo = await (egressClient.startRoomCompositeEgress as any)({
-      roomName: config.roomName,
-      layout: "grid",
+    const client = getEgressClient();
+    
+    // Start a very short recording just to get one frame
+    const egressInfo = await client.startRoomCompositeEgress({
+      roomName: roomName,
+      layout: "speaker",
       audioOnly: false,
-      videoOnly: false,
+      videoOnly: true, // Video only for thumbnails
       
-      // Simple file output that we can extract frames from later
-      file: {
-        filepath: `/tmp/stream-${config.streamId}-{time}.mp4`,
-        fileType: 'MP4'
+      // Very short segment - just enough for one frame
+      segmentedFile: {
+        filenamePrefix: `thumb-${streamId}`,
+        playlistName: `thumb-${streamId}.m3u8`,
+        segmentDuration: 1, // 1 second segments
+        fileType: 4 // MP4
       }
     });
 
-    console.log(`Started thumbnail generation for room ${config.roomName}:`, egressInfo.egressId);
+    // Stop after 2 seconds to get just one segment
+    setTimeout(async () => {
+      try {
+        await client.stopEgress(egressInfo.egressId);
+        console.log(`Stopped thumbnail capture for ${streamId} after 2 seconds`);
+      } catch (error) {
+        console.error("Failed to stop thumbnail capture:", error);
+      }
+    }, 2000);
+
     return egressInfo;
     
   } catch (error) {
-    console.error("Failed to start thumbnail generation:", error);
+    console.error("Failed to generate thumbnail:", error);
     throw new Error(`Thumbnail generation failed: ${error}`);
   }
+};
+
+/**
+ * DEPRECATED: Don't use continuous recording for thumbnails
+ * Use generateThumbnailScreenshot() for on-demand captures instead
+ * 
+ * This function is kept for backward compatibility but should not be used
+ * for thumbnail generation as it records continuously.
+ */
+export const startThumbnailGeneration = async (config: ThumbnailConfig) => {
+  console.warn('startThumbnailGeneration is deprecated for thumbnails. Use generateThumbnailScreenshot instead.');
+  
+  // Instead of continuous recording, just generate one screenshot
+  return generateThumbnailScreenshot(config.roomName, config.streamId);
 };
 
 /**
@@ -95,7 +103,8 @@ export const startThumbnailGeneration = async (config: ThumbnailConfig) => {
  */
 export const stopThumbnailGeneration = async (egressId: string) => {
   try {
-    const egressInfo = await egressClient.stopEgress(egressId);
+    const client = getEgressClient();
+    const egressInfo = await client.stopEgress(egressId);
     console.log(`Stopped thumbnail generation:`, egressId);
     return egressInfo;
   } catch (error) {
@@ -109,7 +118,8 @@ export const stopThumbnailGeneration = async (egressId: string) => {
  */
 export const listActiveEgress = async () => {
   try {
-    const egressList = await egressClient.listEgress({
+    const client = getEgressClient();
+    const egressList = await client.listEgress({
       active: true
     });
     return egressList;
@@ -124,7 +134,8 @@ export const listActiveEgress = async () => {
  */
 export const getEgressInfo = async (egressId: string) => {
   try {
-    const egressInfo = await egressClient.listEgress({
+    const client = getEgressClient();
+    const egressInfo = await client.listEgress({
       egressId: egressId
     });
     return egressInfo;
@@ -140,8 +151,10 @@ export const getEgressInfo = async (egressId: string) => {
  */
 export const cleanupOldThumbnails = async (olderThanDays: number = 7) => {
   try {
+    const client = getEgressClient();
+    
     // Get all egress sessions
-    const allEgress = await egressClient.listEgress({});
+    const allEgress = await client.listEgress({});
     
     const cutoffDate = new Date();
     cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
