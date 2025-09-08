@@ -3,7 +3,7 @@
 import { toast } from "sonner";
 import { Heart } from "lucide-react";
 import { useTransition } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -42,7 +42,8 @@ export const Actions = ({
 }: ActionsProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const { userId } = useAuth();
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
   const handleFollow = () => {
     startTransition(() => {

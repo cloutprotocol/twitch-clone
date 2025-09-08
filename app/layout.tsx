@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { WalletContextProvider } from "@/components/auth/wallet-provider";
 
@@ -24,11 +24,8 @@ export default function RootLayout({
         <AuthProvider>
           <WalletContextProvider>
             <ThemeProvider
-              attribute="class"
-              forcedTheme="dark"
+              defaultTheme="dark"
               storageKey="rarecube-theme"
-              enableSystem={false}
-              disableTransitionOnChange
             >
               <Toaster theme="light" position="top-right" />
               {children}

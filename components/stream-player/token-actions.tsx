@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Coins, Rocket, Loader2 } from "lucide-react";
 
@@ -33,7 +33,8 @@ export const TokenActions = ({
   const [contractAddress, setContractAddress] = useState("");
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const { user } = useUser();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   if (!isHost) {
     return null;

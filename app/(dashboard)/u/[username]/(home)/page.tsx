@@ -1,4 +1,5 @@
-import { currentUser } from "@clerk/nextjs";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 import { getUserByUsername } from "@/lib/user-service";
 import { getChatMessages } from "@/lib/chat-service";
@@ -11,10 +12,10 @@ interface CreatorPageProps {
 }
 
 const CreatorPage = async ({ params }: CreatorPageProps) => {
-  const externalUser = await currentUser();
+  const session = await getServerSession(authOptions);
   const user = await getUserByUsername(params.username);
 
-  if (!user || user.externalUserId !== externalUser?.id || !user.stream) {
+  if (!user || !session || user.username !== session.user.username || !user.stream) {
     throw new Error("Unauthorized");
   }
 

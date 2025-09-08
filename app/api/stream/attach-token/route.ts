@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs";
 
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
+import { getSelf } from "@/lib/auth-service";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = auth();
+    const user = await getSelf();
     
-    if (!userId) {
+    if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 

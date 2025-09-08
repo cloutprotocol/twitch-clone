@@ -6,12 +6,6 @@ html,
 body,
 :root {
   height: 100%;
-  @apply bg-neutral-900/80;
-}
-
-/* Smooth transitions for theme changes */
-* {
-  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 
 /* Improve mobile touch targets */
@@ -40,77 +34,159 @@ body,
 .hidden-scrollbar::-webkit-scrollbar { 
   display: none;
 }
- 
 @layer base {
   :root {
+    /* Legacy shadcn/ui tokens for backward compatibility */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
- 
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
- 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
- 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
- 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
- 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
- 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
- 
     --radius: 0.5rem;
+
+    /* New semantic theme tokens - Light theme */
+    --background-primary: 0 0% 100%;
+    --background-secondary: 0 0% 98%;
+    --background-tertiary: 0 0% 95%;
+    --background-overlay: 0 0% 0% / 0.5;
+    
+    --text-primary: 0 0% 9%;
+    --text-secondary: 0 0% 45%;
+    --text-tertiary: 0 0% 65%;
+    --text-inverse: 0 0% 98%;
+    
+    --interactive-primary: 221 83% 53%;
+    --interactive-secondary: 0 0% 95%;
+    --interactive-hover: 221 83% 45%;
+    --interactive-active: 221 83% 40%;
+    --interactive-disabled: 0 0% 85%;
+    
+    --border-primary: 0 0% 89%;
+    --border-secondary: 0 0% 93%;
+    --border-focus: 221 83% 53%;
+    
+    --status-success: 142 76% 36%;
+    --status-warning: 38 92% 50%;
+    --status-error: 0 84% 60%;
+    --status-info: 199 89% 48%;
+    
+    --streaming-live: 0 84% 60%;
+    --streaming-offline: 0 0% 45%;
+    --streaming-viewer: 221 83% 53%;
   }
  
   .dark {
-    --background: 226.7 12.7% 13.9%;
+    /* Legacy shadcn/ui dark tokens */
+    --background: 224 13% 10%;
     --foreground: 210 40% 98%;
- 
-    --card: 226.7 12.7% 13.9%;
+    --card: 224 13% 10%;
     --card-foreground: 210 40% 98%;
- 
-    --popover: 226.7 12.7% 13.9%;
+    --popover: 224 13% 10%;
     --popover-foreground: 210 40% 98%;
- 
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
- 
-    --secondary: 226.7 12.7% 17.5%;
+    --secondary: 225 12% 14%;
     --secondary-foreground: 210 40% 98%;
- 
-    --muted: 226.7 12.7% 17.5%;
+    --muted: 225 12% 14%;
     --muted-foreground: 215 20.2% 65.1%;
- 
-    --accent: 226.7 12.7% 17.5%;
+    --accent: 225 12% 14%;
     --accent-foreground: 210 40% 98%;
- 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
- 
-    --border: 226.7 12.7% 17.5%;
-    --input: 226.7 12.7% 17.5%;
+    --border: 226 11% 22%;
+    --input: 226 11% 22%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* New semantic theme tokens - Dark theme (optimized for streaming) */
+    --background-primary: 224 13% 10%;
+    --background-secondary: 225 12% 14%;
+    --background-tertiary: 226 11% 18%;
+    --background-overlay: 0 0% 0% / 0.7;
+    
+    --text-primary: 0 0% 98%;
+    --text-secondary: 0 0% 70%;
+    --text-tertiary: 0 0% 55%;
+    --text-inverse: 0 0% 9%;
+    
+    --interactive-primary: 221 83% 53%;
+    --interactive-secondary: 226 11% 18%;
+    --interactive-hover: 221 83% 60%;
+    --interactive-active: 221 83% 65%;
+    --interactive-disabled: 0 0% 25%;
+    
+    --border-primary: 226 11% 22%;
+    --border-secondary: 226 11% 18%;
+    --border-focus: 221 83% 53%;
+    
+    --status-success: 142 76% 45%;
+    --status-warning: 38 92% 55%;
+    --status-error: 0 84% 65%;
+    --status-info: 199 89% 55%;
+    
+    --streaming-live: 0 84% 65%;
+    --streaming-offline: 0 0% 55%;
+    --streaming-viewer: 221 83% 60%;
+  }
+
+  /* High contrast theme for accessibility */
+  .high-contrast {
+    --background-primary: 0 0% 0%;
+    --background-secondary: 0 0% 5%;
+    --background-tertiary: 0 0% 10%;
+    --background-overlay: 0 0% 0% / 0.8;
+    
+    --text-primary: 0 0% 100%;
+    --text-secondary: 0 0% 85%;
+    --text-tertiary: 0 0% 70%;
+    --text-inverse: 0 0% 0%;
+    
+    --interactive-primary: 221 83% 70%;
+    --interactive-secondary: 0 0% 15%;
+    --interactive-hover: 221 83% 80%;
+    --interactive-active: 221 83% 85%;
+    --interactive-disabled: 0 0% 30%;
+    
+    --border-primary: 0 0% 30%;
+    --border-secondary: 0 0% 20%;
+    --border-focus: 221 83% 70%;
+    
+    --status-success: 142 76% 60%;
+    --status-warning: 38 92% 70%;
+    --status-error: 0 84% 75%;
+    --status-info: 199 89% 70%;
+    
+    --streaming-live: 0 84% 75%;
+    --streaming-offline: 0 0% 70%;
+    --streaming-viewer: 221 83% 70%;
   }
 }
  
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border theme-transition;
   }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background-primary text-text-primary;
+  }
+  
+  /* Remove transitions from media elements for performance */
+  img, video, iframe, canvas, svg {
+    @apply no-transition;
   }
 }
 
@@ -159,5 +235,33 @@ body,
     100% {
       transform: rotateX(360deg) rotateY(360deg);
     }
+  }
+}/* Perform
+ance optimizations */
+@layer base {
+  /* Reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Optimized transitions - only animate necessary properties */
+  * {
+    transition-property: color, background-color, border-color, opacity, transform;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Remove transitions from media elements for performance */
+  img, video, iframe, canvas, svg {
+    transition: none !important;
+  }
+
+  /* Optimize will-change for animations */
+  .animate-in, .animate-out, [data-state="open"], [data-state="closed"] {
+    will-change: transform, opacity;
   }
 }
