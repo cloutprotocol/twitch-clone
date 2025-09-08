@@ -27,6 +27,7 @@ export const getUserByUsername = async (username: string) => {
           isChatFollowersOnly: true,
           thumbnail: true,
           title: true,
+          tokenAddress: true,
         },
       },
       _count: {
@@ -58,6 +59,7 @@ export const getUserById = async (id: string) => {
           isChatFollowersOnly: true,
           thumbnail: true,
           title: true,
+          tokenAddress: true,
         },
       },
     },

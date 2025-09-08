@@ -22,6 +22,7 @@ interface HeaderProps {
   name: string;
   bio?: string | null;
   followedByCount: number;
+  tokenAddress?: string | null;
   socialLinks?: {
     twitter?: string;
     instagram?: string;
@@ -42,6 +43,7 @@ export const Header = ({
   name,
   bio,
   followedByCount,
+  tokenAddress,
   socialLinks,
 }: HeaderProps) => {
   const participants = useParticipants();
@@ -173,6 +175,7 @@ export const Header = ({
         isHost={isHost}
         bio={bio}
         streamTitle={name}
+        tokenAddress={tokenAddress}
         socialLinks={socialLinks}
       />
     </div>

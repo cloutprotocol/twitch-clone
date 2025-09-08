@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { onFollow, onUnfollow } from "@/actions/follow";
 import { ProfileEditModal } from "./profile-edit-modal";
+import { TokenActions } from "./token-actions";
 
 interface ActionsProps {
   hostIdentity: string;
@@ -18,6 +19,7 @@ interface ActionsProps {
   isHost: boolean;
   bio?: string | null;
   streamTitle: string;
+  tokenAddress?: string | null;
   socialLinks?: {
     twitter?: string;
     instagram?: string;
@@ -35,6 +37,7 @@ export const Actions = ({
   isHost,
   bio,
   streamTitle,
+  tokenAddress,
   socialLinks,
 }: ActionsProps) => {
   const [isPending, startTransition] = useTransition();
@@ -77,19 +80,26 @@ export const Actions = ({
 
   if (isHost) {
     return (
-      <ProfileEditModal
-        initialValues={{
-          bio: bio || "",
-          streamTitle: streamTitle,
-          twitterUrl: socialLinks?.twitter || "",
-          instagramUrl: socialLinks?.instagram || "",
-          tiktokUrl: socialLinks?.tiktok || "",
-          discordUrl: socialLinks?.discord || "",
-          telegramUrl: socialLinks?.telegram || "",
-          twitchUrl: socialLinks?.twitch || "",
-          websiteUrl: socialLinks?.website || "",
-        }}
-      />
+      <div className="flex flex-col gap-2">
+        <ProfileEditModal
+          initialValues={{
+            bio: bio || "",
+            streamTitle: streamTitle,
+            twitterUrl: socialLinks?.twitter || "",
+            instagramUrl: socialLinks?.instagram || "",
+            tiktokUrl: socialLinks?.tiktok || "",
+            discordUrl: socialLinks?.discord || "",
+            telegramUrl: socialLinks?.telegram || "",
+            twitchUrl: socialLinks?.twitch || "",
+            websiteUrl: socialLinks?.website || "",
+          }}
+        />
+        <TokenActions
+          hostIdentity={hostIdentity}
+          isHost={isHost}
+          tokenAddress={tokenAddress}
+        />
+      </div>
     );
   }
 

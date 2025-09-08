@@ -1,10 +1,10 @@
-import { ClerkProvider } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/components/auth/auth-provider";
+import { WalletContextProvider } from "@/components/auth/wallet-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,23 +19,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider 
-      appearance={{ baseTheme: dark }}
-    >
-      <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
-          <ThemeProvider
-            attribute="class"
-            forcedTheme="dark"
-            storageKey="rarecube-theme"
-            enableSystem={false}
-            disableTransitionOnChange
-          >
-            <Toaster theme="light" position="top-right" />
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className}>
+        <AuthProvider>
+          <WalletContextProvider>
+            <ThemeProvider
+              attribute="class"
+              forcedTheme="dark"
+              storageKey="rarecube-theme"
+              enableSystem={false}
+              disableTransitionOnChange
+            >
+              <Toaster theme="light" position="top-right" />
+              {children}
+            </ThemeProvider>
+          </WalletContextProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

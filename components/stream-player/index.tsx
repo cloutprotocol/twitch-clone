@@ -19,6 +19,7 @@ type CustomStream = {
   isLive: boolean;
   thumbnail: string | null;
   title: string;
+  tokenAddress?: string | null;
 };
 
 type CustomUser = {
@@ -100,6 +101,7 @@ export const StreamPlayer = ({
             name={stream.title}
             bio={user.bio}
             followedByCount={user._count.followedBy}
+            tokenAddress={stream.tokenAddress}
             socialLinks={{
               twitter: user.twitterUrl ?? undefined,
               instagram: user.instagramUrl ?? undefined,

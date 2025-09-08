@@ -13,24 +13,33 @@ export const getRecommended = async () => {
 
   let users = [];
   if (userId) {
-    // Single optimized query that excludes followed and blocked users
+    // Single optimized query that excludes followed and blocked users, only shows live streamers
     users = await db.user.findMany({
       where: {
-        NOT: [
-          { id: userId },
+        AND: [
           {
-            followedBy: {
-              some: {
-                followerId: userId,
-              },
+            stream: {
+              isLive: true, // Only show users who are currently live
             },
           },
           {
-            blockedby: {
-              some: {
-                blockerId: userId,
+            NOT: [
+              { id: userId },
+              {
+                followedBy: {
+                  some: {
+                    followerId: userId,
+                  },
+                },
               },
-            },
+              {
+                blockedby: {
+                  some: {
+                    blockerId: userId,
+                  },
+                },
+              },
+            ],
           },
         ],
       },
@@ -38,10 +47,16 @@ export const getRecommended = async () => {
         stream: {
           select: {
             isLive: true,
+            viewerCount: true,
           },
         },
       },
       orderBy: [
+        {
+          stream: {
+            viewerCount: "desc", // Prioritize by viewer count
+          },
+        },
         {
           createdAt: "desc",
         },
@@ -50,16 +65,29 @@ export const getRecommended = async () => {
     });
   } else {
     users = await db.user.findMany({
+      where: {
+        stream: {
+          isLive: true, // Only show users who are currently live
+        },
+      },
       include: {
         stream: {
           select: {
             isLive: true,
+            viewerCount: true,
           },
         },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        {
+          stream: {
+            viewerCount: "desc", // Prioritize by viewer count
+          },
+        },
+        {
+          createdAt: "desc",
+        },
+      ],
       take: 50, // Limit results for better performance
     });
   }

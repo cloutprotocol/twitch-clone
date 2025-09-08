@@ -1,5 +1,6 @@
-import { SignUp } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-  return <SignUp />;
+  // Redirect to home page where users can connect wallet
+  redirect("/");
 }

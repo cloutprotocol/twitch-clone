@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { LogOut, Menu } from "lucide-react";
-import { UserButton } from "@clerk/nextjs";
+import { useSession, signOut } from "next-auth/react";
 
 import { Button } from "@/components/ui/button";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";
+import { UserDropdown } from "@/components/auth/user-dropdown";
 
 export const Actions = () => {
+  const { data: session } = useSession();
   const { collapsed, onExpand, onCollapse } = useCreatorSidebar((state) => state);
 
   const handleMenuClick = () => {
@@ -54,7 +56,9 @@ export const Actions = () => {
         </Link>
       </Button>
       
-      <UserButton afterSignOutUrl="/" />
+      {session?.user && (
+        <UserDropdown user={session.user} />
+      )}
     </div>
   );
 };
