@@ -33,6 +33,9 @@ export const UserAvatar = ({
 }: UserAvatarProps) => {
   const canShowBadge = showBadge && isLive;
 
+  // Generate DiceBear Bottts Neutral avatar with custom styling if no imageUrl
+  const avatarSrc = imageUrl || `https://api.dicebear.com/9.x/bottts-neutral/svg?seed=${encodeURIComponent(username)}&eyes=dizzy,robocop,glow&eyesColor=ffffff&mouth=bite,grill02,square01&backgroundColor=00cc33&scale=90`;
+
   return (
     <div className="relative">
       <Avatar
@@ -41,7 +44,7 @@ export const UserAvatar = ({
           avatarSizes({ size })
         )}
       >
-        <AvatarImage src={imageUrl} className="object-cover" />
+        <AvatarImage src={avatarSrc} className="object-cover" />
         <AvatarFallback>
           {username[0]}
           {username[username.length - 1]}

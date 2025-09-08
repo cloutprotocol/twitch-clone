@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Loader2, User, Video } from "lucide-react";
 import moment from "moment";
+import { UserAvatar } from "@/components/user-avatar";
 
 interface SearchResult {
   id: string;
@@ -75,12 +76,10 @@ export const SearchPreview = ({
             >
               <div className="flex items-center gap-3 p-3">
                 <div className="relative">
-                  <Image
-                    src={result.user.imageUrl}
-                    alt={result.user.username}
-                    width={40}
-                    height={40}
-                    className="w-10 h-10 rounded-full object-cover"
+                  <UserAvatar
+                    username={result.user.username}
+                    imageUrl={result.user.imageUrl}
+                    isLive={result.isLive}
                   />
                   {result.isLive && (
                     <div className="absolute -bottom-2 right-0.5 bg-status-error text-text-inverse text-xs px-1 rounded">
