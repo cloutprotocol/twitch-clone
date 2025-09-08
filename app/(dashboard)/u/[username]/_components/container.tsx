@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useMediaQuery } from "usehooks-ts";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/theme-utils";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 
 interface ContainerProps {

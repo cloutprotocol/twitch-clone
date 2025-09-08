@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/theme-utils";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 
 interface WrapperProps {
@@ -13,7 +13,7 @@ export const Wrapper = ({ children }: WrapperProps) => {
   return (
     <aside
       className={cn(
-        "fixed left-0 flex flex-col h-full bg-background border-r border-[#2D2E35] z-50 transition-all duration-300 ease-in-out",
+        "fixed left-0 flex flex-col h-full bg-background border-r border-border-primary z-50 transition-all duration-300 ease-in-out",
         // Desktop behavior
         "lg:w-60 lg:translate-x-0",
         collapsed && "lg:w-[70px]",

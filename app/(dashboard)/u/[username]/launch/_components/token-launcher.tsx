@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -171,56 +172,58 @@ export const TokenLauncher = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-white">Token Information</CardTitle>
+    <div className="max-w-4xl mx-auto space-y-4 h-full overflow-y-auto">
+      <Card className="bg-background-secondary border-border-primary">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-text-primary text-xl">Token Information</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="name" className="text-gray-400">Token Name *</Label>
+              <Label htmlFor="name" className="text-text-tertiary">Token Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
                 placeholder="My Awesome Token"
-                className="bg-gray-800 border-gray-700 text-white"
+                className="bg-background-tertiary border-border-secondary text-text-primary"
               />
             </div>
             <div>
-              <Label htmlFor="symbol" className="text-gray-400">Symbol *</Label>
+              <Label htmlFor="symbol" className="text-text-tertiary">Symbol *</Label>
               <Input
                 id="symbol"
                 value={formData.symbol}
                 onChange={(e) => handleInputChange("symbol", e.target.value.toUpperCase())}
                 placeholder="MAT"
                 maxLength={10}
-                className="bg-gray-800 border-gray-700 text-white"
+                className="bg-background-tertiary border-border-secondary text-text-primary"
               />
             </div>
           </div>
 
           <div>
-            <Label htmlFor="description" className="text-gray-400">Description *</Label>
+            <Label htmlFor="description" className="text-text-tertiary">Description *</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Describe your token..."
               rows={3}
-              className="bg-gray-800 border-gray-700 text-white resize-none"
+              className="bg-background-tertiary border-border-secondary text-text-primary resize-none"
             />
           </div>
 
           <div>
-            <Label className="text-gray-400">Token Image (Optional)</Label>
+            <Label className="text-text-tertiary">Token Image (Optional)</Label>
             <div className="mt-2">
               {imagePreview ? (
                 <div className="relative inline-block">
-                  <img
+                  <Image
                     src={imagePreview}
                     alt="Token preview"
+                    width={128}
+                    height={128}
                     className="w-32 h-32 object-cover rounded-lg border-2 border-green-500"
                   />
                   <Button
@@ -233,9 +236,9 @@ export const TokenLauncher = () => {
                   </Button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-blue-500 transition-colors bg-gray-800/50">
-                  <Upload className="h-8 w-8 text-green-500" />
-                  <span className="text-sm text-gray-400">Upload Image</span>
+                <label className="flex flex-col items-center justify-center w-32 h-32 border-2 border-dashed border-border-primary rounded-lg cursor-pointer hover:border-interactive-primary transition-colors bg-background-secondary">
+                  <Upload className="h-8 w-8 text-interactive-primary" />
+                  <span className="text-sm text-text-tertiary">Upload Image</span>
                   <input
                     type="file"
                     className="hidden"
@@ -245,16 +248,16 @@ export const TokenLauncher = () => {
                 </label>
               )}
             </div>
-            <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF, WebP up to 15MB</p>
+            <p className="text-xs text-text-tertiary mt-1">PNG, JPG, GIF, WebP up to 15MB</p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-white">Launch Configuration</CardTitle>
+      <Card className="bg-background-secondary border-border-primary">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-text-primary text-xl">Launch Configuration</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div className="flex items-center space-x-2">
             <Switch
               checked={formData.launchType === "twitter-fee-sharing"}
@@ -262,37 +265,37 @@ export const TokenLauncher = () => {
                 handleInputChange("launchType", checked ? "twitter-fee-sharing" : "standard")
               }
             />
-            <Label className="text-gray-400">Enable Fee Sharing</Label>
+            <Label className="text-text-tertiary">Enable Fee Sharing</Label>
           </div>
 
           {formData.launchType === "twitter-fee-sharing" && (
-            <div className="space-y-4 p-4 bg-gray-800/50 rounded-lg border border-gray-700">
+            <div className="space-y-4 p-4 bg-background-tertiary/50 rounded-lg border border-border-secondary">
               <div>
-                <Label htmlFor="twitterUsername" className="text-gray-400">Twitter Username *</Label>
+                <Label htmlFor="twitterUsername" className="text-text-tertiary">Twitter Username *</Label>
                 <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-gray-400">@</span>
+                  <span className="text-text-tertiary">@</span>
                   <Input
                     id="twitterUsername"
                     value={formData.twitterUsername}
                     onChange={(e) => handleInputChange("twitterUsername", e.target.value)}
                     placeholder="elonmusk"
-                    className="bg-gray-800 border-gray-700 text-white"
+                    className="bg-background-tertiary border-border-secondary text-text-primary"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Enter just the username (no @ or links)</p>
+                <p className="text-xs text-text-tertiary mt-1">Enter just the username (no @ or links)</p>
                 
                 {feeShareWallet && (
-                  <div className="mt-2 p-2 bg-green-500/10 border border-green-500/20 rounded text-xs">
-                    <p className="text-green-400">✓ Fee share wallet found</p>
-                    <p className="text-gray-400 font-mono break-all">{feeShareWallet}</p>
+                  <div className="mt-2 p-2 bg-status-success/10 border border-status-success/20 rounded text-xs">
+                    <p className="text-status-success">✓ Fee share wallet found</p>
+                    <p className="text-text-tertiary font-mono break-all">{feeShareWallet}</p>
                   </div>
                 )}
               </div>
 
               <div>
                 <div className="flex items-center justify-between text-sm mb-2">
-                  <span className="text-gray-400">You: <span className="text-white font-medium">{(formData.creatorFeeBps / 100).toFixed(1)}%</span></span>
-                  <span className="text-gray-400">Them: <span className="text-white font-medium">{(formData.twitterUserFeeBps / 100).toFixed(1)}%</span></span>
+                  <span className="text-text-tertiary">You: <span className="text-text-primary font-medium">{(formData.creatorFeeBps / 100).toFixed(1)}%</span></span>
+                  <span className="text-text-tertiary">Them: <span className="text-text-primary font-medium">{(formData.twitterUserFeeBps / 100).toFixed(1)}%</span></span>
                 </div>
                 <Slider
                   value={[formData.creatorFeeBps]}
@@ -305,7 +308,7 @@ export const TokenLauncher = () => {
                   step={100}
                   className="mt-2"
                 />
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-text-tertiary mt-2">
                   The Twitter user will receive {(formData.twitterUserFeeBps / 100).toFixed(1)}% of fees, you get {(formData.creatorFeeBps / 100).toFixed(1)}%
                 </p>
               </div>
@@ -313,7 +316,7 @@ export const TokenLauncher = () => {
           )}
 
           <div>
-            <Label htmlFor="initialBuy" className="text-gray-400">Initial Buy (SOL)</Label>
+            <Label htmlFor="initialBuy" className="text-text-tertiary">Initial Buy (SOL)</Label>
             <Input
               id="initialBuy"
               type="number"
@@ -321,69 +324,69 @@ export const TokenLauncher = () => {
               onChange={(e) => handleInputChange("initialBuySOL", parseFloat(e.target.value) || 0)}
               min="0.001"
               step="0.001"
-              className="bg-gray-800 border-gray-700 text-white"
+              className="bg-background-tertiary border-border-secondary text-text-primary"
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-text-tertiary mt-1">
               Recommended minimum 0.2 SOL to avoid snipers. Leave ~0.05 SOL for transaction fees.
             </p>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-white">Social Links (Optional)</CardTitle>
+      <Card className="bg-background-secondary border-border-primary">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-text-primary text-xl">Social Links (Optional)</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-0">
           <div>
-            <Label htmlFor="website" className="text-gray-400">Website</Label>
+            <Label htmlFor="website" className="text-text-tertiary">Website</Label>
             <Input
               id="website"
               value={formData.websiteLink}
               onChange={(e) => handleInputChange("websiteLink", e.target.value)}
               placeholder="https://mytoken.com"
-              className="bg-gray-800 border-gray-700 text-white"
+              className="bg-background-tertiary border-border-secondary text-text-primary"
             />
           </div>
           <div>
-            <Label htmlFor="twitter" className="text-gray-400">Twitter</Label>
+            <Label htmlFor="twitter" className="text-text-tertiary">Twitter</Label>
             <Input
               id="twitter"
               value={formData.twitterLink}
               onChange={(e) => handleInputChange("twitterLink", e.target.value)}
               placeholder="https://twitter.com/mytoken"
-              className="bg-gray-800 border-gray-700 text-white"
+              className="bg-background-tertiary border-border-secondary text-text-primary"
             />
           </div>
           <div>
-            <Label htmlFor="telegram" className="text-gray-400">Telegram</Label>
+            <Label htmlFor="telegram" className="text-text-tertiary">Telegram</Label>
             <Input
               id="telegram"
               value={formData.telegramLink}
               onChange={(e) => handleInputChange("telegramLink", e.target.value)}
               placeholder="https://t.me/mytoken"
-              className="bg-gray-800 border-gray-700 text-white"
+              className="bg-background-tertiary border-border-secondary text-text-primary"
             />
           </div>
         </CardContent>
       </Card>
 
-      <Card className="bg-gray-900 border-gray-800">
-        <CardHeader>
-          <CardTitle className="text-yellow-400">Wallet Configuration</CardTitle>
+      <Card className="bg-background-secondary border-border-primary">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-status-warning text-xl">Wallet Configuration</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-xl">
-            <Label htmlFor="privateKey" className="text-yellow-400">Private Key (Temporary) *</Label>
+        <CardContent className="pt-0">
+          <div className="p-4 bg-status-warning/10 border border-status-warning/20 rounded-xl">
+            <Label htmlFor="privateKey" className="text-status-warning">Private Key (Temporary) *</Label>
             <Input
               id="privateKey"
               type="password"
               value={formData.privateKey}
               onChange={(e) => handleInputChange("privateKey", e.target.value)}
               placeholder="Your base58 encoded private key"
-              className="bg-gray-800 border-gray-700 text-white mt-1"
+              className="bg-background-tertiary border-border-secondary text-text-primary mt-1"
             />
-            <p className="text-xs text-yellow-400 mt-1">
+            <p className="text-xs text-status-warning mt-1">
               ⚠️ This will be replaced with global Solana wallet connection. Never share your private key.
             </p>
           </div>
@@ -393,7 +396,7 @@ export const TokenLauncher = () => {
       <Button
         onClick={handleLaunch}
         disabled={isLaunching}
-        className="w-full py-6 bg-green-500 hover:bg-green-600 disabled:bg-gray-600 text-black font-semibold text-lg"
+        className="w-full py-6 bg-interactive-primary hover:bg-interactive-hover disabled:bg-interactive-disabled text-text-inverse font-semibold text-lg"
         size="lg"
       >
         {isLaunching ? (

@@ -27,10 +27,9 @@ export class BagsSDKClient {
    */
   async getFeeShareWallet(twitterUsername: string): Promise<string | null> {
     try {
-      // Import the function directly from the SDK like the external implementation
-      const { getFeeShareWallet } = await import("@bagsfm/bags-sdk");
-      
-      return await getFeeShareWallet(twitterUsername);
+      // Function not available in current SDK version
+      console.log("getFeeShareWallet not available in current SDK version");
+      return null;
     } catch (error) {
       console.error("Error getting fee share wallet:", error);
       return null;
@@ -52,22 +51,8 @@ export class BagsSDKClient {
     privateKey: string;
   }) {
     try {
-      // Import the functions directly from the SDK like the external implementation
-      const { launchTokenStandard } = await import("@bagsfm/bags-sdk");
-      
-      // Set the private key in environment for the SDK to use
-      process.env.PRIVATE_KEY = params.privateKey;
-
-      return await launchTokenStandard(
-        params.imageUrl,
-        params.name,
-        params.symbol,
-        params.description,
-        params.telegram,
-        params.twitter,
-        params.website,
-        params.initialBuySOL || 0.01
-      );
+      // Function not available in current SDK version
+      throw new Error("launchTokenStandard not available in current SDK version");
     } catch (error) {
       console.error("Error launching standard token:", error);
       throw error;
@@ -95,25 +80,8 @@ export class BagsSDKClient {
     privateKey: string;
   }) {
     try {
-      // Import the functions directly from the SDK like the external implementation
-      const { launchTokenWithSharedFees } = await import("@bagsfm/bags-sdk");
-      
-      // Set the private key in environment for the SDK to use
-      process.env.PRIVATE_KEY = params.privateKey;
-
-      return await launchTokenWithSharedFees(
-        params.imageUrl,
-        params.name,
-        params.symbol,
-        params.description,
-        params.feeClaimerTwitterHandle,
-        params.creatorFeeBps || 1000,
-        params.feeClaimerFeeBps || 9000,
-        params.initialBuySOL || 0.01,
-        params.telegram,
-        params.twitter,
-        params.website
-      );
+      // Function not available in current SDK version
+      throw new Error("launchTokenWithSharedFees not available in current SDK version");
     } catch (error) {
       console.error("Error launching token with fee sharing:", error);
       throw error;

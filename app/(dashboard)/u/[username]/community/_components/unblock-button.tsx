@@ -29,7 +29,7 @@ export const UnblockButton = ({ userId }: UnblockButtonProps) => {
       onClick={onClick}
       variant="link"
       size="sm"
-      className="text-blue-500 w-full"
+      className="text-interactive-primary w-full"
     >
       Unblock
     </Button>

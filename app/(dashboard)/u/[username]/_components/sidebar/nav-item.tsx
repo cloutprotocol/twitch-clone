@@ -4,7 +4,7 @@ import Link from "next/link";
 import { LucideIcon } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/theme-utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";

@@ -112,7 +112,7 @@ export const TokenActions = ({
                 placeholder="Enter Solana contract address..."
                 className="mt-1"
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 This should be a valid Solana token contract address
               </p>
             </div>

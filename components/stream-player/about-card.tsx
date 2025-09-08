@@ -104,7 +104,7 @@ export const AboutCard = ({
             </div>
           )}
         </div>
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-text-secondary">
           <span className="font-semibold text-primary">{followedByCount}</span>{" "}
           {followedByLabel}
         </div>

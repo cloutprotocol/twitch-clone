@@ -10,16 +10,15 @@ export async function POST(req: NextRequest) {
     );
 
     // Test with minimal configuration using new API signature
-    const egressInfo = await egressClient.startRoomCompositeEgress({
+    const egressInfo = await (egressClient.startRoomCompositeEgress as any)({
       roomName: "68bb53566eefdf6e7663b144",
       layout: "grid",
-      output: {
-        file: {
-          filepath: `/tmp/test-recording-{time}.mp4`
-        }
-      },
       audioOnly: false,
-      videoOnly: false
+      videoOnly: false,
+      file: {
+        filepath: `/tmp/test-recording-{time}.mp4`,
+        fileType: 'MP4'
+      }
     });
 
     return NextResponse.json({

@@ -10,16 +10,18 @@ body,
 
 /* Improve mobile touch targets */
 @media (max-width: 1024px) {
-  button, a {
+
+  button,
+  a {
     min-height: 44px;
     min-width: 44px;
   }
-  
+
   /* Prevent horizontal scroll on mobile */
   body {
     overflow-x: hidden;
   }
-  
+
   /* Smooth sidebar animations */
   aside {
     will-change: transform;
@@ -31,9 +33,10 @@ body,
   scrollbar-width: none;
 }
 
-.hidden-scrollbar::-webkit-scrollbar { 
+.hidden-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 @layer base {
   :root {
     /* Legacy shadcn/ui tokens for backward compatibility */
@@ -62,33 +65,39 @@ body,
     --background-primary: 0 0% 100%;
     --background-secondary: 0 0% 98%;
     --background-tertiary: 0 0% 95%;
-    --background-overlay: 0 0% 0% / 0.5;
-    
+    --background-overlay: 0 0% 0%;
+    --background-overlay-opacity: 0.8;
+
     --text-primary: 0 0% 9%;
     --text-secondary: 0 0% 45%;
     --text-tertiary: 0 0% 65%;
     --text-inverse: 0 0% 98%;
-    
-    --interactive-primary: 221 83% 53%;
+
+    --interactive-primary: 120 100% 25%;
+    /* BAGS green #02ff40 */
     --interactive-secondary: 0 0% 95%;
-    --interactive-hover: 221 83% 45%;
-    --interactive-active: 221 83% 40%;
+    --interactive-hover: 120 100% 20%;
+    --interactive-active: 120 100% 15%;
     --interactive-disabled: 0 0% 85%;
-    
+
     --border-primary: 0 0% 89%;
     --border-secondary: 0 0% 93%;
-    --border-focus: 221 83% 53%;
-    
-    --status-success: 142 76% 36%;
+    --border-focus: 120 100% 25%;
+    /* BAGS green */
+
+    --status-success: 120 100% 25%;
+    /* BAGS green */
     --status-warning: 38 92% 50%;
     --status-error: 0 84% 60%;
     --status-info: 199 89% 48%;
-    
-    --streaming-live: 0 84% 60%;
+
+    --streaming-live: 120 100% 25%;
+    /* BAGS green for live */
     --streaming-offline: 0 0% 45%;
-    --streaming-viewer: 221 83% 53%;
+    --streaming-viewer: 120 100% 25%;
+    /* BAGS green */
   }
- 
+
   .dark {
     /* Legacy shadcn/ui dark tokens */
     --background: 224 13% 10%;
@@ -115,31 +124,37 @@ body,
     --background-primary: 224 13% 10%;
     --background-secondary: 225 12% 14%;
     --background-tertiary: 226 11% 18%;
-    --background-overlay: 0 0% 0% / 0.7;
-    
-    --text-primary: 0 0% 98%;
-    --text-secondary: 0 0% 70%;
-    --text-tertiary: 0 0% 55%;
+    --background-overlay: 0 0% 0%;
+    --background-overlay-opacity: 0.8;
+
+    --text-primary: 0 0% 95%;
+    --text-secondary: 0 0% 75%;
+    --text-tertiary: 0 0% 60%;
     --text-inverse: 0 0% 9%;
-    
-    --interactive-primary: 221 83% 53%;
+
+    --interactive-primary: 120 100% 30%;
+    /* BAGS green for dark theme */
     --interactive-secondary: 226 11% 18%;
-    --interactive-hover: 221 83% 60%;
-    --interactive-active: 221 83% 65%;
+    --interactive-hover: 120 100% 35%;
+    --interactive-active: 120 100% 40%;
     --interactive-disabled: 0 0% 25%;
-    
+
     --border-primary: 226 11% 22%;
     --border-secondary: 226 11% 18%;
-    --border-focus: 221 83% 53%;
-    
-    --status-success: 142 76% 45%;
+    --border-focus: 120 100% 30%;
+    /* BAGS green */
+
+    --status-success: 120 100% 30%;
+    /* BAGS green */
     --status-warning: 38 92% 55%;
     --status-error: 0 84% 65%;
     --status-info: 199 89% 55%;
-    
-    --streaming-live: 0 84% 65%;
+
+    --streaming-live: 120 100% 30%;
+    /* BAGS green for live */
     --streaming-offline: 0 0% 55%;
-    --streaming-viewer: 221 83% 60%;
+    --streaming-viewer: 120 100% 30%;
+    /* BAGS green */
   }
 
   /* High contrast theme for accessibility */
@@ -147,98 +162,39 @@ body,
     --background-primary: 0 0% 0%;
     --background-secondary: 0 0% 5%;
     --background-tertiary: 0 0% 10%;
-    --background-overlay: 0 0% 0% / 0.8;
-    
+    --background-overlay: 0 0% 0%;
+    --background-overlay-opacity: 0.9;
+
     --text-primary: 0 0% 100%;
     --text-secondary: 0 0% 85%;
     --text-tertiary: 0 0% 70%;
     --text-inverse: 0 0% 0%;
-    
-    --interactive-primary: 221 83% 70%;
+
+    --interactive-primary: 120 100% 40%;
+    /* BAGS green for high contrast */
     --interactive-secondary: 0 0% 15%;
-    --interactive-hover: 221 83% 80%;
-    --interactive-active: 221 83% 85%;
+    --interactive-hover: 120 100% 50%;
+    --interactive-active: 120 100% 60%;
     --interactive-disabled: 0 0% 30%;
-    
+
     --border-primary: 0 0% 30%;
     --border-secondary: 0 0% 20%;
-    --border-focus: 221 83% 70%;
-    
-    --status-success: 142 76% 60%;
+    --border-focus: 120 100% 40%;
+    /* BAGS green */
+
+    --status-success: 120 100% 40%;
+    /* BAGS green */
     --status-warning: 38 92% 70%;
     --status-error: 0 84% 75%;
     --status-info: 199 89% 70%;
-    
-    --streaming-live: 0 84% 75%;
-    --streaming-offline: 0 0% 70%;
-    --streaming-viewer: 221 83% 70%;
-  }
-}
- 
-@layer base {
-  * {
-    @apply border-border theme-transition;
-  }
-  
-  body {
-    @apply bg-background-primary text-text-primary;
-  }
-  
-  /* Remove transitions from media elements for performance */
-  img, video, iframe, canvas, svg {
-    @apply no-transition;
-  }
-}
 
-@layer utilities {
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    --streaming-live: 120 100% 40%;
+    /* BAGS green for live */
+    --streaming-offline: 0 0% 70%;
+    --streaming-viewer: 120 100% 40%;
+    /* BAGS green */
   }
-  
-  .animate-marquee {
-    animation: marquee 30s linear infinite;
-  }
-  
-  .animate-spin-slow {
-    animation: spin-slow 4s linear infinite;
-  }
-  
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-  
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-  
-  @keyframes spin-slow {
-    0% {
-      transform: rotateX(0deg) rotateY(0deg);
-    }
-    25% {
-      transform: rotateX(90deg) rotateY(90deg);
-    }
-    50% {
-      transform: rotateX(180deg) rotateY(180deg);
-    }
-    75% {
-      transform: rotateX(270deg) rotateY(270deg);
-    }
-    100% {
-      transform: rotateX(360deg) rotateY(360deg);
-    }
-  }
-}/* Perform
-ance optimizations */
-@layer base {
+
   /* Reduced motion preferences */
   @media (prefers-reduced-motion: reduce) {
     * {
@@ -248,20 +204,166 @@ ance optimizations */
     }
   }
 
-  /* Optimized transitions - only animate necessary properties */
+  /* Base styles */
   * {
+    @apply border-border;
     transition-property: color, background-color, border-color, opacity, transform;
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  body {
+    @apply bg-background-primary text-text-primary;
+  }
+
   /* Remove transitions from media elements for performance */
-  img, video, iframe, canvas, svg {
+  img,
+  video,
+  iframe,
+  canvas,
+  svg {
     transition: none !important;
   }
 
   /* Optimize will-change for animations */
-  .animate-in, .animate-out, [data-state="open"], [data-state="closed"] {
+  .animate-in,
+  .animate-out,
+  [data-state="open"],
+  [data-state="closed"] {
     will-change: transform, opacity;
+  }
+}
+
+/* Wallet Adapter Theme Overrides */
+.wallet-adapter-button {
+  background-color: hsl(var(--interactive-primary)) !important;
+  color: hsl(var(--text-inverse)) !important;
+  border: 1px solid hsl(var(--border-primary)) !important;
+  border-radius: 0.5rem !important;
+  font-weight: 600 !important;
+  transition: all 150ms ease !important;
+}
+
+.wallet-adapter-button:hover:not([disabled]) {
+  background-color: hsl(var(--interactive-hover)) !important;
+}
+
+.wallet-adapter-button:active:not([disabled]) {
+  background-color: hsl(var(--interactive-active)) !important;
+}
+
+.wallet-adapter-button[disabled] {
+  background-color: hsl(var(--interactive-disabled)) !important;
+  color: hsl(var(--text-tertiary)) !important;
+  cursor: not-allowed !important;
+}
+
+.wallet-adapter-modal {
+  background-color: hsl(var(--background-primary)) !important;
+  border: 1px solid hsl(var(--border-primary)) !important;
+  color: hsl(var(--text-primary)) !important;
+}
+
+.wallet-adapter-modal-title {
+  color: hsl(var(--text-primary)) !important;
+}
+
+.wallet-adapter-modal-list {
+  background-color: hsl(var(--background-secondary)) !important;
+}
+
+.wallet-adapter-modal-list-item {
+  background-color: hsl(var(--background-secondary)) !important;
+  border: 1px solid hsl(var(--border-secondary)) !important;
+  color: hsl(var(--text-primary)) !important;
+}
+
+.wallet-adapter-modal-list-item:hover {
+  background-color: hsl(var(--background-tertiary)) !important;
+  border-color: hsl(var(--border-focus)) !important;
+}
+
+@layer utilities {
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 4s linear infinite;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0%);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes spin-slow {
+    0% {
+      transform: rotateX(0deg) rotateY(0deg);
+    }
+
+    25% {
+      transform: rotateX(90deg) rotateY(90deg);
+    }
+
+    50% {
+      transform: rotateX(180deg) rotateY(180deg);
+    }
+
+    75% {
+      transform: rotateX(270deg) rotateY(270deg);
+    }
+
+    100% {
+      transform: rotateX(360deg) rotateY(360deg);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(2, 255, 64, 0.3);
+    }
+
+    50% {
+      box-shadow: 0 0 30px rgba(2, 255, 64, 0.6);
+    }
   }
 }

@@ -59,7 +59,7 @@ module.exports = withUt({
         'background-primary': themeConfig.colors.background.primary,
         'background-secondary': themeConfig.colors.background.secondary,
         'background-tertiary': themeConfig.colors.background.tertiary,
-        'background-overlay': themeConfig.colors.background.overlay,
+        'background-overlay': 'hsl(var(--background-overlay) / var(--background-overlay-opacity))',
         
         'text-primary': themeConfig.colors.text.primary,
         'text-secondary': themeConfig.colors.text.secondary,
@@ -129,7 +129,7 @@ module.exports = withUt({
   plugins: [
     require("tailwindcss-animate"),
     // Custom plugin for theme utilities
-    function({ addUtilities }) {
+    function({ addUtilities }: any) {
       addUtilities({
         '.theme-transition': {
           'transition-property': 'color, background-color, border-color, opacity, transform',
@@ -139,6 +139,7 @@ module.exports = withUt({
         '.no-transition': {
           'transition': 'none !important',
         },
+
       })
     }
   ],

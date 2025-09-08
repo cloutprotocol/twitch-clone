@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getCurrentSession } from "@/lib/auth-service";
 import { SignInButton } from "@/components/auth/sign-in-button";
 import { UserDropdown } from "@/components/auth/user-dropdown";
+import { TwitchStyleThemeToggle } from "@/components/theme/twitch-style-toggle";
 
 export const Actions = async () => {
   const session = await getCurrentSession();
@@ -12,6 +13,8 @@ export const Actions = async () => {
 
   return (
     <div className="flex items-center justify-end gap-x-2 ml-4 lg:ml-0">
+      <TwitchStyleThemeToggle />
+      
       {!user && (
         <SignInButton size="sm" />
       )}

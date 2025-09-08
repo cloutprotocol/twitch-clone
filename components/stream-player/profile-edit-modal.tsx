@@ -141,7 +141,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
             
             <div className="grid grid-cols-1 gap-3">
               <div>
-                <Label htmlFor="twitterUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="twitterUrl" className="text-xs text-text-secondary">
                   X (Twitter)
                 </Label>
                 <Input
@@ -155,7 +155,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="instagramUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="instagramUrl" className="text-xs text-text-secondary">
                   Instagram
                 </Label>
                 <Input
@@ -169,7 +169,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="tiktokUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="tiktokUrl" className="text-xs text-text-secondary">
                   TikTok
                 </Label>
                 <Input
@@ -183,7 +183,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="discordUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="discordUrl" className="text-xs text-text-secondary">
                   Discord
                 </Label>
                 <Input
@@ -197,7 +197,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="telegramUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="telegramUrl" className="text-xs text-text-secondary">
                   Telegram
                 </Label>
                 <Input
@@ -211,7 +211,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="twitchUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="twitchUrl" className="text-xs text-text-secondary">
                   Twitch
                 </Label>
                 <Input
@@ -225,7 +225,7 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
               </div>
 
               <div>
-                <Label htmlFor="websiteUrl" className="text-xs text-muted-foreground">
+                <Label htmlFor="websiteUrl" className="text-xs text-text-secondary">
                   Website
                 </Label>
                 <Input

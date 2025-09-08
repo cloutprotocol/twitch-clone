@@ -1,12 +1,12 @@
 /**
  * Example: Refactored Navbar using new theme system
- * Before: hardcoded bg-[#252731]
+ * Before: hardcoded bg-background-secondary
  * After: semantic theme tokens
  */
 
-import { Logo } from "../(browse)/_components/navbar/logo";
-import { Search } from "../(browse)/_components/navbar/search";
-import { Actions } from "../(browse)/_components/navbar/actions";
+import { Logo } from "@/app/(browse)/_components/navbar/logo";
+import { Search } from "@/app/(browse)/_components/navbar/search";
+import { Actions } from "@/app/(browse)/_components/navbar/actions";
 import { cn } from "@/lib/theme-utils";
 
 export const RefactoredNavbar = () => {

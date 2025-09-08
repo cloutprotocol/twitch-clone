@@ -2,7 +2,7 @@
 
 import { Stream, User } from "@prisma/client";
 import { LiveKitRoom } from "@livekit/components-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/theme-utils";
 import { useChatSidebar } from "@/store/use-chat-sidebar";
 import { useViewerToken } from "@/hooks/use-viewer-token";
 import { ChatToggle } from "./chat-toggle";

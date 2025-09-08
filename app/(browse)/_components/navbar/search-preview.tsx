@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Loader2, User, Video } from "lucide-react";
 import moment from "moment";
 
@@ -42,18 +43,18 @@ export const SearchPreview = ({
       {isLoading && (
         <div className="flex items-center justify-center p-4">
           <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          <span className="text-sm text-muted-foreground">Searching...</span>
+          <span className="text-sm text-text-secondary">Searching...</span>
         </div>
       )}
 
       {error && (
-        <div className="p-4 text-sm text-red-500">
+        <div className="p-4 text-sm text-status-error">
           {error}
         </div>
       )}
 
       {!isLoading && !error && results.length === 0 && query.length >= 2 && (
-        <div className="p-4 text-sm text-muted-foreground">
+        <div className="p-4 text-sm text-text-secondary">
           No results found for &quot;{query}&quot;
         </div>
       )}
@@ -61,7 +62,7 @@ export const SearchPreview = ({
       {!isLoading && !error && results.length > 0 && (
         <>
           <div className="p-2 border-b border-border">
-            <span className="text-xs text-muted-foreground font-medium">
+            <span className="text-xs text-text-secondary font-medium">
               Search Results
             </span>
           </div>
@@ -74,31 +75,33 @@ export const SearchPreview = ({
             >
               <div className="flex items-center gap-3 p-3">
                 <div className="relative">
-                  <img
+                  <Image
                     src={result.user.imageUrl}
                     alt={result.user.username}
+                    width={40}
+                    height={40}
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   {result.isLive && (
-                    <div className="absolute -bottom-2 right-0.5 bg-red-500 text-white text-xs px-1 rounded">
+                    <div className="absolute -bottom-2 right-0.5 bg-status-error text-text-inverse text-xs px-1 rounded">
                       LIVE
                     </div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <User className="h-3 w-3 text-muted-foreground" />
+                    <User className="h-3 w-3 text-text-secondary" />
                     <span className="font-medium text-sm truncate">
                       {result.user.username}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <Video className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground truncate">
+                    <Video className="h-3 w-3 text-text-secondary" />
+                    <span className="text-xs text-text-secondary truncate">
                       {result.title}
                     </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-text-secondary">
                     {moment(result.updatedAt).fromNow()}
                   </span>
                 </div>
@@ -109,7 +112,7 @@ export const SearchPreview = ({
             <Link
               href={`/search?term=${encodeURIComponent(query)}`}
               onClick={onClose}
-              className="block p-3 text-center text-sm text-blue-500 hover:bg-muted/50 border-t border-border"
+              className="block p-3 text-center text-sm text-interactive-primary hover:bg-muted/50 border-t border-border"
             >
               View all results for &quot;{query}&quot;
             </Link>

@@ -31,13 +31,13 @@ export const ResultCard = ({ data }: ResultCardProps) => {
         </div>
         <div className="space-y-1">
           <div className="flex items-center gap-x-2">
-            <p className="font-bold text-lg cursor-pointer hover:text-blue-500">
+            <p className="font-bold text-lg cursor-pointer hover:text-interactive-primary">
               {data.user.username}
             </p>
             <VerifiedMark />
           </div>
-          <p className="text-sm text-muted-foreground">{data.title}</p>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-text-secondary">{data.title}</p>
+          <p className="text-sm text-text-secondary">
             {moment(data.updatedAt).fromNow()}
           </p>
         </div>

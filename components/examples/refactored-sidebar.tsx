@@ -1,6 +1,6 @@
 /**
  * Example: Refactored Sidebar using new theme system
- * Before: hardcoded border-[#2D2E35]
+ * Before: hardcoded border-border-primary
  * After: semantic theme tokens with better responsive behavior
  */
 

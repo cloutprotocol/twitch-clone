@@ -54,7 +54,7 @@ export const CommunityItem = ({
             onClick={handleBlock}
             className="h-auto w-auto p-1 opacity-0 group-hover:opacity-100 transition"
           >
-            <MinusCircle className="h-4 w-4 text-muted-foreground" />
+            <MinusCircle className="h-4 w-4 text-text-secondary" />
           </Button>
         </Hint>
       )}

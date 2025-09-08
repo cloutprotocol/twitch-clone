@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/theme-utils";
 
 interface LiveBadgeProps {
   className?: string;

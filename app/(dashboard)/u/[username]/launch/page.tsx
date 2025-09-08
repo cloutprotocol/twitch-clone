@@ -16,15 +16,8 @@ const LaunchPage = async ({ params }: LaunchPageProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e10] text-white">
-      <div className="container mx-auto py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Launch Token</h1>
-          <p className="text-gray-400">
-            Create and launch Solana tokens with optional fee sharing capabilities.
-          </p>
-        </div>
-        
+    <div className="h-full bg-background-primary text-text-inverse">
+      <div className="container mx-auto p-4 h-full">
         <TokenLauncher />
       </div>
     </div>

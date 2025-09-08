@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 import { UserDropdown } from "@/components/auth/user-dropdown";
+import { TwitchStyleThemeToggle } from "@/components/theme/twitch-style-toggle";
 
 export const Actions = () => {
   const { data: session } = useSession();
@@ -22,6 +23,8 @@ export const Actions = () => {
 
   return (
     <div className="flex items-center justify-end gap-x-2">
+      <TwitchStyleThemeToggle />
+      
       {/* Mobile menu button - only show on mobile */}
       <Button
         size="sm"
@@ -35,7 +38,7 @@ export const Actions = () => {
       <Button
         size="sm"
         variant="ghost"
-        className="text-muted-foreground hover:text-primary hidden sm:flex"
+        className="text-text-secondary hover:text-primary hidden sm:flex"
         asChild
       >
         <Link href="/">
@@ -48,7 +51,7 @@ export const Actions = () => {
       <Button
         size="sm"
         variant="ghost"
-        className="text-muted-foreground hover:text-primary sm:hidden p-2"
+        className="text-text-secondary hover:text-primary sm:hidden p-2"
         asChild
       >
         <Link href="/">

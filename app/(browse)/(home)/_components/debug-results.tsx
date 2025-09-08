@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import Image from "next/image";
 
 export const DebugResults = async () => {
   try {
@@ -54,13 +55,15 @@ export const DebugResults = async () => {
                     <div className={`relative z-10 transition-opacity duration-300 ${
                       stream.isLive ? 'group-hover:opacity-30' : ''
                     }`}>
-                      <img
+                      <Image
                         src={stream.user.imageUrl}
                         alt={stream.user.username}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 rounded-full border-2 border-white/80"
                       />
                       {stream.isLive && (
-                        <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded">
+                        <div className="absolute -top-1 -right-1 bg-status-error text-text-inverse text-xs px-1 rounded">
                           LIVE
                         </div>
                       )}
@@ -69,8 +72,8 @@ export const DebugResults = async () => {
                   
                   <div className="space-y-2">
                     <h3 className="font-semibold text-sm line-clamp-2">{stream.title}</h3>
-                    <p className="text-xs text-muted-foreground">{stream.user.username}</p>
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <p className="text-xs text-text-secondary">{stream.user.username}</p>
+                    <div className="flex items-center justify-between text-xs text-text-secondary">
                       <span>👁 {stream.viewerCount} viewers</span>
                       <span>💬 {stream._count.chatMessages} messages</span>
                     </div>
@@ -87,8 +90,8 @@ export const DebugResults = async () => {
       <div className="w-full">
         <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-20">
           <div className="text-center py-16">
-            <h2 className="text-2xl font-bold mb-4 text-red-500">Debug Error</h2>
-            <p className="text-muted-foreground">{error instanceof Error ? error.message : 'An unknown error occurred'}</p>
+            <h2 className="text-2xl font-bold mb-4 text-status-error">Debug Error</h2>
+            <p className="text-text-secondary">{error instanceof Error ? error.message : 'An unknown error occurred'}</p>
           </div>
         </div>
       </div>

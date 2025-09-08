@@ -1,11 +1,31 @@
 "use client"
 
 import * as React from "react"
-import { ThemeProvider as NextThemesProvider } from "next-themes"
+import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes"
 import { type ThemeProviderProps } from "next-themes/dist/types"
+import { Toaster } from "sonner"
 
 interface ExtendedThemeProviderProps extends Omit<ThemeProviderProps, 'themes'> {
   children: React.ReactNode
+}
+
+// Theme-aware Toaster component
+function ThemedToaster() {
+  const { theme } = useTheme()
+  
+  return (
+    <Toaster 
+      theme={theme === 'light' ? 'light' : 'dark'} 
+      position="top-right"
+      toastOptions={{
+        style: {
+          background: 'hsl(var(--background-secondary))',
+          color: 'hsl(var(--text-primary))',
+          border: '1px solid hsl(var(--border-primary))',
+        },
+      }}
+    />
+  )
 }
 
 export function ThemeProvider({ children, ...props }: ExtendedThemeProviderProps) {
@@ -20,15 +40,7 @@ export function ThemeProvider({ children, ...props }: ExtendedThemeProviderProps
       {...props}
     >
       {children}
+      <ThemedToaster />
     </NextThemesProvider>
   )
-}
-
-// Hook for accessing theme with type safety
-export function useTheme() {
-  const context = React.useContext(NextThemesProvider as any)
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider')
-  }
-  return context
 }

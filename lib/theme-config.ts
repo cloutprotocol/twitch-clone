@@ -29,7 +29,7 @@ export const themeConfig = {
       primary: 'hsl(var(--background-primary))',
       secondary: 'hsl(var(--background-secondary))',
       tertiary: 'hsl(var(--background-tertiary))',
-      overlay: 'hsl(var(--background-overlay))',
+      overlay: 'hsl(var(--background-overlay) / var(--background-overlay-opacity))',
     },
     
     // Text hierarchy

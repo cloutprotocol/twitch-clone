@@ -121,19 +121,19 @@ export const Header = ({
               </p>
             </div>
           ) : (
-            <p className="font-semibold text-xs text-muted-foreground">
+            <p className="font-semibold text-xs text-text-secondary">
               Offline
             </p>
           )}
           
           {/* About Section */}
           <div className="space-y-2 pt-1">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-text-secondary">
               <span className="font-semibold text-primary">{followedByCount}</span>{" "}
               {followedByLabel}
             </div>
             {bio && (
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-md">
+              <p className="text-sm text-text-secondary leading-relaxed max-w-md">
                 {bio}
               </p>
             )}

@@ -49,7 +49,7 @@ export const ChatCommunity = ({
   if (isHidden) {
     return (
       <div className="flex flex-1 items-center justify-center">
-        <p className="text-sm text-muted-foreground">Community is disabled</p>
+        <p className="text-sm text-text-secondary">Community is disabled</p>
       </div>
     );
   }
@@ -62,7 +62,7 @@ export const ChatCommunity = ({
         className="border-white/10"
       />
       <ScrollArea className="gap-y-2 mt-4">
-        <p className="text-center text-sm text-muted-foreground hidden last:block p-2">
+        <p className="text-center text-sm text-text-secondary hidden last:block p-2">
           No results
         </p>
         {filteredParticipants.map((participant) => (

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef } from "react";
 import { Eye, MessageCircle, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -56,7 +57,7 @@ export const ResultCard = ({ data }: ResultCardProps) => {
   return (
     <Link href={`/${data.user.username}`}>
       <div 
-        className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1"
+        className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 w-full max-w-sm mx-auto"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -78,10 +79,11 @@ export const ResultCard = ({ data }: ResultCardProps) => {
             /* Static Thumbnail or Avatar for offline streams */
             <div className="relative w-full h-full">
               {data.thumbnail && !imageError ? (
-                <img
+                <Image
                   src={data.thumbnail}
                   alt={data.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
                   onError={() => setImageError(true)}
                 />
               ) : (
@@ -98,7 +100,7 @@ export const ResultCard = ({ data }: ResultCardProps) => {
           )}
 
           {/* Overlay */}
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-transparent group-hover:bg-background-overlay transition-colors duration-300" />
           
           {/* Play Button */}
           {!data.isLive && (
@@ -124,11 +126,11 @@ export const ResultCard = ({ data }: ResultCardProps) => {
                   streamId={data.id}
                   isLive={data.isLive}
                   fallbackCount={data.viewerCount || 0}
-                  className="flex items-center space-x-1 bg-black/80 rounded-full px-3 py-1 text-white text-xs font-medium backdrop-blur-sm"
+                  className="flex items-center space-x-1 bg-black/90 dark:bg-black/80 rounded-full px-3 py-1 text-white text-xs font-medium backdrop-blur-sm shadow-lg"
                 />
               )}
               {(data._count?.chatMessages || 0) > 0 && (
-                <div className="flex items-center space-x-1 bg-black/80 rounded-full px-3 py-1 text-white text-xs font-medium backdrop-blur-sm">
+                <div className="flex items-center space-x-1 bg-black/90 dark:bg-black/80 rounded-full px-3 py-1 text-white text-xs font-medium backdrop-blur-sm shadow-lg">
                   <MessageCircle className="w-3 h-3" />
                   <span>{formatViewerCount(data._count.chatMessages)}</span>
                 </div>
@@ -151,11 +153,11 @@ export const ResultCard = ({ data }: ResultCardProps) => {
               <h3 className="font-semibold text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors">
                 {data.title}
               </h3>
-              <p className="text-muted-foreground text-xs mt-1">
+              <p className="text-text-secondary text-xs mt-1">
                 {data.user.username}
               </p>
               {!data.isLive && data.viewerCount > 0 && (
-                <div className="flex items-center space-x-1 text-muted-foreground text-xs mt-1">
+                <div className="flex items-center space-x-1 text-text-secondary text-xs mt-1">
                   <Eye className="w-3 h-3" />
                   <span>{formatViewerCount(data.viewerCount)} views</span>
                 </div>

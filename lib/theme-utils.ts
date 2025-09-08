@@ -45,16 +45,16 @@ export const themeColors = {
   
   // Status variants
   status: {
-    success: "bg-status-success text-white",
-    warning: "bg-status-warning text-white",
-    error: "bg-status-error text-white",
-    info: "bg-status-info text-white",
+    success: "bg-status-success text-text-inverse",
+    warning: "bg-status-warning text-text-inverse",
+    error: "bg-status-error text-text-inverse",
+    info: "bg-status-info text-text-inverse",
   },
   
   // Streaming specific
   streaming: {
-    live: "bg-streaming-live text-white",
-    offline: "bg-streaming-offline text-white",
+    live: "bg-streaming-live text-text-inverse",
+    offline: "bg-streaming-offline text-text-inverse",
     viewer: "text-streaming-viewer",
   }
 } as const
