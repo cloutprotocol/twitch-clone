@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Clapperboard } from "lucide-react";
+import { Rocket } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { getCurrentSession } from "@/lib/auth-service";
@@ -19,13 +19,12 @@ export const Actions = async () => {
         <div className="flex items-center gap-x-4">
           <Button
             size="sm"
-            variant="ghost"
-            className="text-muted-foreground hover:text-primary"
+            className="bg-green-500 hover:bg-green-600 text-black font-semibold"
             asChild
           >
-            <Link href={`/u/${user.username}`}>
-              <Clapperboard className="h-5 w-5 lg:mr-2" />
-              <span className="hidden lg:block">Dashboard</span>
+            <Link href={`/u/${user.username}/launch`}>
+              <Rocket className="h-4 w-4 lg:mr-2" />
+              <span className="hidden lg:block">Launch</span>
             </Link>
           </Button>
           
