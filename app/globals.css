@@ -212,6 +212,28 @@ body,
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Disable focus outlines globally for inputs and buttons */
+  input:focus,
+  input:focus-visible,
+  button:focus,
+  button:focus-visible,
+  textarea:focus,
+  textarea:focus-visible,
+  select:focus,
+  select:focus-visible,
+  [role="button"]:focus,
+  [role="button"]:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+
+  /* Also disable focus rings on any focusable elements */
+  *:focus,
+  *:focus-visible {
+    outline: none !important;
+  }
+
   body {
     @apply bg-background-primary text-text-primary;
   }
