@@ -169,10 +169,16 @@ export class ThumbnailGenerator {
         })
       });
 
-      console.log(`Generated thumbnail for stream ${this.streamId}: ${thumbnailUrl}`);
+      // Silent success - only log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`🖼️ Auto-generated thumbnail for stream ${this.streamId}`);
+      }
       
     } catch (error) {
-      console.error('Failed to generate thumbnail:', error);
+      // Silent failure - only log in development
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Auto thumbnail generation failed:', error);
+      }
     }
   }
 }

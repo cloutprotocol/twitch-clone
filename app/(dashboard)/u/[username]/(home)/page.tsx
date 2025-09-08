@@ -28,6 +28,7 @@ const CreatorPage = async ({ params }: CreatorPageProps) => {
         user={user} 
         stream={user.stream} 
         isFollowing 
+        isOwner={true}
         chatMessages={chatMessages.map(msg => ({
           ...msg,
           userId: msg.userId ?? undefined,

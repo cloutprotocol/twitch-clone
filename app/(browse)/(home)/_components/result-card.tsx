@@ -2,11 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Eye, MessageCircle, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatViewerCount } from "@/lib/format";
-// Removed getBestThumbnail import - using API endpoint instead
 
 import { LiveBadge } from "@/components/live-badge";
 import { LiveParticipantCount } from "@/components/live-participant-count";
@@ -35,12 +34,21 @@ export const ResultCard = ({ data }: ResultCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(data.thumbnail);
+  const [showLivePreview, setShowLivePreview] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Load fresh thumbnail on hover for live streams
   const handleMouseEnter = () => {
     setIsHovered(true);
-    if (data.isLive && !thumbnailUrl) {
-      // Use the thumbnail API endpoint for fresh thumbnails
+    if (data.isLive) {
+      // For live streams, show live preview after a short delay
+      setTimeout(() => {
+        if (isHovered) {
+          setShowLivePreview(true);
+        }
+      }, 500); // 500ms delay before showing live preview
+      
+      // Also refresh thumbnail
       const freshThumbnailUrl = `/api/thumbnail/${data.id}?t=${Date.now()}`;
       setThumbnailUrl(freshThumbnailUrl);
     }
@@ -48,7 +56,24 @@ export const ResultCard = ({ data }: ResultCardProps) => {
 
   const handleMouseLeave = () => {
     setIsHovered(false);
+    setShowLivePreview(false);
   };
+
+  // Initialize live preview when needed
+  useEffect(() => {
+    if (showLivePreview && videoRef.current && data.isLive) {
+      // Here you could initialize a lightweight live preview
+      // For now, we'll just refresh the thumbnail more frequently
+      const interval = setInterval(() => {
+        if (showLivePreview) {
+          const freshThumbnailUrl = `/api/thumbnail/${data.id}?t=${Date.now()}`;
+          setThumbnailUrl(freshThumbnailUrl);
+        }
+      }, 2000); // Refresh every 2 seconds while hovering
+
+      return () => clearInterval(interval);
+    }
+  }, [showLivePreview, data.isLive, data.id]);
 
   return (
     <Link href={`/${data.user.username}`}>
@@ -80,10 +105,10 @@ export const ResultCard = ({ data }: ResultCardProps) => {
               </div>
             )}
             
-            {/* Live indicator overlay for fresh content */}
-            {data.isLive && isHovered && (
+            {/* Live preview indicator */}
+            {data.isLive && showLivePreview && (
               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                LIVE
+                LIVE PREVIEW
               </div>
             )}
           </div>

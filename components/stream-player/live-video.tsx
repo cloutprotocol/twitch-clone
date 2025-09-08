@@ -11,10 +11,11 @@ import { ThumbnailGenerator } from "@/lib/client-thumbnail-generator";
 
 interface LiveVideoProps {
   participant: Participant;
-  streamId?: string; // Add streamId for thumbnail generation
+  streamId?: string;
+  showThumbnailControls?: boolean; // Only show controls in dashboard
 }
 
-export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
+export const LiveVideo = ({ participant, streamId, showThumbnailControls = false }: LiveVideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const thumbnailGeneratorRef = useRef<ThumbnailGenerator | null>(null);
@@ -53,8 +54,7 @@ export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
       
       // Wait for video to start playing
       const handleVideoPlay = () => {
-        console.log(`🎬 Starting thumbnail generation for stream ${streamId}`);
-        
+        // Start automatic thumbnail generation (silent)
         thumbnailGeneratorRef.current = new ThumbnailGenerator(
           video, 
           streamId, 
@@ -62,8 +62,10 @@ export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
         );
         thumbnailGeneratorRef.current.start();
         
-        // Update UI to show thumbnail generation is active
-        setLastThumbnailTime(new Date().toLocaleTimeString());
+        // Only update UI if controls are shown (dashboard)
+        if (showThumbnailControls) {
+          setLastThumbnailTime(new Date().toLocaleTimeString());
+        }
       };
 
       video.addEventListener('play', handleVideoPlay);
@@ -96,11 +98,12 @@ export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
           { width: 1280, height: 720, quality: 0.9 }
         );
         
-        console.log("✅ Thumbnail generated:", thumbnailUrl);
         setLastThumbnailTime(new Date().toLocaleTimeString());
         
-        // Show success notification
-        alert(`Thumbnail generated successfully! ${thumbnailUrl}`);
+        // Show success notification only in dashboard
+        if (showThumbnailControls) {
+          alert(`Thumbnail generated successfully!`);
+        }
       } catch (error) {
         console.error("❌ Failed to generate thumbnail:", error);
         alert("Failed to generate thumbnail. Check console for details.");
@@ -135,12 +138,12 @@ export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
     <div ref={wrapperRef} className="relative h-full flex">
       <video ref={videoRef} width="100%" />
       <div className="absolute top-0 h-full w-full opacity-0 hover:opacity-100 hover:transition-all">
-        {/* Thumbnail Generation Status */}
-        {streamId && (
+        {/* Thumbnail Generation Controls - Only show in dashboard */}
+        {streamId && showThumbnailControls && (
           <div className="absolute top-4 right-4 bg-black/80 rounded-lg px-3 py-2 text-white text-sm">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Thumbnails Active</span>
+              <span>Thumbnail</span>
             </div>
             {lastThumbnailTime && (
               <div className="text-xs text-gray-300 mt-1">
@@ -149,7 +152,7 @@ export const LiveVideo = ({ participant, streamId }: LiveVideoProps) => {
             )}
             <button
               onClick={generateThumbnailNow}
-              className="mt-2 bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded text-xs transition-colors"
+              className="mt-2 bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs transition-colors"
             >
               Generate Now
             </button>
