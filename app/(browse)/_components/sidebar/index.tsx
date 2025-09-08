@@ -6,6 +6,7 @@ import { Wrapper } from "./wrapper";
 import { Following, FollowingSkeleton } from "./following";
 import { Toggle, ToggleSkeleton } from "./toggle";
 import { Recommended, RecommendedSkeleton } from "./recommended";
+import { LiveStreamers, LiveStreamersSkeleton } from "./live-streamers";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
 
 export const Sidebar = async () => {
@@ -27,6 +28,7 @@ export const Sidebar = async () => {
       </div>
       <Toggle />
       <div className="space-y-4 pt-4 lg:pt-0 flex-1">
+        <LiveStreamers />
         <Following data={following} />
         <Recommended data={recommended} />
       </div>
@@ -46,6 +48,7 @@ export const SidebarSkeleton = () => {
       </div>
       <ToggleSkeleton />
       <div className="flex-1">
+        <LiveStreamersSkeleton />
         <FollowingSkeleton />
         <RecommendedSkeleton />
       </div>

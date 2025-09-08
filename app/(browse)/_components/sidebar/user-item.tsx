@@ -14,9 +14,10 @@ interface UserItemProps {
   username: string;
   imageUrl: string;
   isLive?: boolean;
+  viewerCount?: number;
 }
 
-export const UserItem = ({ username, imageUrl, isLive }: UserItemProps) => {
+export const UserItem = ({ username, imageUrl, isLive, viewerCount }: UserItemProps) => {
   const pathname = usePathname();
 
   const { collapsed } = useSidebar((state) => state);
@@ -42,7 +43,16 @@ export const UserItem = ({ username, imageUrl, isLive }: UserItemProps) => {
           )}
         >
           <UserAvatar imageUrl={imageUrl} username={username} isLive={isLive} />
-          {!collapsed && <p className="truncate">{username}</p>}
+          {!collapsed && (
+            <div className="flex-1 min-w-0">
+              <p className="truncate text-sm">{username}</p>
+              {isLive && viewerCount !== undefined && (
+                <p className="text-xs text-text-secondary">
+                  {viewerCount} {viewerCount === 1 ? 'viewer' : 'viewers'}
+                </p>
+              )}
+            </div>
+          )}
           {!collapsed && isLive && <LiveBadge className="ml-auto" />}
         </div>
       </Link>
