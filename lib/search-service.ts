@@ -197,6 +197,7 @@ export const getSearch = async (term?: string) => {
         take: 50,
       });
     }
+  }
   } catch (error) {
     console.error("Error in search service:", error);
     // Return empty array on database error
