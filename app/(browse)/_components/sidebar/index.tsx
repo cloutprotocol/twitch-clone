@@ -13,7 +13,7 @@ export const Sidebar = async () => {
   // Parallelize sidebar data fetching with error handling
   let recommended: any[] = [];
   let following: any[] = [];
-  
+
   try {
     [recommended, following] = await Promise.all([
       getRecommended(),
@@ -33,7 +33,18 @@ export const Sidebar = async () => {
           <div className="w-8 h-8 bg-interactive-primary rounded-lg flex items-center justify-center">
             <span className="text-text-inverse font-bold text-lg">R</span>
           </div>
-          <span className="font-bold text-text-primary text-lg lg:block hidden">rarecube.tv</span>
+          <span
+            className="lg:block hidden lowercase"
+            style={{
+              color: 'hsl(var(--text-primary))',
+              fontSize: '2rem',
+              lineHeight: '2.5rem',
+              letterSpacing: '-1.28px',
+              fontWeight: '600'
+            }}
+          >
+            rarecubetv
+          </span>
         </Link>
       </div>
       <Toggle />

@@ -12,7 +12,18 @@ export const Logo = () => {
     <div className="flex flex-col items-center gap-y-4">
       <div className="text-5xl">▣</div>
       <div className={cn(font.className, "flex flex-col items-center")}>
-        <p className="text-xl font-semibold">rarecube.tv</p>
+        <p 
+          className="lowercase"
+          style={{
+            color: 'hsl(var(--text-primary))',
+            fontSize: '2rem',
+            lineHeight: '2.5rem',
+            letterSpacing: '-1.28px',
+            fontWeight: '600'
+          }}
+        >
+          rarecube.tv
+        </p>
       </div>
     </div>
   );
