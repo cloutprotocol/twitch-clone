@@ -9,7 +9,26 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "rarecube.tv",
-  description: "rarecube.tv is a cutting-edge streaming platform for creators and communities.",
+  description: "open sourced streaming for creator capitol markets.",
+  openGraph: {
+    title: "rarecube.tv",
+    description: "open sourced streaming for creator capitol markets.",
+    siteName: "rarecube.tv",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "rarecube.tv",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "rarecube.tv",
+    description: "open sourced streaming for creator capitol markets.",
+    images: ["/og-image.png"],
+  },
 };
 
 export default function RootLayout({

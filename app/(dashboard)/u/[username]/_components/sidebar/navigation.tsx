@@ -2,9 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import { Fullscreen, KeyRound, MessageSquare, Users, Rocket } from "lucide-react";
+import { Fullscreen, KeyRound, MessageSquare, Users, Rocket, Shield } from "lucide-react";
 
 import { NavItem, NavItemSkeleton } from "./nav-item";
+import { isAdmin } from "@/lib/admin";
 
 export const Navigation = () => {
   const pathname = usePathname();
@@ -38,6 +39,17 @@ export const Navigation = () => {
       icon: Users,
     },
   ];
+
+  // Add admin routes if user is admin
+  const adminRoutes = isAdmin(user?.email, user?.id) ? [
+    {
+      label: "Whitelist Admin",
+      href: "/admin/whitelist",
+      icon: Shield,
+    },
+  ] : [];
+
+  const allRoutes = [...routes, ...adminRoutes];
 
   if (!user?.username) {
     return (

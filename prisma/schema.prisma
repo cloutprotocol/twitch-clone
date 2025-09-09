@@ -37,6 +37,7 @@ model User {
   accounts         Account[]
   wallets          Wallet[]
   sessions         Session[]
+  whitelistApplications WhitelistApplication[]
 }
 
 model Follow {
@@ -151,5 +152,27 @@ model Wallet {
 
   @@index([userId])
   @@index([chain])
+}
+
+model WhitelistApplication {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  walletAddress   String   @unique
+  twitterUrl      String?
+  instagramUrl    String?
+  tiktokUrl       String?
+  discordUrl      String?
+  telegramUrl     String?
+  websiteUrl      String?
+  tokenAddress    String?  // Optional token they want to stream
+  streamIdea      String   @db.String
+  additionalNotes String?  @db.String
+  status          String   @default("pending") // pending, approved, rejected
+  userId          String?  @db.ObjectId // If user is logged in when applying
+  user            User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
 }
 

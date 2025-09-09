@@ -16,11 +16,8 @@ export const StartStreamCard = ({ isLoggedIn = false, username, onWalletConnect 
   const router = useRouter();
 
   const handleClick = () => {
-    if (isLoggedIn && username) {
-      router.push(`/u/${username}`);
-    } else {
-      onWalletConnect?.();
-    }
+    // Always redirect to whitelist application page
+    router.push("/whitelist");
   };
 
   return (
@@ -42,7 +39,7 @@ export const StartStreamCard = ({ isLoggedIn = false, username, onWalletConnect 
             Start Streaming
           </h3>
           <p className="text-xs text-interactive-primary/70 group-hover:text-interactive-primary transition-colors">
-            {isLoggedIn ? "Go to Dashboard" : "Connect Wallet"} →
+            Apply for Whitelist →
           </p>
         </div>
       </CardContent>
