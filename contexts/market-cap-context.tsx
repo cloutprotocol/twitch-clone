@@ -51,7 +51,6 @@ export const MarketCapProvider = ({ children }: MarketCapProviderProps) => {
           lastUpdated: new Date().toISOString(),
         };
         setMarketCapData(newMarketCapData);
-        return newMarketCapData;
       }
     } catch (error) {
       console.error('Failed to refresh market cap:', error);

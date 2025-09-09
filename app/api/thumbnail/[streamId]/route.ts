@@ -31,17 +31,41 @@ export async function GET(
       });
     }
 
-    // If we have a stored thumbnail URL, redirect to it
-    if (stream.thumbnail && !stream.thumbnail.startsWith('/api/')) {
+    // If we have a stored thumbnail URL that's external, redirect to it
+    if (stream.thumbnail && stream.thumbnail.startsWith('http')) {
       return NextResponse.redirect(stream.thumbnail);
     }
 
-    // For live streams without thumbnails, return placeholder for now
-    // The client-side thumbnail generator will handle creating actual thumbnails
+    // If we have a stored thumbnail that's an API endpoint, try to serve it
+    if (stream.thumbnail && stream.thumbnail.startsWith('/api/serve-thumbnail/')) {
+      try {
+        // Extract the filename from the stored thumbnail path
+        const pathParts = stream.thumbnail.split('/');
+        const filename = pathParts[pathParts.length - 1];
+        
+        // Try to serve the file directly
+        const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}${stream.thumbnail}`);
+        
+        if (response.ok) {
+          // File exists, return it
+          const buffer = await response.arrayBuffer();
+          return new NextResponse(buffer, {
+            headers: {
+              'Content-Type': 'image/jpeg',
+              'Cache-Control': 'public, max-age=3600',
+            },
+          });
+        }
+      } catch (error) {
+        console.log(`Stored thumbnail file not accessible: ${stream.thumbnail}`);
+      }
+    }
+
+    // For live streams or when stored thumbnails don't work, return placeholder
     return new NextResponse(getPlaceholderSVG(), {
       headers: {
         'Content-Type': 'image/svg+xml',
-        'Cache-Control': 'public, max-age=60', // Short cache for live streams
+        'Cache-Control': stream.isLive ? 'public, max-age=60' : 'public, max-age=300',
       },
     });
     

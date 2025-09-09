@@ -101,7 +101,7 @@ export default function WhitelistApplicationPage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-text-primary mb-4">
-              Join The Stream
+              Join The Stream.
             </h2>
             <p className="text-text-secondary text-lg">
               Tell us about yourself and your streaming plans
