@@ -235,7 +235,7 @@ export const TokenLauncher = ({ userWallet }: TokenLauncherProps) => {
                   Whitelist Application Pending
                 </h3>
                 <p className="text-text-secondary mb-4">
-                  Your whitelist application is being reviewed. You'll be able to launch tokens once approved.
+                  Your whitelist application is being reviewed. You&apos;ll be able to launch tokens once approved.
                 </p>
               </>
             ) : hasApplication ? (
