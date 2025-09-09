@@ -89,6 +89,8 @@ model Stream {
 
   @@index([isLive, updatedAt])
   @@index([viewerCount])
+
+  goals Goal[]
 }
 
 model ChatMessage {
@@ -102,6 +104,22 @@ model ChatMessage {
   createdAt DateTime @default(now())
 
   @@index([streamId, createdAt])
+}
+
+model Goal {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  streamId    String   @db.ObjectId
+  stream      Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  marketCap   Int      // Target market cap in dollars
+  description String   @db.String
+  order       Int      // 1-5 for ordering goals
+  isReached   Boolean  @default(false)
+  reachedAt   DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([streamId, order])
+  @@index([streamId])
 }
 
 // New models for wallet authentication

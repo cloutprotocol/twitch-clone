@@ -12,6 +12,7 @@ import { Header, HeaderSkeleton } from "./header";
 import { StreamHeader, StreamHeaderSkeleton } from "./stream-header";
 import { ViewerTracker } from "./viewer-tracker";
 import { TokenChart } from "./token-chart";
+import { GoalsDisplay } from "../stream/goals-display";
 
 type CustomStream = {
   id: string;
@@ -134,18 +135,31 @@ export const StreamPlayer = ({
             </div>
           )}
         </div>
-        <div className={cn("col-span-1", collapsed && "hidden")}>
-          <Chat
-            viewerName={name}
-            hostName={user.username}
-            hostIdentity={user.id}
-            isFollowing={isFollowing}
-            isChatEnabled={stream.isChatEnabled}
-            isChatDelayed={stream.isChatDelayed}
-            isChatFollowersOnly={stream.isChatFollowersOnly}
-            streamId={stream.id}
-            initialMessages={chatMessages}
-          />
+        <div className={cn("col-span-1 flex flex-col", collapsed && "hidden")}>
+          {/* Goals Display - Above Chat */}
+          {stream.tokenAddress && (
+            <div className="mb-2">
+              <GoalsDisplay 
+                streamId={stream.id}
+                tokenAddress={stream.tokenAddress}
+              />
+            </div>
+          )}
+          
+          {/* Chat - Same width as goals */}
+          <div className="flex-1">
+            <Chat
+              viewerName={name}
+              hostName={user.username}
+              hostIdentity={user.id}
+              isFollowing={isFollowing}
+              isChatEnabled={stream.isChatEnabled}
+              isChatDelayed={stream.isChatDelayed}
+              isChatFollowersOnly={stream.isChatFollowersOnly}
+              streamId={stream.id}
+              initialMessages={chatMessages}
+            />
+          </div>
         </div>
       </LiveKitRoom>
     </>

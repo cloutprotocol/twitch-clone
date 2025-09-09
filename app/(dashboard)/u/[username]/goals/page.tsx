@@ -54,7 +54,6 @@ export default function GoalsPage() {
   const handleSaveGoals = async () => {
     setIsSaving(true);
     try {
-      // TODO: Implement API call to save goals
       const response = await fetch("/api/stream/goals", {
         method: "POST",
         headers: {
@@ -91,7 +90,7 @@ export default function GoalsPage() {
         </Button>
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Token Goals</h1>
-          <p className="text-text-secondary">Set market cap goals to track your token's progress</p>
+          <p className="text-text-secondary">Set market cap goals to track your token&apos;s progress</p>
         </div>
       </div>
 
