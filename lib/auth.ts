@@ -28,7 +28,6 @@ export const authOptions: NextAuthOptions = {
   // adapter: PrismaAdapter(db) as any,
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
-  trustHost: true, // Allow requests from different hosts in production
   providers: [
     CredentialsProvider({
       id: "wallet",
