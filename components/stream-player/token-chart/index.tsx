@@ -1,8 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/theme-utils";
-import { TokenInfoCard } from "./token-info-card";
-import { TestDexScreener } from "./test-dexscreener";
+import { EnhancedTokenCard } from "./enhanced-token-card";
 
 interface TokenChartProps {
   tokenAddress: string;
@@ -17,9 +16,8 @@ export const TokenChart = ({ tokenAddress, streamId, className }: TokenChartProp
   }
 
   return (
-    <div className={cn("space-y-4 transition-all duration-200", className)}>
-      <TokenInfoCard tokenAddress={tokenAddress} />
-      <TestDexScreener defaultTokenAddress={tokenAddress} />
+    <div className={cn("transition-all duration-200", className)}>
+      <EnhancedTokenCard tokenAddress={tokenAddress} />
     </div>
   );
 };
