@@ -25,22 +25,33 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
     useEffect(() => {
         if (!tokenAddress) return;
 
-        setPriceLoading(true);
-        setPriceError(null);
+        const fetchPriceData = () => {
+            setPriceLoading(true);
+            setPriceError(null);
 
-        dexScreenerService.getTokenPriceData(tokenAddress)
-            .then((data) => {
-                setPriceData(data);
-                setPriceError(null);
-            })
-            .catch((err) => {
-                console.error("Price data error:", err);
-                setPriceError(err.message || "Failed to fetch price data");
-                setPriceData(null);
-            })
-            .finally(() => {
-                setPriceLoading(false);
-            });
+            dexScreenerService.getTokenPriceData(tokenAddress)
+                .then((data) => {
+                    setPriceData(data);
+                    setPriceError(null);
+                })
+                .catch((err) => {
+                    console.error("Price data error:", err);
+                    setPriceError(err.message || "Failed to fetch price data");
+                    setPriceData(null);
+                })
+                .finally(() => {
+                    setPriceLoading(false);
+                });
+        };
+
+        // Initial fetch
+        fetchPriceData();
+
+        // Set up automatic updates every 30 seconds
+        const interval = setInterval(fetchPriceData, 30000);
+
+        // Cleanup interval on unmount or when tokenAddress changes
+        return () => clearInterval(interval);
     }, [tokenAddress]);
 
     const handleCopyAddress = async () => {

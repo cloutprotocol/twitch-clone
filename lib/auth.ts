@@ -26,6 +26,8 @@ declare module "next-auth/jwt" {
 export const authOptions: NextAuthOptions = {
   // Don't use adapter with credentials provider - it conflicts
   // adapter: PrismaAdapter(db) as any,
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
   providers: [
     CredentialsProvider({
       id: "wallet",
@@ -35,6 +37,8 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         console.log("Wallet auth called with address:", credentials?.address);
+        console.log("Environment check - DATABASE_URL exists:", !!process.env.DATABASE_URL);
+        console.log("Environment check - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
 
         if (!credentials?.address) {
           console.error("Missing wallet address");
@@ -42,6 +46,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          // Test database connection first
+          await db.$connect();
+          
           // Find or create user with this wallet address - no signature verification needed
           let wallet = await db.wallet.findUnique({
             where: { address: credentials.address },
