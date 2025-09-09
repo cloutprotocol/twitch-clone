@@ -153,13 +153,25 @@ export const StreamPlayer = ({
 };
 
 export const StreamPlayerSkeleton = () => {
+  const { collapsed } = useChatSidebar((state) => state);
+
   return (
-    <div className="grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full">
-      <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
-        <StreamHeaderSkeleton />
-        <VideoSkeleton />
+    <div className={cn(
+      "grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full",
+      collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
+    )}>
+      <div className={cn(
+        "col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10",
+        collapsed && "lg:col-span-2 xl:col-span-2 2xl:col-span-2"
+      )}>
+        <div className="px-4 pt-4">
+          <StreamHeaderSkeleton />
+        </div>
+        <div className="px-4 mt-4">
+          <VideoSkeleton />
+        </div>
       </div>
-      <div className="col-span-1 bg-background">
+      <div className={cn("col-span-1 bg-background", collapsed && "hidden")}>
         <ChatSkeleton />
       </div>
     </div>
