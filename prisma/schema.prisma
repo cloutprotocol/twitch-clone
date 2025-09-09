@@ -12,10 +12,10 @@ generator client {
 
 model User {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  email            String?  @unique       // Make optional for wallet-only users
+  email            String?               // Make optional for wallet-only users
   username         String   @unique
   imageUrl         String   @db.String
-  externalUserId   String?  @unique       // Keep temporarily for migration
+  externalUserId   String?               // Keep temporarily for migration
   bio              String?  @db.String
   twitterUrl       String?  @db.String
   instagramUrl     String?  @db.String

@@ -30,16 +30,21 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
         redirect: false,
       });
 
+      console.log("Sign in result:", result);
+
+      // Check for explicit error first
       if (result?.error) {
-        throw new Error(result.error);
+        console.error("Sign in error:", result.error);
+        toast.error("Failed to sign in. Please try again.");
+        return;
       }
 
-      if (result?.ok) {
-        toast.success("Successfully signed in!");
-        onOpenChange(false);
-        // Refresh the page to update the auth state
-        window.location.reload();
-      }
+      // If no error, assume success and close modal
+      toast.success("Successfully signed in!");
+      onOpenChange(false);
+      // Refresh the page to update the auth state
+      window.location.reload();
+      
     } catch (error) {
       console.error("Auto sign in error:", error);
       toast.error("Failed to sign in. Please try again.");
@@ -57,8 +62,8 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-background-primary border-border-primary text-text-primary max-w-md">
-        <DialogHeader>
+      <DialogContent className="bg-background-primary border-border-primary text-text-primary max-w-lg mx-4 sm:mx-auto w-full min-w-[400px]">
+        <DialogHeader className="pb-2">
           <DialogTitle className="text-center text-2xl font-bold">
             Connect Wallet
           </DialogTitle>
@@ -67,10 +72,10 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-6 py-4">
+        <div className="space-y-6 pb-2">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-highlight-primary/20 rounded-full flex items-center justify-center">
-              <Wallet className="w-8 h-8 text-highlight-primary" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-background-secondary rounded-full flex items-center justify-center border border-border-primary">
+              <Wallet className="w-8 h-8 text-text-secondary" />
             </div>
             <p className="text-text-tertiary text-sm">
               Connect your Solana wallet to sign in instantly
@@ -80,20 +85,20 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
           <div className="space-y-4">
             {!connected ? (
               <div className="flex justify-center">
-                <WalletMultiButton className="!bg-interactive-primary hover:!bg-interactive-hover !rounded-lg !text-text-inverse !font-semibold" />
+                <WalletMultiButton className="!bg-background-secondary hover:!bg-background-tertiary !border !border-border-primary hover:!border-border-secondary !rounded-lg !text-text-primary !font-semibold" />
               </div>
             ) : (
               <div className="space-y-4">
                 <div className="p-4 bg-background-secondary rounded-lg border border-border-primary">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-highlight-primary/20 rounded-full flex items-center justify-center">
-                      <Wallet className="w-5 h-5 text-highlight-primary" />
+                    <div className="w-10 h-10 bg-background-tertiary rounded-full flex items-center justify-center border border-border-secondary flex-shrink-0">
+                      <Wallet className="w-5 h-5 text-text-secondary" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-text-primary">
+                    <div className="flex-1 min-w-0 overflow-hidden">
+                      <p className="text-sm font-medium text-text-primary mb-1">
                         {wallet?.adapter.name}
                       </p>
-                      <p className="text-xs text-text-tertiary truncate">
+                      <p className="text-xs text-text-tertiary truncate break-all">
                         {publicKey?.toBase58()}
                       </p>
                     </div>
@@ -102,8 +107,8 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
 
                 {isLoading && (
                   <div className="flex items-center justify-center py-4">
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-highlight-primary" />
-                    <span className="text-highlight-primary">Signing you in...</span>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-text-secondary" />
+                    <span className="text-text-secondary">Signing you in...</span>
                   </div>
                 )}
               </div>

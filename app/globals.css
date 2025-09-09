@@ -276,8 +276,8 @@ body,
 
 /* Wallet Adapter Theme Overrides */
 .wallet-adapter-button {
-  background-color: hsl(var(--interactive-primary)) !important;
-  color: hsl(var(--text-inverse)) !important;
+  background-color: hsl(var(--background-secondary)) !important;
+  color: hsl(var(--text-primary)) !important;
   border: 1px solid hsl(var(--border-primary)) !important;
   border-radius: 0.5rem !important;
   font-weight: 600 !important;
@@ -285,11 +285,12 @@ body,
 }
 
 .wallet-adapter-button:hover:not([disabled]) {
-  background-color: hsl(var(--interactive-hover)) !important;
+  background-color: hsl(var(--background-tertiary)) !important;
+  border-color: hsl(var(--border-secondary)) !important;
 }
 
 .wallet-adapter-button:active:not([disabled]) {
-  background-color: hsl(var(--interactive-active)) !important;
+  background-color: hsl(var(--interactive-secondary)) !important;
 }
 
 .wallet-adapter-button[disabled] {
@@ -320,7 +321,7 @@ body,
 
 .wallet-adapter-modal-list-item:hover {
   background-color: hsl(var(--background-tertiary)) !important;
-  border-color: hsl(var(--border-focus)) !important;
+  border-color: hsl(var(--text-secondary)) !important;
 }
 
 /* Disable Radix UI dropdown animations */
