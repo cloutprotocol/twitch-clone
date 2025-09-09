@@ -18,6 +18,7 @@ import { cn } from "@/lib/theme-utils";
 import { onFollow, onUnfollow } from "@/actions/follow";
 
 import { ProfileEditModal } from "./profile-edit-modal";
+import { TokenControls } from "@/components/dashboard/token-controls";
 
 interface StreamHeaderProps {
   imageUrl: string;
@@ -159,19 +160,25 @@ export const StreamHeader = ({
         )}
         
         {isHost && (
-          <ProfileEditModal
-            initialValues={{
-              bio: bio || "",
-              streamTitle: streamTitle,
-              twitterUrl: socialLinks?.twitter || "",
-              instagramUrl: socialLinks?.instagram || "",
-              tiktokUrl: socialLinks?.tiktok || "",
-              discordUrl: socialLinks?.discord || "",
-              telegramUrl: socialLinks?.telegram || "",
-              twitchUrl: socialLinks?.twitch || "",
-              websiteUrl: socialLinks?.website || "",
-            }}
-          />
+          <>
+            <TokenControls 
+              tokenAddress={tokenAddress}
+              className="mr-2"
+            />
+            <ProfileEditModal
+              initialValues={{
+                bio: bio || "",
+                streamTitle: streamTitle,
+                twitterUrl: socialLinks?.twitter || "",
+                instagramUrl: socialLinks?.instagram || "",
+                tiktokUrl: socialLinks?.tiktok || "",
+                discordUrl: socialLinks?.discord || "",
+                telegramUrl: socialLinks?.telegram || "",
+                twitchUrl: socialLinks?.twitch || "",
+                websiteUrl: socialLinks?.website || "",
+              }}
+            />
+          </>
         )}
       </div>
     </div>

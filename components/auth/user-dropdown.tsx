@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "@/components/user-avatar";
+import { TokenControls } from "@/components/dashboard/token-controls";
 
 interface UserDropdownProps {
   user: {
@@ -22,9 +23,10 @@ interface UserDropdownProps {
     image?: string | null;
     imageUrl?: string;
   };
+  tokenAddress?: string | null;
 }
 
-export function UserDropdown({ user }: UserDropdownProps) {
+export function UserDropdown({ user, tokenAddress }: UserDropdownProps) {
   const { data: session } = useSession();
   
   // Get wallet address from session or use username as fallback

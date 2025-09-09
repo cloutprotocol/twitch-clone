@@ -10,11 +10,21 @@ import { LiveStreamers, LiveStreamersSkeleton } from "./live-streamers";
 import { SidebarFooter } from "@/components/layout/sidebar-footer";
 
 export const Sidebar = async () => {
-  // Parallelize sidebar data fetching
-  const [recommended, following] = await Promise.all([
-    getRecommended(),
-    getFollowedUsers()
-  ]);
+  // Parallelize sidebar data fetching with error handling
+  let recommended: any[] = [];
+  let following: any[] = [];
+  
+  try {
+    [recommended, following] = await Promise.all([
+      getRecommended(),
+      getFollowedUsers()
+    ]);
+  } catch (error) {
+    console.error("Error loading sidebar data:", error);
+    // Use fallback empty arrays
+    recommended = [];
+    following = [];
+  }
 
   return (
     <Wrapper>
