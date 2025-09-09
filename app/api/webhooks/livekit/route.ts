@@ -52,30 +52,22 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Handle room events for stream status updates
+    // Handle room events for logging (stream status is handled by sync service)
     if (event.event === "room_started") {
       console.log(`Room started: ${event.room?.name}`);
-      await updateStreamStatus(event.room?.name, true);
     }
     
     if (event.event === "room_finished") {
       console.log(`Room finished: ${event.room?.name}`);
-      await updateStreamStatus(event.room?.name, false);
     }
 
-    // Handle participant events for stream status updates
+    // Handle participant events for logging
     if (event.event === "participant_joined") {
       console.log(`Participant joined room: ${event.room?.name}`);
-      await updateStreamStatus(event.room?.name, true);
     }
 
     if (event.event === "participant_left") {
       console.log(`Participant left room: ${event.room?.name}`);
-      // Check if any participants remain
-      const roomName = event.room?.name;
-      if (roomName) {
-        await checkAndUpdateStreamStatus(roomName);
-      }
     }
 
     return new NextResponse("OK", { status: 200 });

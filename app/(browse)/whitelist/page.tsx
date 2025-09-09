@@ -57,14 +57,16 @@ export default function WhitelistApplicationPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit application");
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
       }
 
       toast.success("Application submitted successfully! We'll review it and get back to you.");
       router.push("/");
     } catch (error) {
       console.error("Error submitting application:", error);
-      toast.error("Failed to submit application. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit application";
+      toast.error(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

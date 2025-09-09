@@ -4,8 +4,14 @@ import { auth } from "@clerk/nextjs";
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = auth();
-    
+    // Try to get userId, but don't fail if auth is not available
+    let userId: string | null = null;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      console.log("Auth not available, proceeding without userId");
+    }
     const body = await req.json();
     const {
       walletAddress,
