@@ -1,8 +1,8 @@
 {
-  "name": "twitch-clone",
+  "name": "rarecubetv",
   "version": "0.1.0",
-  "description": "A decentralized streaming platform with token launching capabilities built on Solana",
-  "author": "Your Name",
+  "description": "An Open-Source streaming platform for new capitol markets",
+  "author": "ordinalos",
   "license": "MIT",
   "keywords": ["streaming", "solana", "nextjs", "livekit", "web3", "cryptocurrency"],
   "repository": {
