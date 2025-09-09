@@ -205,7 +205,27 @@ export const TokenLauncher = ({ userWallet }: TokenLauncherProps) => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-4 h-full overflow-y-auto">
+      {/* Whitelist Application Notice */}
       <Card className="bg-background-secondary border-border-primary">
+        <CardContent className="p-6 text-center">
+          <h3 className="text-xl font-semibold text-text-primary mb-2">
+            Token Launching Requires Whitelist Approval
+          </h3>
+          <p className="text-text-secondary mb-4">
+            To launch tokens on rarecube.tv, you need to be approved for our whitelist program.
+          </p>
+          <Button
+            onClick={() => window.location.href = '/whitelist'}
+            className="bg-interactive-primary hover:bg-interactive-hover text-text-inverse font-semibold px-8 py-3"
+          >
+            Apply for Whitelist
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* Greyed out form */}
+      <div className="opacity-50 pointer-events-none">
+        <Card className="bg-background-secondary border-border-primary">
         <CardHeader className="pb-4">
           <CardTitle className="text-text-primary text-xl">Token Information</CardTitle>
         </CardHeader>
@@ -471,6 +491,7 @@ export const TokenLauncher = ({ userWallet }: TokenLauncherProps) => {
           />
           <span className="font-medium">Bags</span>
         </a>
+      </div>
       </div>
     </div>
   );
