@@ -54,3 +54,37 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const self = await getSelf();
+    
+    if (!self) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Remove the token address from the user's stream
+    const updatedStream = await db.stream.update({
+      where: {
+        userId: self.id,
+      },
+      data: {
+        tokenAddress: null,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Token removed successfully",
+    });
+  } catch (error) {
+    console.error("Error removing token:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}

@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components/user-avatar";
 
 interface UserDropdownProps {
   user: {
@@ -19,6 +20,7 @@ interface UserDropdownProps {
     username: string;
     email?: string | null;
     image?: string | null;
+    imageUrl?: string;
   };
 }
 
@@ -45,9 +47,11 @@ export function UserDropdown({ user }: UserDropdownProps) {
           variant="outline" 
           className="bg-background-secondary/90 backdrop-blur-sm hover:bg-background-tertiary border-border-primary text-text-primary flex items-center gap-2 px-2 py-1 h-auto rounded-lg"
         >
-          <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
-            <Wallet className="w-2 h-2 text-black" />
-          </div>
+          <UserAvatar
+            username={user.username}
+            imageUrl={user.imageUrl || user.image || ""}
+            size="xs"
+          />
           <span className="text-sm font-medium">{displayAddress}</span>
           <ChevronDown className="w-4 h-4" />
         </Button>

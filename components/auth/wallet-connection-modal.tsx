@@ -69,8 +69,8 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
         
         <div className="space-y-6 py-4">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-green-500/20 rounded-full flex items-center justify-center">
-              <Wallet className="w-8 h-8 text-green-500" />
+            <div className="w-16 h-16 mx-auto mb-4 bg-highlight-primary/20 rounded-full flex items-center justify-center">
+              <Wallet className="w-8 h-8 text-highlight-primary" />
             </div>
             <p className="text-text-tertiary text-sm">
               Connect your Solana wallet to sign in instantly
@@ -86,8 +86,8 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
               <div className="space-y-4">
                 <div className="p-4 bg-background-secondary rounded-lg border border-border-primary">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <Wallet className="w-5 h-5 text-green-500" />
+                    <div className="w-10 h-10 bg-highlight-primary/20 rounded-full flex items-center justify-center">
+                      <Wallet className="w-5 h-5 text-highlight-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-text-primary">
@@ -102,8 +102,8 @@ export function WalletConnectionModal({ open, onOpenChange }: WalletConnectionMo
 
                 {isLoading && (
                   <div className="flex items-center justify-center py-4">
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-green-500" />
-                    <span className="text-green-500">Signing you in...</span>
+                    <Loader2 className="w-5 h-5 mr-2 animate-spin text-highlight-primary" />
+                    <span className="text-highlight-primary">Signing you in...</span>
                   </div>
                 )}
               </div>

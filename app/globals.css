@@ -96,6 +96,12 @@ body,
     --streaming-offline: 0 0% 45%;
     --streaming-viewer: 120 100% 25%;
     /* BAGS green */
+
+    /* Semantic highlight colors - centralized for easy global changes */
+    --highlight-primary: 149.579 54.8% 72.3%;
+    /* Main highlight color - OKLCH(.723 .219 149.579) converted to HSL */
+    --highlight-primary-alpha: 149.579 54.8% 72.3%;
+    /* Same as primary but for use with opacity */
   }
 
   .dark {
@@ -155,6 +161,12 @@ body,
     --streaming-offline: 0 0% 55%;
     --streaming-viewer: 120 100% 30%;
     /* BAGS green */
+
+    /* Semantic highlight colors - dark theme */
+    --highlight-primary: 149.579 54.8% 75%;
+    /* Main highlight color - OKLCH adjusted for dark theme */
+    --highlight-primary-alpha: 149.579 54.8% 75%;
+    /* Same as primary but for use with opacity */
   }
 
   /* High contrast theme for accessibility */
@@ -193,6 +205,12 @@ body,
     --streaming-offline: 0 0% 70%;
     --streaming-viewer: 120 100% 40%;
     /* BAGS green */
+
+    /* Semantic highlight colors - high contrast theme */
+    --highlight-primary: 149.579 60% 80%;
+    /* Main highlight color - OKLCH adjusted for high contrast */
+    --highlight-primary-alpha: 149.579 60% 80%;
+    /* Same as primary but for use with opacity */
   }
 
   /* Reduced motion preferences */

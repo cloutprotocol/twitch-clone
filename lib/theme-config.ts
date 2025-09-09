@@ -69,6 +69,12 @@ export const themeConfig = {
       live: 'hsl(var(--streaming-live))',
       offline: 'hsl(var(--streaming-offline))',
       viewer: 'hsl(var(--streaming-viewer))',
+    },
+    
+    // Semantic highlight colors for consistent theming
+    highlight: {
+      primary: 'hsl(var(--highlight-primary))',
+      primaryAlpha: 'hsl(var(--highlight-primary-alpha))',
     }
   },
 

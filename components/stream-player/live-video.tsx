@@ -142,7 +142,7 @@ export const LiveVideo = ({ participant, streamId, showThumbnailControls = false
         {streamId && showThumbnailControls && (
           <div className="absolute top-4 right-4 bg-black/80 rounded-lg px-3 py-2 text-white text-sm">
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-highlight-primary rounded-full animate-pulse"></div>
               <span>Thumbnail</span>
             </div>
             {lastThumbnailTime && (
@@ -152,7 +152,7 @@ export const LiveVideo = ({ participant, streamId, showThumbnailControls = false
             )}
             <button
               onClick={generateThumbnailNow}
-              className="mt-2 bg-green-600 hover:bg-green-700 px-2 py-1 rounded text-xs transition-colors"
+              className="mt-2 bg-highlight-primary hover:bg-highlight-primary/80 px-2 py-1 rounded text-xs transition-colors"
             >
               Generate Now
             </button>

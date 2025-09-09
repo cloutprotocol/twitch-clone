@@ -84,6 +84,9 @@ module.exports = withUt({
         'streaming-live': themeConfig.colors.streaming.live,
         'streaming-offline': themeConfig.colors.streaming.offline,
         'streaming-viewer': themeConfig.colors.streaming.viewer,
+        
+        'highlight-primary': themeConfig.colors.highlight.primary,
+        'highlight-primary-alpha': themeConfig.colors.highlight.primaryAlpha,
       },
       borderRadius: {
         lg: "var(--radius)",

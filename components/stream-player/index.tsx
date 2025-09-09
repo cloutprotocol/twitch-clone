@@ -10,6 +10,7 @@ import { Chat, ChatSkeleton } from "./chat";
 import { Video, VideoSkeleton } from "./video";
 import { Header, HeaderSkeleton } from "./header";
 import { ViewerTracker } from "./viewer-tracker";
+import { TokenChart } from "./token-chart";
 
 type CustomStream = {
   id: string;
@@ -114,6 +115,12 @@ export const StreamPlayer = ({
               website: user.websiteUrl ?? undefined,
             }}
           />
+          {stream.tokenAddress && (
+            <TokenChart 
+              tokenAddress={stream.tokenAddress}
+              streamId={stream.id}
+            />
+          )}
         </div>
         <div className={cn("col-span-1", collapsed && "hidden")}>
           <Chat

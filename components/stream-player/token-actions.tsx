@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Coins, Rocket, Loader2 } from "lucide-react";
+import { Coins, Rocket, Loader2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -81,9 +81,56 @@ export const TokenActions = ({
     }
   };
 
-  // If token is already attached, don't show the buttons
+  const handleRemoveToken = () => {
+    startTransition(async () => {
+      try {
+        const response = await fetch("/api/stream/attach-token", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          toast.success("Token removed successfully!");
+          // Refresh the page to show the updated state
+          window.location.reload();
+        } else {
+          toast.error(data.error || "Failed to remove token");
+        }
+      } catch (error) {
+        toast.error("Failed to remove token");
+      }
+    });
+  };
+
+  // If token is already attached, show remove button
   if (tokenAddress) {
-    return null;
+    return (
+      <div className="flex gap-2 mt-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleRemoveToken}
+          disabled={isPending}
+          className="flex items-center gap-2 text-status-error border-status-error hover:bg-status-error/10"
+        >
+          {isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Removing...
+            </>
+          ) : (
+            <>
+              <X className="h-4 w-4" />
+              Remove Token
+            </>
+          )}
+        </Button>
+      </div>
+    );
   }
 
   return (

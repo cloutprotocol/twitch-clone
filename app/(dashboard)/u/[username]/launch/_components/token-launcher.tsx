@@ -256,7 +256,7 @@ export const TokenLauncher = ({ userWallet }: TokenLauncherProps) => {
                     alt="Token preview"
                     width={128}
                     height={128}
-                    className="w-32 h-32 object-cover rounded-lg border-2 border-green-500"
+                    className="w-32 h-32 object-cover rounded-lg border-2 border-highlight-primary"
                   />
                   <Button
                     size="sm"
