@@ -99,6 +99,7 @@ export const Actions = ({
           hostIdentity={hostIdentity}
           isHost={isHost}
           tokenAddress={tokenAddress}
+          showRemoveButton={true} // Always show on dashboard when host
         />
       </div>
     );

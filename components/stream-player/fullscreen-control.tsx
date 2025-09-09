@@ -22,9 +22,9 @@ export const FullscreenControl = ({
       <Hint label={label} asChild>
         <button
           onClick={onToggle}
-          className="text-text-inverse p-1.5 hover:bg-white/10 rounded-lg"
+          className="text-white hover:bg-white/30 hover:scale-105 p-2 rounded-lg transition-all duration-200 bg-black/20 backdrop-blur-sm"
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="h-5 w-5 drop-shadow-2xl" />
         </button>
       </Hint>
     </div>

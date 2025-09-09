@@ -9,6 +9,7 @@ import { ChatToggle } from "./chat-toggle";
 import { Chat, ChatSkeleton } from "./chat";
 import { Video, VideoSkeleton } from "./video";
 import { Header, HeaderSkeleton } from "./header";
+import { StreamHeader, StreamHeaderSkeleton } from "./stream-header";
 import { ViewerTracker } from "./viewer-tracker";
 import { TokenChart } from "./token-chart";
 
@@ -93,33 +94,44 @@ export const StreamPlayer = ({
           hostIdentity={user.id}
           viewerIdentity={identity}
         />
-        <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
-          <Video hostName={user.username} hostIdentity={user.id} streamId={stream.id} showThumbnailControls={isOwner} />
-          <Header
-            hostName={user.username}
-            hostIdentity={user.id}
-            viewerIdentity={identity}
-            imageUrl={user.imageUrl}
-            isFollowing={isFollowing}
-            name={stream.title}
-            bio={user.bio}
-            followedByCount={user._count.followedBy}
-            tokenAddress={stream.tokenAddress}
-            socialLinks={{
-              twitter: user.twitterUrl ?? undefined,
-              instagram: user.instagramUrl ?? undefined,
-              tiktok: user.tiktokUrl ?? undefined,
-              discord: user.discordUrl ?? undefined,
-              telegram: user.telegramUrl ?? undefined,
-              twitch: user.twitchUrl ?? undefined,
-              website: user.websiteUrl ?? undefined,
-            }}
-          />
-          {stream.tokenAddress && (
-            <TokenChart 
+        <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
+          {/* Stream Header - Above Video */}
+          <div className="px-4 pt-4">
+            <StreamHeader
+              hostName={user.username}
+              hostIdentity={user.id}
+              viewerIdentity={identity}
+              imageUrl={user.imageUrl}
+              isFollowing={isFollowing}
+              streamTitle={stream.title}
+              bio={user.bio}
+              followedByCount={user._count.followedBy}
               tokenAddress={stream.tokenAddress}
-              streamId={stream.id}
+              socialLinks={{
+                twitter: user.twitterUrl ?? undefined,
+                instagram: user.instagramUrl ?? undefined,
+                tiktok: user.tiktokUrl ?? undefined,
+                discord: user.discordUrl ?? undefined,
+                telegram: user.telegramUrl ?? undefined,
+                twitch: user.twitchUrl ?? undefined,
+                website: user.websiteUrl ?? undefined,
+              }}
             />
+          </div>
+          
+          {/* Video Player - Same Width as Token Chart */}
+          <div className="px-4 mt-4">
+            <Video hostName={user.username} hostIdentity={user.id} streamId={stream.id} showThumbnailControls={isOwner} />
+          </div>
+          
+          {/* Token Chart - Below Video */}
+          {stream.tokenAddress && (
+            <div className="px-4 pt-4">
+              <TokenChart 
+                tokenAddress={stream.tokenAddress}
+                streamId={stream.id}
+              />
+            </div>
           )}
         </div>
         <div className={cn("col-span-1", collapsed && "hidden")}>
@@ -143,9 +155,9 @@ export const StreamPlayer = ({
 export const StreamPlayerSkeleton = () => {
   return (
     <div className="grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full">
-      <div className="space-y-4 col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
+      <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
+        <StreamHeaderSkeleton />
         <VideoSkeleton />
-        <HeaderSkeleton />
       </div>
       <div className="col-span-1 bg-background">
         <ChatSkeleton />

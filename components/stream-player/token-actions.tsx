@@ -22,12 +22,14 @@ interface TokenActionsProps {
   hostIdentity: string;
   isHost: boolean;
   tokenAddress?: string | null;
+  showRemoveButton?: boolean; // Only show on dashboard
 }
 
 export const TokenActions = ({
   hostIdentity,
   isHost,
   tokenAddress,
+  showRemoveButton = false,
 }: TokenActionsProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [contractAddress, setContractAddress] = useState("");
@@ -106,8 +108,8 @@ export const TokenActions = ({
     });
   };
 
-  // If token is already attached, show remove button
-  if (tokenAddress) {
+  // If token is already attached, show remove button only on dashboard
+  if (tokenAddress && showRemoveButton) {
     return (
       <div className="flex gap-2 mt-4">
         <Button
@@ -131,6 +133,11 @@ export const TokenActions = ({
         </Button>
       </div>
     );
+  }
+
+  // If token is attached but we're not on dashboard, don't show token actions
+  if (tokenAddress && !showRemoveButton) {
+    return null;
   }
 
   return (

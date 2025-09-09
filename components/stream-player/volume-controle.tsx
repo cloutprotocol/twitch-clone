@@ -38,9 +38,9 @@ export const VolumeControl = ({
       <Hint label={label} asChild>
         <button
           onClick={onToggle}
-          className="text-text-inverse hover:bg-white/10 p-1.5 rounded-lg"
+          className="text-white hover:bg-white/30 hover:scale-105 p-2 rounded-lg transition-all duration-200 bg-black/20 backdrop-blur-sm"
         >
-          <Icon className="h-6 w-6" />
+          <Icon className="h-6 w-6 drop-shadow-2xl" />
         </button>
       </Hint>
       <Slider

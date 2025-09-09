@@ -38,12 +38,12 @@ export const Video = ({ hostName, hostIdentity, streamId, showThumbnailControls 
     content = <LiveVideo participant={participant} streamId={streamId} showThumbnailControls={showThumbnailControls} />;
   }
 
-  return <div className="aspect-video border-b group relative">{content}</div>;
+  return <div className="aspect-video group relative w-full h-full">{content}</div>;
 };
 
 export const VideoSkeleton = () => {
   return (
-    <div className="aspect-video border-x border-background">
+    <div className="aspect-video">
       <Skeleton className="h-full w-full rounded-none" />
     </div>
   );
