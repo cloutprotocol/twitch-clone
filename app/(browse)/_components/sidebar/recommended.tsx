@@ -30,7 +30,7 @@ export const Recommended = ({ data }: RecommendedProps) => {
             key={user.id}
             username={user.username}
             imageUrl={user.imageUrl}
-            isLive={user.stream?.isLive}
+            isLive={false} // Don't show as live in recommended - live users appear in live section
           />
         ))}
       </ul>

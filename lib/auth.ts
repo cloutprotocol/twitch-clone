@@ -36,9 +36,13 @@ export const authOptions: NextAuthOptions = {
         address: { label: "Wallet Address", type: "text" },
       },
       async authorize(credentials) {
-        console.log("Wallet auth called with address:", credentials?.address);
-        console.log("Environment check - DATABASE_URL exists:", !!process.env.DATABASE_URL);
-        console.log("Environment check - NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+        console.log("=== WALLET AUTH DEBUG ===");
+        console.log("Environment:", process.env.NODE_ENV);
+        console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+        console.log("NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+        console.log("DATABASE_URL exists:", !!process.env.DATABASE_URL);
+        console.log("Wallet address:", credentials?.address);
+        console.log("========================");
 
         if (!credentials?.address) {
           console.error("Missing wallet address");

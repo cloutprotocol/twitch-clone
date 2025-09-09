@@ -1,12 +1,13 @@
 import { db } from "@/lib/db";
+import { RoomServiceClient } from "livekit-server-sdk";
 import { UserItem } from "./user-item";
 
 export const LiveStreamers = async () => {
   let liveStreamers: any[] = [];
   
   try {
-    // Fetch live streamers
-    liveStreamers = await db.stream.findMany({
+    // Fetch potentially live streamers from database
+    const potentiallyLiveStreamers = await db.stream.findMany({
       where: {
         isLive: true,
       },
@@ -25,8 +26,55 @@ export const LiveStreamers = async () => {
         { viewerCount: "desc" },
         { updatedAt: "desc" },
       ],
-      take: 10, // Limit to 10 live streamers for the sidebar
+      take: 20, // Get more to filter down to actual live streams
     });
+
+    // Verify which streams are actually live by checking LiveKit rooms
+    if (potentiallyLiveStreamers.length > 0) {
+      try {
+        const roomService = new RoomServiceClient(
+          process.env.LIVEKIT_API_URL!,
+          process.env.LIVEKIT_API_KEY!,
+          process.env.LIVEKIT_API_SECRET!
+        );
+
+        const rooms = await roomService.listRooms();
+
+        // Filter streams to only include those with active LiveKit rooms with participants
+        for (const stream of potentiallyLiveStreamers) {
+          // Check multiple possible room name formats
+          const possibleRoomNames = [
+            stream.user.id,         // User ID (most common)
+            `stream-${stream.id}`,  // Stream ID format
+            stream.id,              // Just the stream ID
+            stream.user.username,   // Username
+          ];
+          
+          let isActuallyLive = false;
+          for (const roomName of possibleRoomNames) {
+            const room = rooms.find(r => r.name === roomName);
+            if (room && room.numParticipants > 0) {
+              console.log(`[Sidebar] Found live room for ${stream.user.username}: ${room.name} (${room.numParticipants} participants)`);
+              isActuallyLive = true;
+              break;
+            }
+          }
+          
+          if (isActuallyLive) {
+            liveStreamers.push(stream);
+          } else {
+            console.log(`[Sidebar] No live room found for ${stream.user.username} - excluding from live list`);
+          }
+        }
+
+        // Limit to 10 for sidebar display
+        liveStreamers = liveStreamers.slice(0, 10);
+      } catch (error) {
+        console.error("Error verifying live streams with LiveKit:", error);
+        // Fallback to database results if LiveKit check fails
+        liveStreamers = potentiallyLiveStreamers.slice(0, 10);
+      }
+    }
   } catch (error) {
     console.error("Error fetching live streamers for sidebar:", error);
     // Return null on error to hide the component

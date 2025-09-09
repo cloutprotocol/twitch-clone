@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { RoomServiceClient } from "livekit-server-sdk";
 
 import { ResultCard, ResultCardSkeleton } from "./result-card";
 import { LiveMarquee } from "./live-marquee";
@@ -17,10 +18,10 @@ export const Results = async () => {
   let liveStreams: any[] = [];
   
   try {
-    // Only fetch live streams for the main page
-    liveStreams = await db.stream.findMany({
+    // Get all streams that claim to be live from database
+    const potentiallyLiveStreams = await db.stream.findMany({
     where: {
-      isLive: true, // Only get live streams
+      isLive: true, // Only get streams marked as live in DB
     },
     select: {
       id: true,
@@ -48,6 +49,48 @@ export const Results = async () => {
     ],
     take: 50,
   });
+
+    // Verify which streams are actually live by checking LiveKit rooms
+    if (potentiallyLiveStreams.length > 0) {
+      try {
+        const roomService = new RoomServiceClient(
+          process.env.LIVEKIT_API_URL!,
+          process.env.LIVEKIT_API_KEY!,
+          process.env.LIVEKIT_API_SECRET!
+        );
+
+        const rooms = await roomService.listRooms();
+
+        // Filter streams to only include those with active LiveKit rooms with participants
+        liveStreams = [];
+        for (const stream of potentiallyLiveStreams) {
+          // Check multiple possible room name formats
+          const possibleRoomNames = [
+            stream.user.id,         // User ID (most common)
+            `stream-${stream.id}`,  // Stream ID format
+            stream.id,              // Just the stream ID
+            stream.user.username,   // Username
+          ];
+          
+          let isActuallyLive = false;
+          for (const roomName of possibleRoomNames) {
+            const room = rooms.find(r => r.name === roomName);
+            if (room && room.numParticipants > 0) {
+              isActuallyLive = true;
+              break;
+            }
+          }
+          
+          if (isActuallyLive) {
+            liveStreams.push(stream);
+          }
+        }
+      } catch (error) {
+        console.error("Error verifying live streams with LiveKit:", error);
+        // Fallback to database results if LiveKit check fails
+        liveStreams = potentiallyLiveStreams;
+      }
+    }
   } catch (error) {
     console.error("Error fetching live streams:", error);
     // Fallback to empty array on database error

@@ -51,13 +51,20 @@ export async function POST() {
       for (const roomName of possibleRoomNames) {
         matchingRoom = rooms.find(r => r.name === roomName);
         if (matchingRoom) {
-          console.log(`🔍 Found room for ${stream.user.username}: ${matchingRoom.name}`);
+          console.log(`🔍 Found room for ${stream.user.username}: ${matchingRoom.name} (${matchingRoom.numParticipants} participants)`);
           break;
         }
       }
       
+      // A stream is only live if it has a room AND that room has participants
       const hasParticipants = matchingRoom ? matchingRoom.numParticipants > 0 : false;
       const shouldBeLive = hasParticipants;
+      
+      if (!matchingRoom) {
+        console.log(`❌ No room found for ${stream.user.username} (${stream.id}) - marking as offline`);
+      } else if (matchingRoom.numParticipants === 0) {
+        console.log(`⚠️ Room ${matchingRoom.name} for ${stream.user.username} has 0 participants - marking as offline`);
+      }
       
       if (shouldBeLive) {
         liveStreamsFound++;

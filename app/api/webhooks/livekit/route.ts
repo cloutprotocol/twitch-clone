@@ -52,15 +52,30 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Handle room events for automatic thumbnail management
+    // Handle room events for stream status updates
     if (event.event === "room_started") {
-      // Room started - could trigger thumbnail generation
       console.log(`Room started: ${event.room?.name}`);
+      await updateStreamStatus(event.room?.name, true);
     }
     
     if (event.event === "room_finished") {
-      // Room ended - cleanup thumbnails
       console.log(`Room finished: ${event.room?.name}`);
+      await updateStreamStatus(event.room?.name, false);
+    }
+
+    // Handle participant events for stream status updates
+    if (event.event === "participant_joined") {
+      console.log(`Participant joined room: ${event.room?.name}`);
+      await updateStreamStatus(event.room?.name, true);
+    }
+
+    if (event.event === "participant_left") {
+      console.log(`Participant left room: ${event.room?.name}`);
+      // Check if any participants remain
+      const roomName = event.room?.name;
+      if (roomName) {
+        await checkAndUpdateStreamStatus(roomName);
+      }
     }
 
     return new NextResponse("OK", { status: 200 });
