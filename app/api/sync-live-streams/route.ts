@@ -56,9 +56,23 @@ export async function POST() {
         }
       }
       
-      // A stream is only live if it has a room AND that room has participants
-      const hasParticipants = matchingRoom ? matchingRoom.numParticipants > 0 : false;
-      const shouldBeLive = hasParticipants;
+      // A stream is only live if it has a room AND the actual streamer is connected
+      let shouldBeLive = false;
+      if (matchingRoom && matchingRoom.numParticipants > 0) {
+        // Check if the actual streamer (user) is connected to their room
+        try {
+          const participants = await roomService.listParticipants(matchingRoom.name);
+          const streamerConnected = participants.some(p => p.identity === stream.user.id);
+          shouldBeLive = streamerConnected;
+          
+          if (!streamerConnected) {
+            console.log(`⚠️ Room ${matchingRoom.name} has participants but streamer ${stream.user.username} (${stream.user.id}) is not connected`);
+          }
+        } catch (error) {
+          console.log(`❌ Error checking participants for room ${matchingRoom.name}:`, error);
+          shouldBeLive = false;
+        }
+      }
       
       if (!matchingRoom) {
         console.log(`❌ No room found for ${stream.user.username} (${stream.id}) - marking as offline`);

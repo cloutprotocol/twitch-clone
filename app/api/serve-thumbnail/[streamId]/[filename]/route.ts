@@ -27,6 +27,8 @@ export async function GET(
         },
       });
     } catch (fileError) {
+      console.log(`Thumbnail file not found: ${filepath}, returning placeholder`);
+      
       // File not found, return placeholder SVG
       const placeholderSVG = `<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="1280" height="720" fill="#1a1a1a"/>

@@ -76,8 +76,17 @@ export const Results = async () => {
           for (const roomName of possibleRoomNames) {
             const room = rooms.find(r => r.name === roomName);
             if (room && room.numParticipants > 0) {
-              isActuallyLive = true;
-              break;
+              // Check if the actual streamer is connected to their room
+              try {
+                const participants = await roomService.listParticipants(room.name);
+                const streamerConnected = participants.some(p => p.identity === stream.user.id);
+                if (streamerConnected) {
+                  isActuallyLive = true;
+                  break;
+                }
+              } catch (error) {
+                console.error(`Error checking participants for room ${room.name}:`, error);
+              }
             }
           }
           
