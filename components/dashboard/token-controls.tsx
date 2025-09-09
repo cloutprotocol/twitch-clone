@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { Coins, Rocket, Loader2, X, Settings } from "lucide-react";
+import { Coins, Rocket, Loader2, X, Settings, Target } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -75,6 +75,12 @@ export const TokenControls = ({ tokenAddress, className }: TokenControlsProps) =
   const handleLaunchToken = () => {
     if (user?.username) {
       router.push(`/u/${user.username}/launch`);
+    }
+  };
+
+  const handleAddGoals = () => {
+    if (user?.username) {
+      router.push(`/u/${user.username}/goals`);
     }
   };
 
@@ -195,6 +201,16 @@ export const TokenControls = ({ tokenAddress, className }: TokenControlsProps) =
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48 bg-background-secondary border-border-primary" align="end">
+          <DropdownMenuItem 
+            className="text-text-primary hover:bg-background-tertiary cursor-pointer"
+            onClick={handleAddGoals}
+          >
+            <Target className="mr-2 h-4 w-4" />
+            Add Goals
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator className="bg-border-primary" />
+
           <DropdownMenuItem 
             className="text-status-error hover:bg-background-tertiary cursor-pointer"
             onClick={handleRemoveToken}

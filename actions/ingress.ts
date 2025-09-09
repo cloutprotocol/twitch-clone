@@ -21,7 +21,11 @@ const roomService = new RoomServiceClient(
   process.env.LIVEKIT_API_SECRET!
 );
 
-const ingressClient = new IngressClient(process.env.LIVEKIT_API_URL!);
+const ingressClient = new IngressClient(
+  process.env.LIVEKIT_API_URL!,
+  process.env.LIVEKIT_API_KEY!,
+  process.env.LIVEKIT_API_SECRET!
+);
 
 export const resetIngresses = async (hostIdentity: string) => {
   try {
@@ -56,7 +60,7 @@ export const resetIngresses = async (hostIdentity: string) => {
         }
       }
     }
-    
+
     console.log("✅ Reset ingresses completed");
   } catch (error) {
     console.error("❌ Error in resetIngresses:", error);
@@ -68,7 +72,7 @@ export const resetIngresses = async (hostIdentity: string) => {
 export const createIngress = async (ingressType: IngressInput) => {
   try {
     console.log("🚀 Starting ingress creation for type:", ingressType);
-    
+
     // Validate environment variables
     if (!process.env.LIVEKIT_API_URL || !process.env.LIVEKIT_API_KEY || !process.env.LIVEKIT_API_SECRET) {
       console.error("❌ Missing LiveKit environment variables");
@@ -114,41 +118,65 @@ export const createIngress = async (ingressType: IngressInput) => {
     console.log("🔄 Creating ingress with LiveKit...");
     const ingress = await ingressClient.createIngress(ingressType, options);
 
-    if (!ingress || !ingress.url || !ingress.streamKey) {
+    console.log("✅ Ingress response received:", {
+      ingressId: ingress?.ingressId,
+      hasUrl: !!ingress?.url,
+      url: ingress?.url,
+      hasStreamKey: !!ingress?.streamKey,
+      streamKeyLength: ingress?.streamKey?.length,
+      roomName: ingress?.roomName,
+      state: ingress?.state
+    });
+
+    if (!ingress || !ingress.ingressId || !ingress.streamKey) {
       console.error("❌ Invalid ingress response:", ingress);
-      throw new Error("Failed to create ingress - invalid response from LiveKit");
+      throw new Error("Failed to create ingress - missing required fields (ingressId or streamKey)");
     }
 
     console.log("✅ Ingress created successfully:", ingress.ingressId);
 
     console.log("🔄 Updating database...");
+    
+    // Use the configured RTMP URL for streaming (what users see in dashboard)
+    const rtmpUrl = process.env.LIVEKIT_RTMP_URL || "rtmp://206.189.171.12:1935";
+    
     await db.stream.update({
       where: { userId: self.id },
       data: {
         ingressId: ingress.ingressId,
-        serverUrl: ingress.url,
+        serverUrl: rtmpUrl,
         streamKey: ingress.streamKey,
       },
     });
 
     console.log("✅ Database updated successfully");
     revalidatePath(`/u/${self.username}/keys`);
-    
+
     return ingress;
   } catch (error) {
     console.error("❌ Error in createIngress:", error);
     
-    // Provide more specific error messages
+    // Log the full error details for debugging
     if (error instanceof Error) {
-      if (error.message.includes("LiveKit")) {
-        throw new Error("LiveKit service error. Please check your streaming configuration.");
-      }
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
+    
+    // Provide more specific error messages but also log the original
+    if (error instanceof Error) {
       if (error.message.includes("Stream not found")) {
         throw new Error("User stream not found. Please contact support.");
       }
-      if (error.message.includes("Unauthorized")) {
+      if (error.message.includes("Unauthorized") || error.message.includes("unauthenticated")) {
         throw new Error("Authentication failed. Please sign in again.");
       }
+      if (error.message.includes("Request failed")) {
+        throw new Error(`LiveKit connection failed: ${error.message}`);
+      }
+      
+      // For any other error, include the original message for debugging
+      throw new Error(`Failed to generate streaming keys: ${error.message}`);
     }
     
     throw new Error("Failed to generate streaming keys. Please try again.");
