@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ChevronUp, ChevronDown, Target, Trophy, Check } from "lucide-react";
+import { useSharedTokenData } from "@/hooks/use-shared-token-data";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -28,9 +29,20 @@ interface GoalsDisplayProps {
 
 export const GoalsDisplay = ({ streamId, tokenAddress, className }: GoalsDisplayProps) => {
   const [goals, setGoals] = useState<Goal[]>([]);
-  const [currentMarketCap, setCurrentMarketCap] = useState<number>(0);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Use shared token data instead of separate market cap API
+  const { priceData, isLoading: tokenDataLoading } = useSharedTokenData(tokenAddress || '');
+  const currentMarketCap = priceData?.marketCap || 0;
+
+  // Debug logging
+  console.log('Goals Display - Token Data:', {
+    tokenAddress,
+    priceData,
+    currentMarketCap,
+    isLoading: tokenDataLoading
+  });
 
   useEffect(() => {
     const fetchGoals = async () => {
@@ -52,73 +64,42 @@ export const GoalsDisplay = ({ streamId, tokenAddress, className }: GoalsDisplay
     }
   }, [streamId]);
 
+  // Check for goal completion when market cap changes
   useEffect(() => {
-    const fetchMarketCap = async () => {
-      if (!tokenAddress) return;
-
-      try {
-        const response = await fetch(`/api/token/${tokenAddress}/market-cap`);
-        if (response.ok) {
-          const data = await response.json();
-          const newMarketCap = data.marketCap || 0;
-          
-          // Check if any goals should be marked as completed
-          if (newMarketCap !== currentMarketCap && goals.length > 0) {
-            const completedGoals = goals.filter(goal => 
-              newMarketCap >= goal.marketCap && !goal.isReached
-            );
-            
-            if (completedGoals.length > 0) {
-              // Update goal completion status in the database
-              await updateGoalCompletion(completedGoals, newMarketCap);
-              // Refresh goals data
-              fetchGoals();
-            }
-          }
-          
-          setCurrentMarketCap(newMarketCap);
-        }
-      } catch (error) {
-        console.error("Failed to fetch market cap:", error);
+    if (currentMarketCap > 0 && goals.length > 0) {
+      const completedGoals = goals.filter(goal => 
+        currentMarketCap >= goal.marketCap && !goal.isReached
+      );
+      
+      if (completedGoals.length > 0) {
+        updateGoalCompletion(completedGoals, currentMarketCap);
       }
-    };
-
-    const updateGoalCompletion = async (completedGoals: Goal[], marketCap: number) => {
-      try {
-        await fetch(`/api/stream/${streamId}/goals/update-completion`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            completedGoals: completedGoals.map(g => g.id),
-            marketCap: marketCap,
-          }),
-        });
-      } catch (error) {
-        console.error("Failed to update goal completion:", error);
-      }
-    };
-
-    const fetchGoals = async () => {
-      try {
-        const response = await fetch(`/api/stream/${streamId}/goals`);
-        if (response.ok) {
-          const data = await response.json();
-          setGoals(data.goals || []);
-        }
-      } catch (error) {
-        console.error("Failed to fetch goals:", error);
-      }
-    };
-
-    if (tokenAddress) {
-      fetchMarketCap();
-      // Set up interval to update market cap every 30 seconds
-      const interval = setInterval(fetchMarketCap, 30000);
-      return () => clearInterval(interval);
     }
-  }, [tokenAddress, currentMarketCap, goals, streamId]);
+  }, [currentMarketCap, goals, streamId]);
+
+  const updateGoalCompletion = async (completedGoals: Goal[], marketCap: number) => {
+    try {
+      await fetch(`/api/stream/${streamId}/goals/update-completion`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          completedGoals: completedGoals.map(g => g.id),
+          marketCap: marketCap,
+        }),
+      });
+      
+      // Refresh goals data after updating completion
+      const response = await fetch(`/api/stream/${streamId}/goals`);
+      if (response.ok) {
+        const data = await response.json();
+        setGoals(data.goals || []);
+      }
+    } catch (error) {
+      console.error("Failed to update goal completion:", error);
+    }
+  };
 
   const formatMarketCap = (value: number): string => {
     if (value >= 1000000) {

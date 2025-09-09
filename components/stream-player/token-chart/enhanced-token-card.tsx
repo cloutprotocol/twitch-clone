@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHeliusToken } from "@/hooks/use-helius-token";
-import { dexScreenerService, TokenPriceData } from "@/lib/dexscreener-service";
+import { useSharedTokenData } from "@/hooks/use-shared-token-data";
+import { TokenPriceData } from "@/lib/dexscreener-service";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Share, ExternalLink, Copy, TrendingUp, TrendingDown } from "lucide-react";
+import { Share, ExternalLink, Copy, TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { copyToClipboard, truncateAddress } from "@/lib/token-chart-utils";
 
@@ -17,42 +18,19 @@ interface EnhancedTokenCardProps {
 
 export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedTokenCardProps) => {
     const { data: heliusData, loading: heliusLoading, error: heliusError } = useHeliusToken(tokenAddress);
-    const [priceData, setPriceData] = useState<TokenPriceData | null>(null);
-    const [priceLoading, setPriceLoading] = useState(false);
-    const [priceError, setPriceError] = useState<string | null>(null);
+    const { priceData, isLoading: priceLoading, error: priceError, refresh } = useSharedTokenData(tokenAddress);
+    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [lastRefreshTime, setLastRefreshTime] = useState<number>(0);
 
-    // Fetch price data from DexScreener
-    useEffect(() => {
-        if (!tokenAddress) return;
+    // Debug logging
+    console.log('Token Card - Shared Data:', {
+        tokenAddress,
+        priceData,
+        isLoading: priceLoading,
+        error: priceError
+    });
 
-        const fetchPriceData = () => {
-            setPriceLoading(true);
-            setPriceError(null);
-
-            dexScreenerService.getTokenPriceData(tokenAddress)
-                .then((data) => {
-                    setPriceData(data);
-                    setPriceError(null);
-                })
-                .catch((err) => {
-                    console.error("Price data error:", err);
-                    setPriceError(err.message || "Failed to fetch price data");
-                    setPriceData(null);
-                })
-                .finally(() => {
-                    setPriceLoading(false);
-                });
-        };
-
-        // Initial fetch
-        fetchPriceData();
-
-        // Set up automatic updates every 30 seconds
-        const interval = setInterval(fetchPriceData, 30000);
-
-        // Cleanup interval on unmount or when tokenAddress changes
-        return () => clearInterval(interval);
-    }, [tokenAddress]);
+    // Data fetching is now handled by useSharedTokenData hook
 
     const handleCopyAddress = async () => {
         const success = await copyToClipboard(tokenAddress);
@@ -84,6 +62,31 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
 
     const handleOpenDexScreener = () => {
         window.open(`https://dexscreener.com/solana/${tokenAddress}`, '_blank');
+    };
+
+    const handleManualRefresh = async () => {
+        const now = Date.now();
+        const timeSinceLastRefresh = now - lastRefreshTime;
+        const cooldownTime = 5000; // 5 seconds cooldown
+
+        if (timeSinceLastRefresh < cooldownTime) {
+            const remainingTime = Math.ceil((cooldownTime - timeSinceLastRefresh) / 1000);
+            toast.error(`Please wait ${remainingTime}s before refreshing again`);
+            return;
+        }
+
+        setIsRefreshing(true);
+        setLastRefreshTime(now);
+
+        try {
+            // Use shared refresh function - this updates both token card and goals display
+            await refresh();
+            toast.success("Token data refreshed");
+        } catch (error) {
+            toast.error("Failed to refresh token data");
+        } finally {
+            setIsRefreshing(false);
+        }
     };
 
     const formatPrice = (price: number) => {
@@ -222,6 +225,17 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                             className="bg-status-success hover:bg-status-success/80 text-white px-4 py-2 text-sm font-medium"
                         >
                             Share
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleManualRefresh}
+                            disabled={isRefreshing || priceLoading}
+                            className="p-2"
+                            title="Refresh token data"
+                        >
+                            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                         </Button>
 
                         <Button

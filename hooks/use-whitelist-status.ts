@@ -1,51 +1,63 @@
-"use client";
-
 import { useState, useEffect } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
 
 interface WhitelistStatus {
   hasApplication: boolean;
-  status: "pending" | "approved" | "rejected" | null;
+  status: string | null;
   appliedAt: string | null;
   walletAddress: string | null;
 }
 
-export const useWhitelistStatus = () => {
-  const { publicKey, connected } = useWallet();
+export const useWhitelistStatus = (walletAddress: string | null) => {
   const [status, setStatus] = useState<WhitelistStatus | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const checkStatus = async (walletAddress?: string) => {
-    if (!walletAddress && (!connected || !publicKey)) return;
-    
-    setLoading(true);
-    try {
-      const wallet = walletAddress || publicKey?.toString();
-      const response = await fetch(`/api/whitelist/status?wallet=${wallet}`);
-      
-      if (response.ok) {
-        const data = await response.json();
-        setStatus(data);
-      }
-    } catch (error) {
-      console.error("Error checking whitelist status:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (connected && publicKey) {
-      checkStatus();
-    }
-  }, [connected, publicKey]);
+    const checkWhitelistStatus = async () => {
+      if (!walletAddress) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/whitelist/status?wallet=${walletAddress}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to check whitelist status");
+        }
+
+        const data = await response.json();
+        setStatus(data);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Unknown error");
+        setStatus(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkWhitelistStatus();
+  }, [walletAddress]);
+
+  const isApproved = status?.status === "approved";
+  const isPending = status?.status === "pending";
+  const hasApplication = status?.hasApplication || false;
 
   return {
     status,
-    loading,
-    checkStatus,
-    isWhitelisted: status?.status === "approved",
-    isPending: status?.status === "pending",
-    isRejected: status?.status === "rejected"
+    isLoading,
+    error,
+    isApproved,
+    isPending,
+    hasApplication,
+    refetch: () => {
+      if (walletAddress) {
+        setIsLoading(true);
+        // Re-trigger the effect
+        setStatus(null);
+      }
+    }
   };
 };

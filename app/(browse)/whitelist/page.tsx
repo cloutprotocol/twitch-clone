@@ -14,7 +14,7 @@ export default function WhitelistApplicationPage() {
   const router = useRouter();
   const { publicKey, connected } = useWallet();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [formData, setFormData] = useState({
     walletAddress: connected && publicKey ? publicKey.toString() : "",
     twitterUrl: "",
@@ -34,19 +34,19 @@ export default function WhitelistApplicationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.walletAddress) {
       toast.error("Wallet address is required");
       return;
     }
-    
+
     if (!formData.streamIdea.trim()) {
       toast.error("Stream idea is required");
       return;
     }
 
     setIsSubmitting(true);
-    
+
     try {
       const response = await fetch("/api/whitelist/apply", {
         method: "POST",
@@ -86,12 +86,12 @@ export default function WhitelistApplicationPage() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center text-white">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            {/* <h1 className="text-4xl md:text-6xl font-bold mb-4">
               Join the Stream
             </h1>
             <p className="text-lg md:text-xl opacity-90">
               Apply for streaming access on rarecube.tv
-            </p>
+            </p> */}
           </div>
         </div>
       </div>
@@ -132,7 +132,7 @@ export default function WhitelistApplicationPage() {
             {/* Social Links */}
             <div className="space-y-6">
               <h3 className="text-xl font-semibold text-text-primary">Social Links</h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
                   <Label htmlFor="twitterUrl" className="text-text-primary font-medium">Twitter/X</Label>
@@ -144,7 +144,7 @@ export default function WhitelistApplicationPage() {
                     className="bg-background-secondary border-border-primary text-text-primary h-12"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   <Label htmlFor="instagramUrl" className="text-text-primary font-medium">Instagram</Label>
                   <Input
@@ -155,7 +155,7 @@ export default function WhitelistApplicationPage() {
                     className="bg-background-secondary border-border-primary text-text-primary h-12"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   <Label htmlFor="tiktokUrl" className="text-text-primary font-medium">TikTok</Label>
                   <Input
@@ -166,7 +166,7 @@ export default function WhitelistApplicationPage() {
                     className="bg-background-secondary border-border-primary text-text-primary h-12"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   <Label htmlFor="discordUrl" className="text-text-primary font-medium">Discord</Label>
                   <Input
@@ -177,7 +177,7 @@ export default function WhitelistApplicationPage() {
                     className="bg-background-secondary border-border-primary text-text-primary h-12"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   <Label htmlFor="telegramUrl" className="text-text-primary font-medium">Telegram</Label>
                   <Input
@@ -188,7 +188,7 @@ export default function WhitelistApplicationPage() {
                     className="bg-background-secondary border-border-primary text-text-primary h-12"
                   />
                 </div>
-                
+
                 <div className="space-y-3">
                   <Label htmlFor="websiteUrl" className="text-text-primary font-medium">Website</Label>
                   <Input

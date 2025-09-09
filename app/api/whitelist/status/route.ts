@@ -4,9 +4,17 @@ import { auth } from "@clerk/nextjs";
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = auth();
     const { searchParams } = new URL(req.url);
     const walletAddress = searchParams.get("wallet");
+    
+    // Try to get userId, but don't fail if auth is not available
+    let userId: string | null = null;
+    try {
+      const authResult = auth();
+      userId = authResult.userId;
+    } catch (authError) {
+      // Auth not available, continue without userId
+    }
     
     if (!walletAddress && !userId) {
       return NextResponse.json(
