@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     await fs.mkdir(dir, { recursive: true });
     
     // Write file
-    await fs.writeFile(filepath, buffer);
+    await fs.writeFile(filepath, new Uint8Array(buffer));
     
     // For local development, serve from a public endpoint
     const publicUrl = `/api/serve-thumbnail/${streamId}/${filename}`;

@@ -35,18 +35,20 @@ export async function POST(req: NextRequest) {
       if (egressInfo.fileResults && egressInfo.fileResults.length > 0) {
         const thumbnailUrl = egressInfo.fileResults[0].location;
         
-        await db.stream.update({
-          where: { id: streamId },
-          data: { 
-            thumbnail: thumbnailUrl,
-            updatedAt: new Date()
-          }
-        });
+        if (thumbnailUrl) {
+          await db.stream.update({
+            where: { id: streamId },
+            data: { 
+              thumbnail: thumbnailUrl,
+              updatedAt: new Date()
+            }
+          });
 
-        // Update cache
-        setCachedThumbnail(streamId, thumbnailUrl, undefined, true);
-        
-        console.log(`Updated thumbnail for stream ${streamId}: ${thumbnailUrl}`);
+          // Update cache
+          setCachedThumbnail(streamId, thumbnailUrl, undefined, true);
+          
+          console.log(`Updated thumbnail for stream ${streamId}: ${thumbnailUrl}`);
+        }
       }
     }
 

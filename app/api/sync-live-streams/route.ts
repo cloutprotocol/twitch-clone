@@ -70,7 +70,7 @@ export async function POST() {
           data: { 
             isLive: shouldBeLive,
             viewerCount: shouldBeLive 
-              ? Math.max(0, matchingRoom.numParticipants - 1 || 0)
+              ? Math.max(0, (matchingRoom?.numParticipants ?? 1) - 1)
               : 0
           },
         });

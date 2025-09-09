@@ -19,7 +19,7 @@ export async function GET(
     try {
       const fileBuffer = await readFile(filepath);
       
-      return new NextResponse(fileBuffer, {
+      return new NextResponse(new Uint8Array(fileBuffer), {
         headers: {
           'Content-Type': 'image/jpeg',
           'Cache-Control': 'public, max-age=3600', // Cache for 1 hour

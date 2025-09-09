@@ -229,7 +229,7 @@ export class TokenChartService {
         symbol: metadataResponse?.symbol || "UNKNOWN",
         decimals: metadataResponse?.decimals || 9,
         logoURI: metadataResponse?.logoURI,
-        supply: supplyResponse,
+        supply: supplyResponse ?? undefined,
       };
 
       console.log(`Helius metadata result for ${address}:`, result);

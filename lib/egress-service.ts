@@ -49,19 +49,18 @@ export const generateThumbnailScreenshot = async (roomName: string, streamId: st
     const client = getEgressClient();
     
     // Start a very short recording just to get one frame
-    const egressInfo = await client.startRoomCompositeEgress({
+    const egressInfo = await (client.startRoomCompositeEgress as any)({
       roomName: roomName,
       layout: "speaker",
       audioOnly: false,
       videoOnly: true, // Video only for thumbnails
       
-      // Very short segment - just enough for one frame
-      segmentedFile: {
-        filenamePrefix: `thumb-${streamId}`,
-        playlistName: `thumb-${streamId}.m3u8`,
-        segmentDuration: 1, // 1 second segments
-        fileType: 4 // MP4
-      }
+      // Basic file output for thumbnail extraction
+      fileOutputs: [{
+        fileType: 4, // MP4
+        filepath: `/tmp/thumb-${streamId}-{time}.mp4`,
+        disableManifest: true
+      }]
     });
 
     // Stop after 2 seconds to get just one segment
