@@ -2,28 +2,36 @@ import { db } from "@/lib/db";
 import { UserItem } from "./user-item";
 
 export const LiveStreamers = async () => {
-  // Fetch live streamers
-  const liveStreamers = await db.stream.findMany({
-    where: {
-      isLive: true,
-    },
-    select: {
-      id: true,
-      viewerCount: true,
-      user: {
-        select: {
-          id: true,
-          username: true,
-          imageUrl: true,
+  let liveStreamers: any[] = [];
+  
+  try {
+    // Fetch live streamers
+    liveStreamers = await db.stream.findMany({
+      where: {
+        isLive: true,
+      },
+      select: {
+        id: true,
+        viewerCount: true,
+        user: {
+          select: {
+            id: true,
+            username: true,
+            imageUrl: true,
+          },
         },
       },
-    },
-    orderBy: [
-      { viewerCount: "desc" },
-      { updatedAt: "desc" },
-    ],
-    take: 10, // Limit to 10 live streamers for the sidebar
-  });
+      orderBy: [
+        { viewerCount: "desc" },
+        { updatedAt: "desc" },
+      ],
+      take: 10, // Limit to 10 live streamers for the sidebar
+    });
+  } catch (error) {
+    console.error("Error fetching live streamers for sidebar:", error);
+    // Return null on error to hide the component
+    return null;
+  }
 
   if (liveStreamers.length === 0) {
     return null;

@@ -15,10 +15,11 @@ export const getSearch = async (term?: string) => {
     return [];
   }
 
-  let streams = [];
+  let streams: any[] = [];
 
-  // Use MongoDB aggregation for case-insensitive search
-  const pipeline: any[] = [
+  try {
+    // Use MongoDB aggregation for case-insensitive search
+    const pipeline: any[] = [
     {
       $lookup: {
         from: "User",
@@ -196,6 +197,10 @@ export const getSearch = async (term?: string) => {
         take: 50,
       });
     }
+  } catch (error) {
+    console.error("Error in search service:", error);
+    // Return empty array on database error
+    streams = [];
   }
   
   return streams;
