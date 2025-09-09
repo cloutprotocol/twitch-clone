@@ -91,25 +91,43 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.updated") {
-    await db.user.update({
+    // Find user by externalUserId first, then update by id
+    const existingUser = await db.user.findFirst({
       where: {
         externalUserId: payload.data.id,
       },
-      data: {
-        username: payload.data.username,
-        imageUrl: payload.data.image_url,
-      },
     });
+
+    if (existingUser) {
+      await db.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          username: payload.data.username,
+          imageUrl: payload.data.image_url,
+        },
+      });
+    }
   }
 
   if (eventType === "user.deleted") {
     await resetIngresses(payload.data.id);
 
-    await db.user.delete({
+    // Find user by externalUserId first, then delete by id
+    const existingUser = await db.user.findFirst({
       where: {
         externalUserId: payload.data.id,
       },
     });
+
+    if (existingUser) {
+      await db.user.delete({
+        where: {
+          id: existingUser.id,
+        },
+      });
+    }
   }
 
   return new Response("", { status: 200 });
