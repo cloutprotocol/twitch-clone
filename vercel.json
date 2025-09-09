@@ -1,0 +1,31 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 60
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@next_public_clerk_publishable_key",
+    "CLERK_SECRET_KEY": "@clerk_secret_key", 
+    "CLERK_WEBHOOK_SECRET": "@clerk_webhook_secret",
+    "DATABASE_URL": "@database_url",
+    "LIVEKIT_API_URL": "@livekit_api_url",
+    "LIVEKIT_API_KEY": "@livekit_api_key",
+    "LIVEKIT_API_SECRET": "@livekit_api_secret",
+    "NEXT_PUBLIC_LIVEKIT_WS_URL": "@next_public_livekit_ws_url",
+    "UPLOADTHING_SECRET": "@uploadthing_secret",
+    "UPLOADTHING_APP_ID": "@uploadthing_app_id",
+    "BAGS_API_KEY": "@bags_api_key",
+    "SOLANA_RPC_URL": "@solana_rpc_url",
+    "HELIUS_API_KEY": "@helius_api_key",
+    "NEXT_PUBLIC_SOLANA_RPC_URL": "@next_public_solana_rpc_url",
+    "NEXTAUTH_SECRET": "@nextauth_secret",
+    "NEXTAUTH_URL": "@nextauth_url"
+  }
+}

@@ -120,7 +120,9 @@ Welcome to rarecube.tv! This project utilizes Next.js 14, Livestreaming capabili
 
 ### 🚀 Deployment
 
-- Deploy the application to a production environment to make it accessible to users worldwide. Utilize deployment strategies such as containerization, CI/CD pipelines, and cloud hosting services to ensure scalability, reliability, and security for the streaming platform.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fcloutprotocol%2Ftwitch-clone&env=DATABASE_URL,NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,CLERK_SECRET_KEY,CLERK_WEBHOOK_SECRET,LIVEKIT_API_URL,LIVEKIT_API_KEY,LIVEKIT_API_SECRET,NEXT_PUBLIC_LIVEKIT_WS_URL,UPLOADTHING_SECRET,UPLOADTHING_APP_ID,BAGS_API_KEY,SOLANA_RPC_URL,HELIUS_API_KEY,NEXT_PUBLIC_SOLANA_RPC_URL,NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Required%20environment%20variables%20for%20the%20streaming%20platform&envLink=https%3A%2F%2Fgithub.com%2Fcloutprotocol%2Ftwitch-clone%23environment-variables&project-name=rarecube-streaming&repository-name=rarecube-streaming)
+
+Deploy the application to a production environment to make it accessible to users worldwide. The platform is optimized for Vercel deployment with automatic builds, serverless functions, and global CDN distribution.
 
 ## Prerequisites
 
@@ -151,25 +153,39 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 CLERK_WEBHOOK_SECRET=
 
-DATABASE_URL=
+DATABASE_URL=mongodb+srv://username:password@cluster.mongodb.net/database
 
-LIVEKIT_API_URL=
-LIVEKIT_API_KEY=
-LIVEKIT_API_SECRET=
-NEXT_PUBLIC_LIVEKIT_WS_URL=
+LIVEKIT_API_URL=https://your-project.livekit.cloud
+LIVEKIT_API_KEY=your_api_key
+LIVEKIT_API_SECRET=your_api_secret
+NEXT_PUBLIC_LIVEKIT_WS_URL=wss://your-project.livekit.cloud
 
-UPLOADTHING_SECRET=
-UPLOADTHING_APP_ID=
+UPLOADTHING_SECRET=sk_live_your_secret
+UPLOADTHING_APP_ID=your_app_id
+
+# Solana & Token Integration
+BAGS_API_KEY=bags_prod_your_key
+SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_key
+HELIUS_API_KEY=your_helius_key
+NEXT_PUBLIC_SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_key
+
+# NextAuth.js
+NEXTAUTH_SECRET=your_secure_secret
+NEXTAUTH_URL=http://localhost:3000
 ```
 
-## Setup Prisma
+## Setup Database
 
-Ensure you have added a MySQL Database (recommended using PlanetScale). Then run:
+The application uses **MongoDB** (not MySQL). Database setup varies by environment:
 
+### Local Development
 ```bash
 npx prisma generate
 npx prisma db push
 ```
+
+### Production (Vercel)
+The database is already configured with MongoDB Atlas. Prisma will automatically generate during deployment via the `postinstall` script.
 
 ## Starting the app
 
@@ -184,3 +200,77 @@ Running commands with npm: `npm run [command]`
 | Command | Description                              |
 | ------- | ---------------------------------------- |
 | dev     | Starts a development instance of the app |
+| build   | Creates optimized production build       |
+| start   | Runs the production build                |
+| lint    | Runs ESLint for code quality checks     |
+
+## 🚀 Production Deployment
+
+### Quick Deploy to Vercel
+
+1. **One-Click Deploy**: Click the "Deploy with Vercel" button above
+2. **Environment Variables**: Add the required environment variables in Vercel dashboard
+3. **Database**: Already configured with MongoDB Atlas
+4. **Domain**: Your app will be live at `https://your-project.vercel.app`
+
+### Manual Deployment Steps
+
+1. **Fork/Clone Repository**
+   ```bash
+   git clone https://github.com/cloutprotocol/twitch-clone.git
+   cd twitch-clone
+   ```
+
+2. **Connect to Vercel**
+   ```bash
+   npm install -g vercel
+   vercel login
+   vercel
+   ```
+
+3. **Configure Environment Variables**
+   
+   Copy variables from `.env.production` template to Vercel dashboard:
+   
+   - Navigate to your Vercel project → Settings → Environment Variables
+   - Add all variables from the template
+   - Update LiveKit to use cloud service for production
+   - Use production Clerk keys
+   - Generate secure NEXTAUTH_SECRET (32+ characters)
+
+4. **Deploy**
+   ```bash
+   vercel --prod
+   ```
+
+### Environment Variables
+
+#### Required Services Setup:
+
+1. **MongoDB Atlas**: Already configured ✅
+2. **Clerk**: Get production keys from [clerk.dev](https://clerk.dev)  
+3. **LiveKit**: Sign up at [livekit.io](https://livekit.io) for cloud service
+4. **UploadThing**: Get keys from [uploadthing.com](https://uploadthing.com)
+5. **Helius**: Get RPC key from [helius.dev](https://helius.dev)
+6. **BAGS SDK**: Get API key from BAGS protocol
+
+#### Production Checklist:
+
+- [ ] MongoDB Atlas connection string added
+- [ ] Clerk production keys configured
+- [ ] LiveKit Cloud service configured (not VPS)
+- [ ] UploadThing production keys added
+- [ ] Helius API key for Solana RPC
+- [ ] BAGS API key for token features
+- [ ] NEXTAUTH_SECRET (32+ random characters)
+- [ ] NEXTAUTH_URL set to your domain
+- [ ] All webhooks updated to production URLs
+
+### Performance & Security
+
+- ✅ **Server-Side Rendering (SSR)** enabled
+- ✅ **Serverless Functions** for API routes
+- ✅ **Global CDN** distribution via Vercel
+- ✅ **Automatic HTTPS** and security headers
+- ✅ **Database connection pooling** configured
+- ✅ **Image optimization** enabled
