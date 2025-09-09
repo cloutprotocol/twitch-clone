@@ -3,6 +3,8 @@ import { getSelf } from "@/lib/auth-service";
 import { BagsSDK } from "@bagsfm/bags-sdk";
 import { Connection } from "@solana/web3.js";
 
+export const dynamic = 'force-dynamic';
+
 // Initialize SDK with Helius
 const BAGS_API_KEY = process.env.BAGS_API_KEY;
 const SOLANA_RPC_URL = process.env.SOLANA_RPC_URL;

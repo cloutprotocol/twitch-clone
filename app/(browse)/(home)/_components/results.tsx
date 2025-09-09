@@ -14,8 +14,11 @@ export const Results = async () => {
   const isLoggedIn = !!session?.user;
   const username = session?.user?.username;
 
-  // Only fetch live streams for the main page
-  const liveStreams = await db.stream.findMany({
+  let liveStreams: any[] = [];
+  
+  try {
+    // Only fetch live streams for the main page
+    liveStreams = await db.stream.findMany({
     where: {
       isLive: true, // Only get live streams
     },
@@ -45,6 +48,11 @@ export const Results = async () => {
     ],
     take: 50,
   });
+  } catch (error) {
+    console.error("Error fetching live streams:", error);
+    // Fallback to empty array on database error
+    liveStreams = [];
+  }
 
   return (
     <div className="w-full min-h-screen">

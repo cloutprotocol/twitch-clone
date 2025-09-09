@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSelf } from "@/lib/auth-service";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const user = await getSelf();
