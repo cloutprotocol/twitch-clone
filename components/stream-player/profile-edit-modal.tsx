@@ -86,8 +86,9 @@ export const ProfileEditModal = ({ initialValues, trigger }: ProfileEditModalPro
   };
 
   const defaultTrigger = (
-    <Button variant="outline" size="sm">
-      Edit Profile
+    <Button variant="outline" size="sm" className="px-2 sm:px-3 h-7 sm:h-8 text-xs sm:text-sm whitespace-nowrap">
+      <span className="hidden sm:inline">Edit Profile</span>
+      <span className="sm:hidden">Edit</span>
     </Button>
   );
 

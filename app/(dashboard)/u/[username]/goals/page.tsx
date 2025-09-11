@@ -35,6 +35,7 @@ export default function GoalsPage() {
   const router = useRouter();
   const [goals, setGoals] = useState<Goal[]>(defaultGoals);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleGoalChange = (id: string, field: keyof Goal, value: string | number) => {
     setGoals(prev => prev.map(goal => 
@@ -52,24 +53,45 @@ export default function GoalsPage() {
   };
 
   const handleSaveGoals = async () => {
+    // Get token address from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const tokenAddress = urlParams.get('token');
+    
+    console.log("Token address from URL:", tokenAddress);
+    console.log("Goals to save:", goals);
+    
+    if (!tokenAddress) {
+      toast.error("Token address is required");
+      return;
+    }
+
     setIsSaving(true);
     try {
+      const requestBody = { goals, tokenAddress };
+      console.log("Sending request body:", requestBody);
+      
       const response = await fetch("/api/stream/goals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ goals }),
+        body: JSON.stringify(requestBody),
       });
+      
+      console.log("Response status:", response.status);
 
       if (response.ok) {
+        const data = await response.json();
+        console.log("Success response:", data);
         toast.success("Goals saved successfully!");
         router.back();
       } else {
         const data = await response.json();
+        console.log("Error response:", data);
         toast.error(data.error || "Failed to save goals");
       }
     } catch (error) {
+      console.error("Request failed:", error);
       toast.error("Failed to save goals");
     } finally {
       setIsSaving(false);
@@ -77,20 +99,20 @@ export default function GoalsPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex items-center gap-4 mb-6">
+    <div className="p-4 sm:p-6 max-w-4xl mx-auto">
+      <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => router.back()}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 touch-manipulation"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </Button>
-        <div>
-          <h1 className="text-2xl font-bold text-text-primary">Token Goals</h1>
-          <p className="text-text-secondary">Set market cap goals to track your token&apos;s progress</p>
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-text-primary truncate">Token Goals</h1>
+          <p className="text-sm text-text-secondary hidden sm:block">Set market cap goals to track your token&apos;s progress</p>
         </div>
       </div>
 
@@ -104,19 +126,19 @@ export default function GoalsPage() {
             Configure up to 5 goals based on market cap milestones. These will be displayed above your chat with live progress tracking.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-4 sm:space-y-6">
           {goals.map((goal, index) => (
-            <div key={goal.id} className="space-y-4 p-4 border border-border-primary rounded-lg bg-background-tertiary">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+            <div key={goal.id} className="space-y-3 sm:space-y-4 p-3 sm:p-4 border border-border-primary rounded-lg bg-background-tertiary">
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
                   {index + 1}
                 </div>
-                <h3 className="font-medium text-text-primary">Goal {index + 1}</h3>
+                <h3 className="font-medium text-text-primary text-sm sm:text-base">Goal {index + 1}</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                 <div>
-                  <Label htmlFor={`marketcap-${goal.id}`} className="text-text-primary">
+                  <Label htmlFor={`marketcap-${goal.id}`} className="text-text-primary text-sm">
                     Market Cap ($)
                   </Label>
                   <Input
@@ -124,7 +146,7 @@ export default function GoalsPage() {
                     type="number"
                     value={goal.marketCap}
                     onChange={(e) => handleGoalChange(goal.id, "marketCap", parseInt(e.target.value) || 0)}
-                    className="mt-1"
+                    className="mt-1 text-sm"
                     placeholder="Enter market cap value"
                   />
                   <p className="text-xs text-text-secondary mt-1">
@@ -133,14 +155,14 @@ export default function GoalsPage() {
                 </div>
                 
                 <div className="md:col-span-1">
-                  <Label htmlFor={`description-${goal.id}`} className="text-text-primary">
+                  <Label htmlFor={`description-${goal.id}`} className="text-text-primary text-sm">
                     Goal Description
                   </Label>
                   <Textarea
                     id={`description-${goal.id}`}
                     value={goal.description}
                     onChange={(e) => handleGoalChange(goal.id, "description", e.target.value)}
-                    className="mt-1 min-h-[80px]"
+                    className="mt-1 min-h-[60px] sm:min-h-[80px] text-sm"
                     placeholder="Describe what you'll achieve at this milestone..."
                     maxLength={100}
                   />
@@ -152,18 +174,19 @@ export default function GoalsPage() {
             </div>
           ))}
           
-          <div className="flex justify-end gap-3 pt-6 border-t border-border-primary">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 sm:pt-6 border-t border-border-primary">
             <Button
               variant="outline"
               onClick={() => router.back()}
               disabled={isSaving}
+              className="w-full sm:w-auto touch-manipulation"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSaveGoals}
               disabled={isSaving}
-              className="flex items-center gap-2"
+              className="flex items-center justify-center gap-2 w-full sm:w-auto touch-manipulation"
             >
               {isSaving ? (
                 <>

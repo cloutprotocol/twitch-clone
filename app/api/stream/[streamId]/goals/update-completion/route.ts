@@ -8,11 +8,18 @@ export async function POST(
 ) {
   try {
     const { streamId } = params;
-    const { completedGoals, marketCap } = await req.json();
+    const { completedGoals, marketCap, tokenAddress } = await req.json();
 
     if (!streamId) {
       return NextResponse.json(
         { error: "Stream ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!tokenAddress) {
+      return NextResponse.json(
+        { error: "Token address is required" },
         { status: 400 }
       );
     }
@@ -24,12 +31,13 @@ export async function POST(
       );
     }
 
-    // Update goals as completed
+    // Update goals as completed for the specific token
     const updatePromises = completedGoals.map(goalId =>
       db.goal.update({
         where: {
           id: goalId,
           streamId: streamId,
+          tokenAddress: tokenAddress,
         },
         data: {
           isReached: true,

@@ -173,7 +173,7 @@ export const WalletBalance = ({
     // Compact view (for navbar)
     if (compact) {
         return (
-            <div className={`flex items-center space-x-2 ${className}`}>
+            <div className={`flex items-center space-x-2 min-h-[32px] ${className}`}>
                 <Wallet className="w-4 h-4 text-interactive-primary" />
                 <div className="text-sm">
                     <span className="text-text-primary font-medium">{solFormatted} SOL</span>

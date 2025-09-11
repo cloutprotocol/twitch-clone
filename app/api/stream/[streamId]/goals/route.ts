@@ -8,6 +8,8 @@ export async function GET(
 ) {
   try {
     const { streamId } = params;
+    const { searchParams } = new URL(req.url);
+    const tokenAddress = searchParams.get('tokenAddress');
 
     if (!streamId) {
       return NextResponse.json(
@@ -16,10 +18,18 @@ export async function GET(
       );
     }
 
-    // Fetch goals for the stream
+    if (!tokenAddress) {
+      return NextResponse.json(
+        { error: "Token address is required" },
+        { status: 400 }
+      );
+    }
+
+    // Fetch goals for the stream and specific token
     const goals = await db.goal.findMany({
       where: {
         streamId: streamId,
+        tokenAddress: tokenAddress,
       },
       orderBy: {
         order: "asc",

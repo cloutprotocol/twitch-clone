@@ -114,9 +114,10 @@ export const TokenControls = ({ tokenAddress, className }: TokenControlsProps) =
       <div className={className}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
-              <Coins className="h-4 w-4" />
-              Token Actions
+            <Button variant="outline" size="sm" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-7 sm:h-8 text-xs sm:text-sm whitespace-nowrap">
+              <Coins className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Token Actions</span>
+              <span className="sm:hidden">Token</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-48 bg-background-secondary border-border-primary" align="end">
@@ -195,9 +196,10 @@ export const TokenControls = ({ tokenAddress, className }: TokenControlsProps) =
     <div className={className}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Manage Token
+          <Button variant="outline" size="sm" className="flex items-center gap-1 sm:gap-2 px-2 sm:px-3 h-7 sm:h-8 text-xs sm:text-sm whitespace-nowrap">
+            <Settings className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden sm:inline">Manage Token</span>
+            <span className="sm:hidden">Manage</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48 bg-background-secondary border-border-primary" align="end">

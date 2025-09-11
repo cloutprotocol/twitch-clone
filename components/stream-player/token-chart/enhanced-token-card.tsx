@@ -165,7 +165,7 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                 {/* Mobile-first layout */}
                 <div className="space-y-3">
                     {/* Top row: Logo, Info, and main action */}
-                    <div className="flex items-start gap-3">
+                    <div className="flex items-center gap-3">
                         {/* Token Logo - smaller on mobile */}
                         <div className="relative flex-shrink-0">
                             {heliusData?.logoURI ? (
@@ -187,17 +187,17 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                             </div>
                         </div>
 
-                        {/* Token Info - aligned with logo top */}
-                        <div className="flex-1 min-w-0 pt-0.5">
+                        {/* Token Info - aligned with logo center */}
+                        <div className="flex-1 min-w-0 flex flex-col justify-center">
                             <h3 className="text-base sm:text-lg font-semibold text-text-primary truncate leading-tight">
                                 {heliusData?.name || 'Unknown Token'}
                             </h3>
-                            <p className="text-sm font-medium text-text-secondary mt-0.5">
+                            <p className="text-sm font-medium text-text-secondary leading-tight">
                                 {heliusData?.symbol || 'UNKNOWN'}
                             </p>
 
                             {/* Token Address - mobile friendly */}
-                            <div className="flex items-center gap-1 mt-1">
+                            <div className="flex items-center gap-1 mt-0.5">
                                 <span className="text-xs text-text-tertiary font-mono">
                                     {truncateAddress(tokenAddress)}
                                 </span>
@@ -205,17 +205,17 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleCopyAddress}
-                                    className="h-5 w-5 p-0 text-text-tertiary hover:text-text-secondary"
+                                    className="h-4 w-4 p-0 text-text-tertiary hover:text-text-secondary"
                                 >
-                                    <Copy className="h-3 w-3" />
+                                    <Copy className="h-2.5 w-2.5" />
                                 </Button>
                             </div>
                         </div>
 
-                        {/* Main Share Button - aligned with logo top */}
+                        {/* Main Share Button - centered with logo */}
                         <Button
                             onClick={handleShare}
-                            className="bg-status-success hover:bg-status-success/80 text-white px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-medium flex-shrink-0 h-8 sm:h-9"
+                            className="bg-status-success hover:bg-status-success/80 text-white px-3 py-2 text-sm font-medium flex-shrink-0 h-10"
                         >
                             Share
                         </Button>
@@ -223,35 +223,33 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
 
                     {/* Secondary actions row - mobile friendly */}
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 sm:gap-3 text-xs text-text-tertiary">
-                            <span className="flex items-center gap-1">
+                        <div className="flex items-center gap-2 text-xs text-text-tertiary">
+                            <span className="flex items-center gap-1.5">
                                 <span className="w-2 h-2 bg-status-success rounded-full"></span>
-                                <span className="hidden sm:inline">{heliusData?.decimals || 9} decimals</span>
-                                <span className="sm:hidden">Live</span>
+                                <span>Live</span>
                             </span>
-                            <span className="hidden sm:inline">Live data</span>
                         </div>
 
-                        <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="flex items-center gap-2">
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={handleManualRefresh}
                                 disabled={isRefreshing || priceLoading}
-                                className="p-1.5 sm:p-2 h-7 w-7 sm:h-8 sm:w-8"
+                                className="h-8 w-8 p-0"
                                 title="Refresh token data"
                             >
-                                <RefreshCw className={`h-3 w-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                                <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
                             </Button>
 
                             <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={handleOpenDexScreener}
-                                className="p-1.5 sm:p-2 h-7 w-7 sm:h-8 sm:w-8"
+                                className="h-8 w-8 p-0"
                                 title="View on DexScreener"
                             >
-                                <ExternalLink className="h-3 w-3" />
+                                <ExternalLink className="h-3.5 w-3.5" />
                             </Button>
                         </div>
                     </div>

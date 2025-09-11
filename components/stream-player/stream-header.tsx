@@ -1,6 +1,6 @@
 "use client";
 
-import { UserIcon, Heart } from "lucide-react";
+import { UserIcon, Heart, Menu } from "lucide-react";
 import { useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ import { VerifiedMark } from "@/components/verified-mark";
 import { UserAvatar, UserAvatarSkeleton } from "@/components/user-avatar";
 import { cn } from "@/lib/theme-utils";
 import { onFollow, onUnfollow } from "@/actions/follow";
+import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 
 import { ProfileEditModal } from "./profile-edit-modal";
 import { TokenControls } from "@/components/dashboard/token-controls";
@@ -57,6 +58,7 @@ export const StreamHeader = ({
   const router = useRouter();
   const { data: session } = useSession();
   const userId = session?.user?.id;
+  const { onExpand } = useCreatorSidebar();
 
   const participants = useParticipants();
   const participant = useRemoteParticipant(hostIdentity);
@@ -102,86 +104,88 @@ export const StreamHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between py-3">
-      <div className="flex items-center gap-3">
-        {/* Smaller User Avatar */}
-        <UserAvatar
-          imageUrl={imageUrl}
-          username={hostName}
-          size="default"
-          isLive={isLive}
-          showBadge
-        />
-        
-        <div className="space-y-1">
-          {/* Stream Title Only */}
-          <div className="flex items-center gap-2">
-            <h1 className="text-lg font-semibold text-text-primary truncate">
-              {streamTitle}
-            </h1>
-            <VerifiedMark />
-          </div>
+    <div className="flex items-center justify-between py-3 gap-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          {/* Smaller User Avatar */}
+          <UserAvatar
+            imageUrl={imageUrl}
+            username={hostName}
+            size="default"
+            isLive={isLive}
+            showBadge
+          />
           
-          {/* Streamlined Stats */}
-          <div className="flex items-center gap-4 text-xs text-text-tertiary">
-            {isLive ? (
-              <div className="flex items-center gap-1 text-status-success">
-                <div className="w-2 h-2 bg-status-success rounded-full animate-pulse"></div>
-                <span className="font-medium">
-                  {participantCount} {participantCount === 1 ? "viewer" : "viewers"}
-                </span>
-              </div>
-            ) : (
-              <span className="text-text-secondary">Offline</span>
-            )}
+          <div className="space-y-1 min-w-0 flex-1">
+            {/* Stream Title Only */}
+            <div className="flex items-center gap-2">
+              <h1 className="text-sm sm:text-lg font-semibold text-text-primary truncate">
+                {streamTitle}
+              </h1>
+              <VerifiedMark />
+            </div>
             
-            <span className="text-text-tertiary">
-              {followedByCount} {followedByCount === 1 ? "follower" : "followers"}
-            </span>
+            {/* Streamlined Stats */}
+            <div className="flex items-center gap-2 sm:gap-4 text-xs text-text-tertiary">
+              {isLive ? (
+                <div className="flex items-center gap-1 text-status-success">
+                  <div className="w-2 h-2 bg-status-success rounded-full animate-pulse"></div>
+                  <span className="font-medium">
+                    {participantCount} {participantCount === 1 ? "viewer" : "viewers"}
+                  </span>
+                </div>
+              ) : (
+                <span className="text-text-secondary">Offline</span>
+              )}
+              
+              <span className="text-text-tertiary hidden sm:inline">
+                {followedByCount} {followedByCount === 1 ? "follower" : "followers"}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Actions - Only show Follow for non-hosts, Edit Profile for hosts */}
-      <div className="flex items-center gap-2">
-        {!isHost && (
-          <Button
-            disabled={isPending}
-            onClick={toggleFollow}
-            variant={isFollowing ? "outline" : "default"}
-            size="sm"
-            className="px-3 text-sm h-7"
-          >
-            <Heart
-              className={cn("h-3 w-3 mr-1.5", isFollowing ? "fill-white" : "fill-none")}
-            />
-            {isFollowing ? "Following" : "Follow"}
-          </Button>
-        )}
-        
-        {isHost && (
-          <>
-            <TokenControls 
-              tokenAddress={tokenAddress}
-              className="mr-2"
-            />
-            <ProfileEditModal
-              initialValues={{
-                bio: bio || "",
-                streamTitle: streamTitle,
-                twitterUrl: socialLinks?.twitter || "",
-                instagramUrl: socialLinks?.instagram || "",
-                tiktokUrl: socialLinks?.tiktok || "",
-                discordUrl: socialLinks?.discord || "",
-                telegramUrl: socialLinks?.telegram || "",
-                twitchUrl: socialLinks?.twitch || "",
-                websiteUrl: socialLinks?.website || "",
-              }}
-            />
-          </>
-        )}
+        {/* Actions - Responsive layout for mobile */}
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          {!isHost && (
+            <Button
+              disabled={isPending}
+              onClick={toggleFollow}
+              variant={isFollowing ? "outline" : "default"}
+              size="sm"
+              className="px-2 sm:px-3 text-xs sm:text-sm h-7 sm:h-8 whitespace-nowrap"
+            >
+              <Heart
+                className={cn("h-3 w-3 sm:mr-1.5", isFollowing ? "fill-white" : "fill-none")}
+              />
+              <span className="hidden sm:inline ml-1">
+                {isFollowing ? "Following" : "Follow"}
+              </span>
+            </Button>
+          )}
+          
+          {isHost && (
+            <div className="flex items-center gap-1 sm:gap-2">
+              <TokenControls 
+                tokenAddress={tokenAddress}
+                className="flex-shrink-0"
+              />
+              <ProfileEditModal
+                initialValues={{
+                  bio: bio || "",
+                  streamTitle: streamTitle,
+                  twitterUrl: socialLinks?.twitter || "",
+                  instagramUrl: socialLinks?.instagram || "",
+                  tiktokUrl: socialLinks?.tiktok || "",
+                  discordUrl: socialLinks?.discord || "",
+                  telegramUrl: socialLinks?.telegram || "",
+                  twitchUrl: socialLinks?.twitch || "",
+                  websiteUrl: socialLinks?.website || "",
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 

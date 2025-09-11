@@ -2,9 +2,12 @@
 
 import { Stream, User } from "@prisma/client";
 import { LiveKitRoom } from "@livekit/components-react";
+import { ArrowRightFromLine } from "lucide-react";
 import { cn } from "@/lib/theme-utils";
 import { useChatSidebar } from "@/store/use-chat-sidebar";
+import { useCreatorSidebar } from "@/store/use-creator-sidebar";
 import { useViewerToken } from "@/hooks/use-viewer-token";
+import { Button } from "@/components/ui/button";
 import { ChatToggle } from "./chat-toggle";
 import { Chat, ChatSkeleton } from "./chat";
 import { Video, VideoSkeleton } from "./video";
@@ -71,6 +74,7 @@ export const StreamPlayer = ({
 }: StreamPlayerProps) => {
   const { token, name, identity } = useViewerToken(user.id);
   const { collapsed } = useChatSidebar((state) => state);
+  const { collapsed: sidebarCollapsed, onExpand } = useCreatorSidebar();
 
   if (!token || !name || !identity) {
     return <StreamPlayerSkeleton />;
@@ -82,11 +86,24 @@ export const StreamPlayer = ({
           <ChatToggle />
         </div>
       )}
+
+      {/* Mobile Menu Button - Only show when sidebar is collapsed */}
+      {isOwner && sidebarCollapsed && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onExpand}
+          className="lg:hidden fixed top-4 left-4 z-40 h-8 w-8 p-0 hover:bg-transparent transition-opacity duration-300"
+        >
+          <ArrowRightFromLine className="h-5 w-5 text-text-primary" />
+        </Button>
+      )}
+
       <LiveKitRoom
         token={token}
         serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_WS_URL!}
         className={cn(
-          "grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full",
+          "grid grid-cols-1 lg:gap-y-0 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 h-full bg-transparent",
           collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
         )}
       >
@@ -95,9 +112,9 @@ export const StreamPlayer = ({
           hostIdentity={user.id}
           viewerIdentity={identity}
         />
-        <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 h-[calc(100vh-80px)] lg:overflow-y-auto hidden-scrollbar">
+        <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 h-[calc(100vh-80px)] lg:overflow-y-auto hidden-scrollbar bg-transparent">
           {/* Stream Header - Above Video */}
-          <div className="px-4 pt-4">
+          <div className="px-3 pt-3">
             <StreamHeader
               hostName={user.username}
               hostIdentity={user.id}
@@ -119,35 +136,37 @@ export const StreamPlayer = ({
               }}
             />
           </div>
-          
+
           {/* Video Player - Same Width as Token Chart */}
-          <div className="px-4 mt-4">
+          <div className="px-3 mt-3">
             <Video hostName={user.username} hostIdentity={user.id} streamId={stream.id} showThumbnailControls={isOwner} />
           </div>
-          
+
           {/* Token Chart - Below Video */}
           {stream.tokenAddress && (
-            <div className="px-4 pt-4 pb-10">
-              <TokenChart 
+            <div className="px-3 pt-3 pb-2">
+              <TokenChart
                 tokenAddress={stream.tokenAddress}
                 streamId={stream.id}
               />
             </div>
           )}
         </div>
-        <div className={cn("col-span-1 flex flex-col h-[calc(100vh-80px)]", collapsed && "hidden")}>
+        <div className={cn("col-span-1 flex flex-col h-[calc(100vh-80px)] overflow-hidden", collapsed && "hidden")}>
           {/* Goals Display - Above Chat */}
           {stream.tokenAddress && (
-            <div className="mb-2 flex-shrink-0">
-              <GoalsDisplay 
+            <div className="px-3 pt-1 pb-0 flex-shrink-0">
+              <GoalsDisplay
                 streamId={stream.id}
                 tokenAddress={stream.tokenAddress}
+                canEdit={isOwner}
+                username={user.username}
               />
             </div>
           )}
-          
+
           {/* Chat - Fixed height with scrollbar */}
-          <div className="flex-1 min-h-0">
+          <div className="flex-1 min-h-0 mt-2">
             <Chat
               viewerName={name}
               hostName={user.username}
@@ -175,13 +194,13 @@ export const StreamPlayerSkeleton = () => {
       collapsed && "lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2"
     )}>
       <div className={cn(
-        "col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10",
+        "col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-6",
         collapsed && "lg:col-span-2 xl:col-span-2 2xl:col-span-2"
       )}>
-        <div className="px-4 pt-4">
+        <div className="px-3 pt-3">
           <StreamHeaderSkeleton />
         </div>
-        <div className="px-4 mt-4">
+        <div className="px-3 mt-3">
           <VideoSkeleton />
         </div>
       </div>

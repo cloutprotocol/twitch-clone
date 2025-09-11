@@ -27,13 +27,13 @@ export const Container = ({ children }: ContainerProps) => {
   return (
     <div
       className={cn(
-        "flex-1 transition-all duration-300 ease-in-out min-h-0 h-screen",
+        "flex-1 transition-all duration-300 ease-in-out min-h-0 h-screen bg-transparent",
         // Desktop: proper margins based on sidebar state
         collapsed ? "lg:ml-[70px]" : "lg:ml-60",
         // Mobile: always full width (sidebar is overlay)
         "ml-0",
         // Add top margin for floating wallet
-        "pt-16 px-4"
+        "pt-16"
       )}
     >
       {children}

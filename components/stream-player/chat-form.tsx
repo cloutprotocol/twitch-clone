@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Send } from "lucide-react";
 
 import { cn } from "@/lib/theme-utils";
 import { Input } from "@/components/ui/input";
@@ -58,25 +59,37 @@ export const ChatForm = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center gap-y-4 p-3"
+      className="p-3"
     >
       <div className="w-full">
         <ChatInfo isDelayed={isDelayed} isFollowersOnly={isFollowersOnly} />
-        <Input
-          onChange={(e) => onChange(e.target.value)}
-          value={value}
-          disabled={isDisabled}
-          placeholder="Send a message"
-          className={cn(
-            "border-white/10",
-            (isFollowersOnly || isDelayed) && "rounded-t-none border-t-0"
-          )}
-        />
-      </div>
-      <div className="ml-auto">
-        <Button type="submit" variant="primary" size="sm" disabled={isDisabled}>
-          Chat
-        </Button>
+        <div className="relative">
+          <Input
+            onChange={(e) => onChange(e.target.value)}
+            value={value}
+            disabled={isDisabled}
+            placeholder="Send a message"
+            className={cn(
+              "border-white/10 pr-12",
+              (isFollowersOnly || isDelayed) && "rounded-t-none border-t-0"
+            )}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                if (!value || isDisabled) return;
+                handleSubmit(e as any);
+              }
+            }}
+          />
+          <Button 
+            type="submit" 
+            size="sm" 
+            disabled={isDisabled || !value.trim()}
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-interactive-primary hover:bg-interactive-primary/80 disabled:bg-gray-500 disabled:opacity-50 rounded-md"
+          >
+            <Send className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
     </form>
   );
@@ -84,11 +97,10 @@ export const ChatForm = ({
 
 export const ChatFormSkeleton = () => {
   return (
-    <div className="flex flex-col items-center gap-y-4 p-3">
-      <Skeleton className="w-full h-10" />
-      <div className="flex items-center gap-x-2 ml-auto">
-        <Skeleton className="h-7 w-7" />
-        <Skeleton className="h-7 w-12" />
+    <div className="p-3">
+      <div className="relative">
+        <Skeleton className="w-full h-10" />
+        <Skeleton className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 rounded-md" />
       </div>
     </div>
   );

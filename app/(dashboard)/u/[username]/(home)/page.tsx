@@ -23,7 +23,7 @@ const CreatorPage = async ({ params }: CreatorPageProps) => {
   const chatMessages = await getChatMessages(user.stream.id).catch(() => []);
 
   return (
-    <div className="h-full">
+    <div className="h-full bg-transparent">
       <StreamPlayer 
         user={user} 
         stream={user.stream} 

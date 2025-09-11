@@ -2,6 +2,7 @@
 
 import { LogOut, User, Wallet, Copy, BarChart3, ChevronDown } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -28,16 +29,37 @@ interface UserDropdownProps {
 
 export function UserDropdown({ user, tokenAddress }: UserDropdownProps) {
   const { data: session } = useSession();
+  const [realWalletAddress, setRealWalletAddress] = useState<string | null>(null);
   
-  // Get wallet address from session or use username as fallback
-  const walletAddress = session?.user?.username || user.username;
-  const displayAddress = walletAddress?.length > 8 
-    ? `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`
-    : walletAddress;
+  // Get wallet address from session or use username as fallback for display
+  const displayUsername = session?.user?.username || user.username;
+  const displayAddress = displayUsername?.length > 8 
+    ? `${displayUsername.slice(0, 4)}...${displayUsername.slice(-4)}`
+    : displayUsername;
+
+  // Fetch real wallet address
+  useEffect(() => {
+    const fetchWalletAddress = async () => {
+      if (session?.user?.id) {
+        try {
+          const response = await fetch('/api/user/wallet');
+          const data = await response.json();
+          if (data.wallet?.address) {
+            setRealWalletAddress(data.wallet.address);
+          }
+        } catch (error) {
+          console.error('Failed to fetch wallet address:', error);
+        }
+      }
+    };
+
+    fetchWalletAddress();
+  }, [session?.user?.id]);
 
   const copyAddress = () => {
-    if (walletAddress) {
-      navigator.clipboard.writeText(walletAddress);
+    const addressToCopy = realWalletAddress || displayUsername;
+    if (addressToCopy) {
+      navigator.clipboard.writeText(addressToCopy);
       toast.success("Address copied to clipboard");
     }
   };
@@ -47,7 +69,7 @@ export function UserDropdown({ user, tokenAddress }: UserDropdownProps) {
       <DropdownMenuTrigger asChild>
         <Button 
           variant="outline" 
-          className="bg-background-secondary/90 backdrop-blur-sm hover:bg-background-tertiary border-border-primary text-text-primary flex items-center gap-2 px-2 py-1 h-auto rounded-lg"
+          className="bg-background-secondary/90 backdrop-blur-sm hover:bg-background-tertiary border-border-primary text-text-primary flex items-center gap-2 px-2 py-1 h-auto rounded-lg min-h-[32px]"
         >
           <UserAvatar
             username={user.username}
