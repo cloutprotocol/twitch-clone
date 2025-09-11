@@ -139,28 +139,34 @@ export const Chat = ({
   };
 
   return (
-    <div className="flex flex-col bg-background border-l border-b pt-0 h-full min-h-0">
+    <div className="flex flex-col bg-background border-l border-b pt-0 h-full">
       <ChatHeader />
       {variant === ChatVariant.CHAT && (
         <>
-          <ChatList messages={displayMessages} isHidden={isHidden} />
-          <ChatForm
-            onSubmit={onSubmit}
-            value={value}
-            onChange={onChange}
-            isHidden={isHidden}
-            isFollowersOnly={isChatFollowersOnly}
-            isDelayed={isChatDelayed}
-            isFollowing={isFollowing}
-          />
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <ChatList messages={displayMessages} isHidden={isHidden} />
+          </div>
+          <div className="flex-shrink-0">
+            <ChatForm
+              onSubmit={onSubmit}
+              value={value}
+              onChange={onChange}
+              isHidden={isHidden}
+              isFollowersOnly={isChatFollowersOnly}
+              isDelayed={isChatDelayed}
+              isFollowing={isFollowing}
+            />
+          </div>
         </>
       )}
       {variant === ChatVariant.COMMUNITY && (
-        <ChatCommunity
-          viewerName={viewerName}
-          hostName={hostName}
-          isHidden={isHidden}
-        />
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <ChatCommunity
+            viewerName={viewerName}
+            hostName={hostName}
+            isHidden={isHidden}
+          />
+        </div>
       )}
     </div>
   );
@@ -168,10 +174,14 @@ export const Chat = ({
 
 export const ChatSkeleton = () => {
   return (
-    <div className="flex flex-col border-l border-b pt-0 h-[calc(100vh-80px)] border-2">
+    <div className="flex flex-col border-l border-b pt-0 h-full">
       <ChatHeaderSkeleton />
-      <ChatListSkeleton />
-      <ChatFormSkeleton />
+      <div className="flex-1 min-h-0">
+        <ChatListSkeleton />
+      </div>
+      <div className="flex-shrink-0">
+        <ChatFormSkeleton />
+      </div>
     </div>
   );
 };

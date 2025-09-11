@@ -95,7 +95,7 @@ export const StreamPlayer = ({
           hostIdentity={user.id}
           viewerIdentity={identity}
         />
-        <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 lg:overflow-y-auto hidden-scrollbar pb-10">
+        <div className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-5 h-[calc(100vh-80px)] lg:overflow-y-auto hidden-scrollbar">
           {/* Stream Header - Above Video */}
           <div className="px-4 pt-4">
             <StreamHeader
@@ -127,7 +127,7 @@ export const StreamPlayer = ({
           
           {/* Token Chart - Below Video */}
           {stream.tokenAddress && (
-            <div className="px-4 pt-4">
+            <div className="px-4 pt-4 pb-10">
               <TokenChart 
                 tokenAddress={stream.tokenAddress}
                 streamId={stream.id}
@@ -135,10 +135,10 @@ export const StreamPlayer = ({
             </div>
           )}
         </div>
-        <div className={cn("col-span-1 flex flex-col", collapsed && "hidden")}>
+        <div className={cn("col-span-1 flex flex-col h-[calc(100vh-80px)]", collapsed && "hidden")}>
           {/* Goals Display - Above Chat */}
           {stream.tokenAddress && (
-            <div className="mb-2">
+            <div className="mb-2 flex-shrink-0">
               <GoalsDisplay 
                 streamId={stream.id}
                 tokenAddress={stream.tokenAddress}
@@ -146,8 +146,8 @@ export const StreamPlayer = ({
             </div>
           )}
           
-          {/* Chat - Same width as goals */}
-          <div className="flex-1">
+          {/* Chat - Fixed height with scrollbar */}
+          <div className="flex-1 min-h-0">
             <Chat
               viewerName={name}
               hostName={user.username}
