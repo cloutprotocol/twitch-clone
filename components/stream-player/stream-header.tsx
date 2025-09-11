@@ -150,10 +150,10 @@ export const StreamHeader = ({
             onClick={toggleFollow}
             variant={isFollowing ? "outline" : "default"}
             size="sm"
-            className="px-4"
+            className="px-3 text-sm h-7"
           >
             <Heart
-              className={cn("h-4 w-4 mr-2", isFollowing ? "fill-white" : "fill-none")}
+              className={cn("h-3 w-3 mr-1.5", isFollowing ? "fill-white" : "fill-none")}
             />
             {isFollowing ? "Following" : "Follow"}
           </Button>

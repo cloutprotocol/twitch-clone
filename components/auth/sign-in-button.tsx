@@ -31,10 +31,10 @@ export function SignInButton({ className, size = "default" }: SignInButtonProps)
     <>
       <Button 
         onClick={() => setShowModal(true)}
-        className={`bg-interactive-primary hover:bg-interactive-hover text-text-inverse font-semibold ${className}`}
+        className={`bg-interactive-primary hover:bg-interactive-hover text-text-inverse font-semibold px-3 text-sm h-7 ${className}`}
         size={size}
       >
-        <Wallet className="w-4 h-4 mr-2" />
+        <Wallet className="w-3 h-3 mr-1.5" />
         Connect Wallet
       </Button>
 

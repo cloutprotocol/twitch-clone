@@ -78,7 +78,7 @@ export const ResultCard = ({ data }: ResultCardProps) => {
   return (
     <Link href={`/${data.user.username}`}>
       <div 
-        className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1 w-full max-w-sm mx-auto"
+        className="group relative bg-card rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 sm:hover:scale-[1.02] sm:hover:-translate-y-1 w-full"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -154,13 +154,14 @@ export const ResultCard = ({ data }: ResultCardProps) => {
         </div>
 
         {/* Content */}
-        <div className="p-4">
-          <div className="flex items-start space-x-3">
+        <div className="p-3 sm:p-4">
+          <div className="flex items-start space-x-2 sm:space-x-3">
             <div className="flex-shrink-0">
               <UserAvatar
                 username={data.user.username}
                 imageUrl={data.user.imageUrl}
                 isLive={data.isLive}
+                size="sm"
               />
             </div>
             <div className="flex-1 min-w-0">

@@ -128,8 +128,8 @@ export const Results = async () => {
               </span>
             </div>
             
-            {/* 3-column grid with larger cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Responsive grid - single column on mobile */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Start Stream Card */}
               <StartStreamWrapper isLoggedIn={isLoggedIn} username={username} />
               
@@ -144,7 +144,7 @@ export const Results = async () => {
         {/* Empty State - Show Start Stream Card */}
         {liveStreams.length === 0 && (
           <section>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Start Stream Card */}
               <StartStreamWrapper isLoggedIn={isLoggedIn} username={username} />
               
