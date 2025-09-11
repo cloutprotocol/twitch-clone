@@ -19,7 +19,7 @@ export const Wrapper = ({ children }: WrapperProps) => {
 
   if (!isClient) {
     return (
-      <aside className="fixed left-0 flex flex-col w-[70px] lg:w-60 h-full bg-background border-r border-border-primary z-50">
+      <aside className="fixed left-0 flex flex-col w-[70px] md:w-60 xl:w-80 h-full bg-background border-r border-border-primary z-50">
         <ToggleSkeleton />
         <FollowingSkeleton />
         <RecommendedSkeleton />
@@ -30,7 +30,7 @@ export const Wrapper = ({ children }: WrapperProps) => {
   return (
     <aside
       className={cn(
-        "fixed left-0 flex flex-col w-60 h-full bg-background border-r border-border-primary z-50",
+        "fixed left-0 flex flex-col w-60 xl:w-80 h-full bg-background border-r border-border-primary z-50 transition-all duration-300",
         collapsed && "w-[70px]"
       )}
     >

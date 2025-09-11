@@ -166,13 +166,13 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                 <div className="space-y-3">
                     {/* Top row: Logo, Info, and main action */}
                     <div className="flex items-center gap-3">
-                        {/* Token Logo - smaller on mobile */}
+                        {/* Token Logo - much larger on mobile for proper text alignment */}
                         <div className="relative flex-shrink-0">
                             {heliusData?.logoURI ? (
                                 <img
                                     src={heliusData.logoURI}
                                     alt={`${heliusData.name} logo`}
-                                    className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover bg-background-tertiary border-2 border-interactive-primary"
+                                    className="w-16 h-16 sm:w-16 sm:h-16 rounded-lg object-cover bg-background-tertiary border-2 border-interactive-primary"
                                     onError={(e) => {
                                         const target = e.target as HTMLImageElement;
                                         target.style.display = 'none';
@@ -182,7 +182,7 @@ export const EnhancedTokenCard = ({ tokenAddress, className = "" }: EnhancedToke
                             ) : null}
 
                             {/* Fallback logo */}
-                            <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-interactive-primary/20 flex items-center justify-center text-sm sm:text-lg font-bold text-interactive-primary border-2 border-interactive-primary ${heliusData?.logoURI ? 'hidden' : ''}`}>
+                            <div className={`w-16 h-16 sm:w-16 sm:h-16 rounded-lg bg-interactive-primary/20 flex items-center justify-center text-lg sm:text-lg font-bold text-interactive-primary border-2 border-interactive-primary ${heliusData?.logoURI ? 'hidden' : ''}`}>
                                 {(heliusData?.symbol || 'UN').slice(0, 2).toUpperCase()}
                             </div>
                         </div>

@@ -142,7 +142,6 @@ module.exports = withUt({
         '.no-transition': {
           'transition': 'none !important',
         },
-
       })
     }
   ],

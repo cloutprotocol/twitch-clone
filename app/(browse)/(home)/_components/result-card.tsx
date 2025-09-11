@@ -161,7 +161,7 @@ export const ResultCard = ({ data }: ResultCardProps) => {
                 username={data.user.username}
                 imageUrl={data.user.imageUrl}
                 isLive={data.isLive}
-                size="sm"
+                size="xs"
               />
             </div>
             <div className="flex-1 min-w-0">
